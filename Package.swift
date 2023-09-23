@@ -296,7 +296,7 @@ let package = Package(
 		.target(name:"boost_typeof", path:"boost-libs/typeof", sources:[], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_units", path:"boost-libs/units", sources:[], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_unordered", path:"boost-libs/unordered", sources:[], publicHeadersPath:"include", packageAccess:true),
-		.target(name:"boost_url", path:"boost-libs/url", sources:[], publicHeadersPath:"include", packageAccess:true),
+		.target(name:"boost_url", dependencies:["boost_core", "boost_utility", "boost_assert", "boost_config", "boost_system", "boost_variant2", "boost_mp11", "boost_throw_exception", "boost_static_assert", "boost_align", "boost_type_traits", "boost_optional", "boost_move"], path:"boost-libs/url", sources:["src"], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_utility", path:"boost-libs/utility", sources:[], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_uuid", path:"boost-libs/uuid", sources:[], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_variant", path:"boost-libs/variant", sources:[], publicHeadersPath:"include", packageAccess:true),
