@@ -188,7 +188,7 @@ let package = Package(
 		.target(name:"boost_coroutine", path:"boost-libs/coroutine", sources:[], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_coroutine2", path:"boost-libs/coroutine2", sources:[], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_crc", path:"boost-libs/crc", sources:[], publicHeadersPath:"include", packageAccess:true),
-		.target(name:"boost_date_time", path:"boost-libs/date_time", sources:[], publicHeadersPath:"include", packageAccess:true),
+		.target(name:"boost_date_time", dependencies:["boost_config", "boost_throw_exception", "boost_assert", "boost_type_traits"], path:"boost-libs/date_time", exclude:[], sources:["src/posix_time"], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_describe", path:"boost-libs/describe", sources:[], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_detail", path:"boost-libs/detail", sources:[], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_dll", path:"boost-libs/dll", sources:[], publicHeadersPath:"include", packageAccess:true),
