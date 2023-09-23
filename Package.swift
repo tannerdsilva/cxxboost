@@ -272,7 +272,7 @@ let package = Package(
 		.target(name:"boost_regex", path:"boost-libs/regex", sources:[], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_safe_numerics", path:"boost-libs/safe_numerics", sources:[], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_scope_exit", path:"boost-libs/scope_exit", sources:[], publicHeadersPath:"include", packageAccess:true),
-		.target(name:"boost_serialization", path:"boost-libs/serialization", sources:[], publicHeadersPath:"include", packageAccess:true),
+		.target(name:"boost_serialization", dependencies:["boost_config", "boost_detail", "boost_assert", "boost_spirit", "boost_static_assert", "boost_smart_ptr", "boost_core", "boost_mpl", "boost_type_traits", "boost_preprocessor", "boost_io", "boost_integer", "boost_throw_exception", "boost_move", "boost_optional", "boost_function", "boost_iterator", "boost_array", "boost_bind", "boost_predef", "boost_utility"], path:"boost-libs/serialization", sources:["src"], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_signals2", path:"boost-libs/signals2", sources:[], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_smart_ptr", path:"boost-libs/smart_ptr", sources:[], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_sort", path:"boost-libs/sort", sources:[], publicHeadersPath:"include", packageAccess:true),
@@ -302,9 +302,10 @@ let package = Package(
 		.target(name:"boost_variant", path:"boost-libs/variant", sources:[], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_variant2", path:"boost-libs/variant2", sources:[], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_vmd", path:"boost-libs/vmd", sources:[], publicHeadersPath:"include", packageAccess:true),
-		.target(name:"boost_wave", path:"boost-libs/wave", sources:[], publicHeadersPath:"include", packageAccess:true),
+		.target(name:"boost_wave", dependencies:["boost_config", "boost_core", "boost_iterator", "boost_static_assert", "boost_spirit", "boost_assert", "boost_throw_exception", "boost_mpl", "boost_preprocessor", "boost_type_traits", "boost_detail", "boost_pool", "boost_integer", "boost_smart_ptr", "boost_optional", "boost_move", "boost_utility", "boost_thread", "boost_system", "boost_concept_check", "boost_date_time", "boost_numeric_conversion", "boost_chrono", "boost_predef", "boost_ratio", "boost_bind", "boost_atomic", "boost_filesystem", "boost_io", "boost_container_hash"], path:"boost-libs/wave", sources:["src"], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_winapi", path:"boost-libs/winapi", sources:[], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_xpressive", path:"boost-libs/xpressive", sources:[], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_yap", path:"boost-libs/yap", sources:[], publicHeadersPath:"include", packageAccess:true)
-    ]
+    ],
+    cxxLanguageStandard:.cxx14
 )
