@@ -290,7 +290,7 @@ let package = Package(
 		.target(name:"boost_tokenizer", path:"boost-libs/tokenizer", sources:[], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_tti", path:"boost-libs/tti", sources:[], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_tuple", path:"boost-libs/tuple", sources:[], publicHeadersPath:"include", packageAccess:true),
-		.target(name:"boost_type_erasure", path:"boost-libs/type_erasure", sources:[], publicHeadersPath:"include", packageAccess:true),
+		.target(name:"boost_type_erasure", dependencies:["boost_mpl", "boost_preprocessor", "boost_type_traits", "boost_mp11", "boost_typeof", "boost_assert", "boost_static_assert", "boost_throw_exception", "boost_utility", "boost_thread", "boost_bind", "boost_move", "boost_date_time", "boost_numeric_conversion", "boost_chrono", "boost_predef", "boost_ratio", "boost_integer", "boost_config", "boost_core", "boost_assert", "boost_system"], path:"boost-libs/type_erasure", sources:["src"], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_type_index", path:"boost-libs/type_index", sources:[], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_type_traits", path:"boost-libs/type_traits", sources:[], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_typeof", path:"boost-libs/typeof", sources:[], publicHeadersPath:"include", packageAccess:true),
