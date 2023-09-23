@@ -286,7 +286,7 @@ let package = Package(
 		.target(name:"boost_test", path:"boost-libs/test", sources:[], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_thread", path:"boost-libs/thread", sources:[], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_throw_exception", path:"boost-libs/throw_exception", sources:[], publicHeadersPath:"include", packageAccess:true),
-		.target(name:"boost_timer", path:"boost-libs/timer", sources:[], publicHeadersPath:"include", packageAccess:true),
+		.target(name:"boost_timer", dependencies:["boost_config", "boost_assert", "boost_io", "boost_predef"], path:"boost-libs/timer", sources:["src"], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_tokenizer", path:"boost-libs/tokenizer", sources:[], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_tti", path:"boost-libs/tti", sources:[], publicHeadersPath:"include", packageAccess:true),
 		.target(name:"boost_tuple", path:"boost-libs/tuple", sources:[], publicHeadersPath:"include", packageAccess:true),
