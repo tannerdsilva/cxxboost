@@ -11,7 +11,7 @@ struct MyCommand:CommandPlugin {
     func performCommand(context:PluginContext, arguments:[String]) throws {
     	let firstArgument = arguments.first!
     
-		let baseDir = context.pluginWorkDirectory
+		let baseDir = context.package.directory
 		
 		// name the build tool that we are going to run
 		let runTool = try context.tool(named:"_boost_master_prep")

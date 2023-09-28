@@ -151,7 +151,7 @@ struct PrepareBoostSource:AsyncParsableCommand {
 		// parse the output
 		mainLogger.info("building \(boostdepCommandResult.stdout.count) exclude graph for modules...")
 
-		var allModuleNames = Set(boostdepCommandResult.stdout.compactMap({ String(data:$0, encoding:.utf8) }))
+		var allModuleNames = Set(boostdepCommandResult.stdout.compactMap({ String(data:$0, encoding:.utf8)!.replacingNonAlphaWithUnderscores() }))
 		
 		// determine the excludes for all of the modules
 		let boostdepExcludesCommand = try Command(boostdepBuildDir.appendingPathComponent("boostdep").path, arguments:["--list-exceptions"], workingDirectory:boostPath)
@@ -182,9 +182,8 @@ struct PrepareBoostSource:AsyncParsableCommand {
 			}
 		}
 
-		for (module, excludes) in moduleExcludes {
-			mainLogger.info("module '\(module)' has \(excludes.count) excludes.")
-		}
+		// build a list of the buildable targets
+		let boostdepBuildableCommand = try Command(boostdepBuildDir.appendingPathComponent("boostdep").path, arguments:["--list-buildable"], workingDirectory:boostPath)
 	}
 }
 
