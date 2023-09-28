@@ -20,7 +20,6 @@ struct MyCommand:CommandPlugin {
 		let process = Process()
 		process.executableURL = URL(fileURLWithPath:runTool.path.string)
 		process.arguments = ["prepare-boost-source", "\(baseDir)", firstArgument]
-//		process.workingDirectory = context.pluginWorkDirectory
 
 		// run the build tool
 		try process.run()	

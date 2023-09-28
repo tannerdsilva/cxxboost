@@ -20,11 +20,27 @@ struct CLI:AsyncParsableCommand {
 	)
 }
 
-struct BoostModuleConfiguration:Codable {
+struct BoostSourceModule:Codable, Hashable {
+	static func processInputName(_ inputName:String, basedIn base:URL) -> (String, URL) {
+		if inputName.hasPrefix("numeric~") == true {
+			return (inputName, base.appendingPathComponent("numeric").appendingPathComponent(inputName.replacingOccurrences(of:"numeric~", with:"")))
+		} else {
+			return (inputName, base.appendingPathComponent(inputName))
+		}
+	}
+	// the name of the module
 	let name:String
-	var primaryDependencies:[String]
+	let sourcePath:URL
 	var excludes:[String]
 	var hasSource:Bool
+
+	init(boostdepListName:String, excludes:[String], hasSource:Bool, basedIn base:URL) {
+		let (name, path) = Self.processInputName(boostdepListName, basedIn:base)
+		self.name = name
+		self.sourcePath = path
+		self.excludes = excludes
+		self.hasSource = hasSource
+	}
 }
 
 struct GitTool {
@@ -90,11 +106,11 @@ struct PrepareBoostSource:AsyncParsableCommand {
 		let gitTool = GitTool(base:baseURL)
 		let allModules = try await gitTool.listSubmoduleNames()
 		for module in allModules {
-			mainLogger.info("removing submodule '\(module)'...")
+			mainLogger.info("removing existing boost submodule '\(module)'...")
 			try await gitTool.removeSubmodule(name:module)
 		}
 
-		mainLogger.info("removing boost")
+		mainLogger.info("removing existing boost source...")
 
 		// remove any of the current boost source code
 		if FileManager.default.fileExists(atPath:boostPath.path) {
@@ -139,7 +155,7 @@ struct PrepareBoostSource:AsyncParsableCommand {
 			throw ValidationError(message:"the command '\(makecommand)' failed with exit results \(makecommand.stdout.map { String(data:$0, encoding:.utf8) }).")
 		}
 
-		mainLogger.info("running boostdep...")
+		mainLogger.info("mapping code and graphs...")
 
 		// run the boostdep tool
 		let boostdepCommand = try Command(boostdepBuildDir.appendingPathComponent("boostdep").path, arguments:["--list-modules"], workingDirectory:boostPath)
@@ -148,11 +164,13 @@ struct PrepareBoostSource:AsyncParsableCommand {
 			throw ValidationError(message:"the command '\(boostdepCommand)' failed with exit code \(boostdepCommandResult.exitCode).")
 		}
 
-		// parse the output
-		mainLogger.info("building \(boostdepCommandResult.stdout.count) exclude graph for modules...")
-
-		var allModuleNames = Set(boostdepCommandResult.stdout.compactMap({ String(data:$0, encoding:.utf8)!.replacingNonAlphaWithUnderscores() }))
+		let allModuleNames = Set(boostdepCommandResult.stdout.compactMap({ String(data:$0, encoding:.utf8)!.trimmed() }))
 		
+		mainLogger.info("found \(allModuleNames.count) modules in boost source.")
+
+		// this is used to match the module names from the loose structure of boostdep output
+		let regexName = try! Regex<String>("^([a-zA-Z0-9_~]+):$")
+
 		// determine the excludes for all of the modules
 		let boostdepExcludesCommand = try Command(boostdepBuildDir.appendingPathComponent("boostdep").path, arguments:["--list-exceptions"], workingDirectory:boostPath)
 		let boostdepExcludesCommandResult = try await boostdepExcludesCommand.runSync()
@@ -165,31 +183,75 @@ struct PrepareBoostSource:AsyncParsableCommand {
 		var currentModule:String? = nil
 		for exclude in boostdepExcludesCommandResult.stdout {
 			let asString = String(data:exclude, encoding:.utf8)!
-			if asString.first?.isWhitespace == true {
+			if let firstMatch = asString.matches(of:regexName).first {
+				if (currentModule != nil) {
+					mainLogger.info("stored \(moduleExcludes[currentModule!]!.count) excludes for module '\(currentModule!)'.")
+				}
+				let matchedString = firstMatch.output
+				currentModule = matchedString
+			} else {
 				// this is an exclude. append it to the current module
 				let trimmed = asString.trimmed()
-				if moduleExcludes[currentModule!] == nil {
-					moduleExcludes[currentModule!] = []
+				if var hasCurrentExcludes = moduleExcludes[currentModule!] {
+					hasCurrentExcludes.append(trimmed)
+					mainLogger.debug("adding exclude '\(trimmed)' to module '\(currentModule!)'.")
+					moduleExcludes[currentModule!] = hasCurrentExcludes
+				} else {
+					moduleExcludes[currentModule!] = [trimmed]
 				}
-				moduleExcludes[currentModule!]!.append(trimmed)
-			} else {
-				// this is a module.
-				var modCurModule = asString.trimmed()
-				if modCurModule.hasSuffix(":") {
-					modCurModule.removeLast()
-				}
-				currentModule = modCurModule
 			}
 		}
 
 		// build a list of the buildable targets
-		let boostdepBuildableCommand = try Command(boostdepBuildDir.appendingPathComponent("boostdep").path, arguments:["--list-buildable"], workingDirectory:boostPath)
+		let boostdepBuildableCommand = try await Command(boostdepBuildDir.appendingPathComponent("boostdep").path, arguments:["--list-buildable"], workingDirectory:boostdepBuildDir).runSync()
+		guard boostdepBuildableCommand.exitCode == 0 else {
+			throw ValidationError(message:"the command '\(boostdepBuildableCommand)' failed with exit code \(boostdepBuildableCommand.exitCode).")
+		}
+		let buildableTargets = Set(boostdepBuildableCommand.stdout.compactMap({ String(data:$0, encoding:.utf8)!.trimmed() }))
+
+		var moduleBuild = [String:BoostSourceModule]()
+		for moduleName in allModuleNames {
+			let excludes = moduleExcludes[moduleName] ?? []
+			let hasSource = buildableTargets.contains(moduleName)
+			let newModule = BoostSourceModule(boostdepListName:moduleName, excludes:excludes, hasSource:hasSource, basedIn:boostPath)
+			moduleBuild[moduleName] = newModule
+
+		}
+		var moduleDependencies:[String:Set<BoostSourceModule>] = [:]
+		for moduleName in allModuleNames {
+
+			// acquire all of the dependencies for each target
+			let boostdepPrimaryDependenciesCommandResult = try await Command(boostdepBuildDir.appendingPathComponent("boostdep").path, arguments:["--primary", ], workingDirectory:boostPath).runSync()
+			guard boostdepPrimaryDependenciesCommandResult.exitCode == 0 else {
+				throw ValidationError(message:"the command '\(boostdepPrimaryDependenciesCommandResult)' failed with exit code \(boostdepPrimaryDependenciesCommandResult.exitCode).")
+			}
+
+			guard boostdepPrimaryDependenciesCommandResult.stdout.count > 0 else {
+				throw ValidationError(message:"the command '\(boostdepPrimaryDependenciesCommandResult)' failed with exit code \(boostdepPrimaryDependenciesCommandResult.exitCode).")
+			}
+
+			// list the module dependencies
+			for curDat in boostdepPrimaryDependenciesCommandResult.stdout.dropFirst() {
+				let getString = String(data:curDat, encoding:.utf8)!
+				if let firstMatch = getString.matches(of:regexName).first {
+					let matchedString = firstMatch.output
+					if var hasMatch = moduleDependencies[moduleName] {
+						hasMatch.update(with:moduleBuild[matchedString]!)
+						moduleDependencies[moduleName] = hasMatch
+						mainLogger.debug("adding dependency '\(matchedString)' to module '\(moduleName)'.")
+					} else {
+						moduleDependencies[moduleName] = [moduleBuild[matchedString]!]
+					}
+				}
+			}
+		}
+
 	}
 }
 
 extension String {
     func trimmed() -> String {
-        return self.trimmingCharacters(in: .whitespacesAndNewlines)
+        return self.trimmingCharacters(in:.whitespacesAndNewlines)
     }
 	func replacingNonAlphaWithUnderscores() -> String {
 		var replaceString = ""
