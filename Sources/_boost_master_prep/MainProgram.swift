@@ -2,6 +2,7 @@ import ArgumentParser
 import SwiftSlash
 import Foundation
 import Logging
+// import
 
 struct ValidationError:Swift.Error {
 	let message:String
@@ -21,26 +22,34 @@ struct CLI:AsyncParsableCommand {
 }
 
 struct BoostSourceModule:Codable, Hashable {
-	static func processInputName(_ inputName:String, basedIn base:URL) -> (String, URL) {
+	static func processInputName(_ inputName:String, basedIn base:URL) -> (String, String, URL) {
 		if inputName.hasPrefix("numeric~") == true {
-			return (inputName, base.appendingPathComponent("numeric").appendingPathComponent(inputName.replacingOccurrences(of:"numeric~", with:"")))
+			return (inputName, "cxxboost_" + inputName.replacingOccurrences(of:"~", with: "-"), base.appendingPathComponent("numeric").appendingPathComponent(inputName.replacingOccurrences(of:"numeric~", with:"")))
 		} else {
-			return (inputName, base.appendingPathComponent(inputName))
+			return (inputName, "cxxboost_" + inputName, base.appendingPathComponent(inputName))
 		}
 	}
 	// the name of the module
-	let name:String
-	let sourcePath:URL
+	let boostdepName:String
+	let packageName:String
+	let basePath:URL
 	var excludes:[String]
 	var hasSource:Bool
 
 	init(boostdepListName:String, excludes:[String], hasSource:Bool, basedIn base:URL) {
-		let (name, path) = Self.processInputName(boostdepListName, basedIn:base)
-		self.name = name
-		self.sourcePath = path
+		let (boostName, ourName, path) = Self.processInputName(boostdepListName, basedIn:base)
+		
+		self.boostdepName = boostName
+		self.packageName = ourName
+		self.basePath = path
 		self.excludes = excludes
 		self.hasSource = hasSource
 	}
+}
+
+struct PackageDescriptionWithDependencies {
+	let source:BoostSourceModule
+	let primaryDepends:[BoostSourceModule]
 }
 
 struct GitTool {
@@ -96,7 +105,8 @@ struct PrepareBoostSource:AsyncParsableCommand {
 	var checkout:String
 
 	mutating func run() async throws {
-		let mainLogger = Logger(label:"boost-build-plugin")
+		var mainLogger = Logger(label:"boost-build-plugin")
+		mainLogger.logLevel = .debug
 
 		// lay out the basics
 		let baseURL = URL(fileURLWithPath:sourceBase)
@@ -169,7 +179,7 @@ struct PrepareBoostSource:AsyncParsableCommand {
 		mainLogger.info("found \(allModuleNames.count) modules in boost source.")
 
 		// this is used to match the module names from the loose structure of boostdep output
-		let regexName = try! Regex<String>("^([a-zA-Z0-9_~]+):$")
+		let regexName = try! Regex<(Substring, Substring)>("^([a-zA-Z0-9_~]+):$")
 
 		// determine the excludes for all of the modules
 		let boostdepExcludesCommand = try Command(boostdepBuildDir.appendingPathComponent("boostdep").path, arguments:["--list-exceptions"], workingDirectory:boostPath)
@@ -183,12 +193,13 @@ struct PrepareBoostSource:AsyncParsableCommand {
 		var currentModule:String? = nil
 		for exclude in boostdepExcludesCommandResult.stdout {
 			let asString = String(data:exclude, encoding:.utf8)!
+			
 			if let firstMatch = asString.matches(of:regexName).first {
 				if (currentModule != nil) {
 					mainLogger.info("stored \(moduleExcludes[currentModule!]!.count) excludes for module '\(currentModule!)'.")
 				}
 				let matchedString = firstMatch.output
-				currentModule = matchedString
+				currentModule = String(matchedString.0)
 			} else {
 				// this is an exclude. append it to the current module
 				let trimmed = asString.trimmed()
@@ -203,7 +214,7 @@ struct PrepareBoostSource:AsyncParsableCommand {
 		}
 
 		// build a list of the buildable targets
-		let boostdepBuildableCommand = try await Command(boostdepBuildDir.appendingPathComponent("boostdep").path, arguments:["--list-buildable"], workingDirectory:boostdepBuildDir).runSync()
+		let boostdepBuildableCommand = try await Command(boostdepBuildDir.appendingPathComponent("boostdep").path, arguments:["--list-buildable"], workingDirectory:boostPath).runSync()
 		guard boostdepBuildableCommand.exitCode == 0 else {
 			throw ValidationError(message:"the command '\(boostdepBuildableCommand)' failed with exit code \(boostdepBuildableCommand.exitCode).")
 		}
@@ -221,20 +232,20 @@ struct PrepareBoostSource:AsyncParsableCommand {
 		for moduleName in allModuleNames {
 
 			// acquire all of the dependencies for each target
-			let boostdepPrimaryDependenciesCommandResult = try await Command(boostdepBuildDir.appendingPathComponent("boostdep").path, arguments:["--primary", ], workingDirectory:boostPath).runSync()
+			let boostdepPrimaryDependenciesCommand = try Command(boostdepBuildDir.appendingPathComponent("boostdep").path, arguments:["--primary", moduleName], workingDirectory:boostPath)
+			let boostdepPrimaryDependenciesCommandResult = try await boostdepPrimaryDependenciesCommand.runSync()
 			guard boostdepPrimaryDependenciesCommandResult.exitCode == 0 else {
-				throw ValidationError(message:"the command '\(boostdepPrimaryDependenciesCommandResult)' failed with exit code \(boostdepPrimaryDependenciesCommandResult.exitCode).")
+				throw ValidationError(message:"the command '\(boostdepPrimaryDependenciesCommand)' failed with exit code \(boostdepPrimaryDependenciesCommandResult.exitCode).")
 			}
-
 			guard boostdepPrimaryDependenciesCommandResult.stdout.count > 0 else {
-				throw ValidationError(message:"the command '\(boostdepPrimaryDependenciesCommandResult)' failed with exit code \(boostdepPrimaryDependenciesCommandResult.exitCode).")
+				throw ValidationError(message:"the command '\(boostdepPrimaryDependenciesCommand)' failed with exit code \(boostdepPrimaryDependenciesCommandResult.exitCode).")
 			}
 
 			// list the module dependencies
 			for curDat in boostdepPrimaryDependenciesCommandResult.stdout.dropFirst() {
 				let getString = String(data:curDat, encoding:.utf8)!
 				if let firstMatch = getString.matches(of:regexName).first {
-					let matchedString = firstMatch.output
+					let matchedString = String(firstMatch.output.1)
 					if var hasMatch = moduleDependencies[moduleName] {
 						hasMatch.update(with:moduleBuild[matchedString]!)
 						moduleDependencies[moduleName] = hasMatch

@@ -23,6 +23,9 @@ let package = Package(
 			.product(name:"SwiftSlash", package:"SwiftSlash"),
 			.product(name:"ArgumentParser", package:"swift-argument-parser"),
 			.product(name:"Logging", package:"swift-log"),
+			.product(name:"SwiftSyntax", package:"swift-syntax"),
+			.product(name:"SwiftSyntaxBuilder", package:"swift-syntax"),
+			.product(name:"SwiftParser", package:"swift-syntax"),
 		]),
 		.plugin(name:"_boost_master_prep_plugin", capability:.command(
 			intent:.custom(verb:"prepare", description:"prepare boost and all of its submodules from source for building."), permissions: [.allowNetworkConnections(scope:.all(), reason:"downloading boost source code"), .writeToPackageDirectory(reason:"needs to manage submodules in master repo")]
