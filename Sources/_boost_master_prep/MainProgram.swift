@@ -127,7 +127,7 @@ struct PrepareBoostSource:AsyncParsableCommand {
 			try FileManager.default.removeItem(atPath:boostPath.path)
 		}
 
-		mainLogger.info("acquiring boost source code from '\(sourceBase)'...this may take some time, since boost has many submodules...")
+		mainLogger.info("acquiring boost source code with git...this may take some time, since boost has many submodules...")
 
 		// checkout the boost source code
 		let checkoutCommand = try await Command("git", arguments:["clone", "https://github.com/boostorg/boost.git"], workingDirectory:URL(fileURLWithPath:sourceBase)).runSync()
@@ -257,6 +257,22 @@ struct PrepareBoostSource:AsyncParsableCommand {
 			}
 		}
 
+		// write the package.swift files
+		let moduleDirectory = baseURL.appendingPathComponent("Modules")
+		for curPackage in moduleBuild {
+			let currentModulePath = moduleDirectory.appendingPathComponent(curPackage.value.packageName)
+			let packageDescription = PackageDescriptionWithDependencies(source:curPackage.value, primaryDepends:Array(moduleDependencies[curPackage.key] ?? []))
+			let source = packageDescription.generatePackageDescriptionSourceCode()
+			let formattedString = source.formatted().description
+
+			// create the directory if it does not exist
+			if FileManager.default.fileExists(atPath:currentModulePath.path) == false {
+				mainLogger.info("creating directory '\(currentModulePath.path)'...")
+				try FileManager.default.createDirectory(at:currentModulePath, withIntermediateDirectories:true, attributes:nil)
+			}
+			mainLogger.info("writing package description for module '\(curPackage.value.packageName)'...")
+			try formattedString.write(to:currentModulePath.appendingPathComponent("Package.swift"), atomically:true, encoding:.utf8)
+		}
 	}
 }
 
@@ -295,39 +311,6 @@ struct PrepareModule:AsyncParsableCommand {
 
 	mutating func run() async throws {
 		let mainLogger = Logger(label:"boost-build-plugin")
-
-		// create the content for the package.swift file
-		let packageContent = """
-		// swift-tools-version: 5.9
-		import PackageDescription
-		let package = Package(
-			name: "\(moduleName)",
-			products: [
-				.library(
-					name: "\(moduleName)",
-					targets: ["\(moduleName)"]),
-			],
-			targets: [
-				.target(
-					name: "\(moduleName)",
-					path:"./",
-					exclude:["\(moduleName)"],
-					sources:[],
-					publicHeadersPath:"include"),
-			]
-		)
-		"""
-
-		// define the module path
-		let modulePath = URL(fileURLWithPath:moduleBase).appendingPathComponent(moduleName)
-
-		// create the directory if it doesn't exist
-		if !FileManager.default.fileExists(atPath:modulePath.path) {
-			try FileManager.default.createDirectory(at:modulePath, withIntermediateDirectories:true, attributes:nil)
-		}
-
-		// write the file
-		try packageContent.write(to:modulePath.appendingPathComponent("Package.swift"), atomically:true, encoding:.utf8)
 
 		// add the git submodule
 		let addCommand = try await Command("git", arguments:["submodule", "add", "https://github.com/boostorg/\(moduleName).git"], workingDirectory:modulePath).runSync()
