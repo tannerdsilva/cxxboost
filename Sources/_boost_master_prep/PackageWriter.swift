@@ -84,8 +84,14 @@ extension PackageDescriptionWithDependencies {
 		let packageVariable = VariableDeclSyntax(attributes:AttributeListSyntax(), modifiers:DeclModifierListSyntax(), bindingSpecifier:TokenSyntax.keyword(.`let`), bindings:patternInitList)
 		return SourceFileSyntax {
 			CodeBlockItemListSyntax {
-				packageVariable
+				ImportDeclSyntax(leadingTrivia:Trivia.lineComment("// swift-tools-version: 5.9\n"), attributes:AttributeListSyntax(), modifiers:DeclModifierListSyntax(), importKeyword:TokenSyntax.keyword(.`import`), path:ImportPathComponentListSyntax([
+					ImportPathComponentSyntax(name:TokenSyntax.identifier("PackageDescription"))
+				]), trailingTrivia:Trivia.newlines(1))
+				CodeBlockItemListSyntax {
+					packageVariable
+				}
 			}
+			
 		}
 	}
 }

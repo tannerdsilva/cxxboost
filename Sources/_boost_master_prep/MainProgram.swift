@@ -21,19 +21,31 @@ struct CLI:AsyncParsableCommand {
 	)
 }
 
+// represents a module in the boost source code.
 struct BoostSourceModule:Codable, Hashable {
+
+	// this is used to match the module names from the loose structure of boostdep output
 	static func processInputName(_ inputName:String, basedIn base:URL) -> (String, String, URL) {
 		if inputName.hasPrefix("numeric~") == true {
-			return (inputName, "cxxboost_" + inputName.replacingOccurrences(of:"~", with: "-"), base.appendingPathComponent("numeric").appendingPathComponent(inputName.replacingOccurrences(of:"numeric~", with:"")))
+			return (inputName, "cxxboost_" + inputName.replacingOccurrences(of:"~", with: "-"), base.appendingPathComponent("libs").appendingPathComponent("numeric").appendingPathComponent(inputName.replacingOccurrences(of:"numeric~", with:"")))
 		} else {
-			return (inputName, "cxxboost_" + inputName, base.appendingPathComponent(inputName))
+			return (inputName, "cxxboost_" + inputName, base.appendingPathComponent("libs").appendingPathComponent(inputName))
 		}
 	}
-	// the name of the module
+
+	// the name of the module as provided by the boostdep output
 	let boostdepName:String
+
+	// the name of the module as it will be used in the swift package
 	let packageName:String
+
+	// the path to the source code of this module
 	let basePath:URL
+
+	// the excludes for this module
 	var excludes:[String]
+
+	// indicates whether or not this module has source code
 	var hasSource:Bool
 
 	init(boostdepListName:String, excludes:[String], hasSource:Bool, basedIn base:URL) {
@@ -99,17 +111,25 @@ struct PrepareBoostSource:AsyncParsableCommand {
 	)
 
 	@Argument(help:"the relative path to the swift package source directory.")
-	var sourceBase:String
+	var workingBase:String
+
+	@Argument(help:"the relative path to the swift package source directory.")
+	var packageBase:String
 
 	@Argument(help:"the commit hash or tag to checkout and prepare")
-	var checkout:String
+	var boostCheckout:String
 
 	mutating func run() async throws {
 		var mainLogger = Logger(label:"boost-build-plugin")
 		mainLogger.logLevel = .debug
 
+		mainLogger.critical("preparing boost source code for building in the swift package manager. this will take some time...")
+
 		// lay out the basics
-		let baseURL = URL(fileURLWithPath:sourceBase)
+		let baseURL = URL(fileURLWithPath:workingBase)
+
+		mainLogger.notice("working out of directory '\(baseURL.path)'")
+		
 		let boostPath = baseURL.appendingPathComponent("boost")
 
 		// remove the old source and any of the submodules that might have correlated
@@ -130,13 +150,13 @@ struct PrepareBoostSource:AsyncParsableCommand {
 		mainLogger.info("acquiring boost source code with git...this may take some time, since boost has many submodules...")
 
 		// checkout the boost source code
-		let checkoutCommand = try await Command("git", arguments:["clone", "https://github.com/boostorg/boost.git"], workingDirectory:URL(fileURLWithPath:sourceBase)).runSync()
+		let checkoutCommand = try await Command("git", arguments:["clone", "https://github.com/boostorg/boost.git"], workingDirectory:baseURL).runSync()
 		guard checkoutCommand.exitCode == 0 else {
 			throw ValidationError(message:"the command '\(checkoutCommand)' failed with exit code \(checkoutCommand.exitCode).")
 		}
 
 		// checkout the correct commit
-		let checkoutCommitCommand = try await Command("git", arguments:["checkout", checkout], workingDirectory:baseURL.appendingPathComponent("boost")).runSync()
+		let checkoutCommitCommand = try await Command("git", arguments:["checkout", boostCheckout], workingDirectory:baseURL.appendingPathComponent("boost")).runSync()
 		guard checkoutCommitCommand.exitCode == 0 else {
 			throw ValidationError(message:"the command '\(checkoutCommitCommand)' failed with exit code \(checkoutCommitCommand.exitCode).")
 		}
@@ -258,7 +278,7 @@ struct PrepareBoostSource:AsyncParsableCommand {
 		}
 
 		// write the package.swift files
-		let moduleDirectory = baseURL.appendingPathComponent("Modules")
+		let moduleDirectory = URL(fileURLWithPath:packageBase).appendingPathComponent("Modules")
 		for curPackage in moduleBuild {
 			let currentModulePath = moduleDirectory.appendingPathComponent(curPackage.value.packageName)
 			let packageDescription = PackageDescriptionWithDependencies(source:curPackage.value, primaryDepends:Array(moduleDependencies[curPackage.key] ?? []))
@@ -272,6 +292,31 @@ struct PrepareBoostSource:AsyncParsableCommand {
 			}
 			mainLogger.info("writing package description for module '\(curPackage.value.packageName)'...")
 			try formattedString.write(to:currentModulePath.appendingPathComponent("Package.swift"), atomically:true, encoding:.utf8)
+
+			// create the symbolic links for the include directory
+			let boostSourceModulePath = curPackage.value.basePath
+
+			// remove the old symbolic links
+			let sourceIncludePath = boostSourceModulePath.appendingPathComponent("include")
+			let boostPackageIncludePath = currentModulePath.appendingPathComponent("include")
+			if FileManager.default.fileExists(atPath:boostPackageIncludePath.path) {
+				mainLogger.info("removing old include directory for module '\(curPackage.value.packageName)'...")
+				try FileManager.default.removeItem(at:boostPackageIncludePath)
+			}
+			try FileManager.default.createSymbolicLink(at:boostPackageIncludePath, withDestinationURL:sourceIncludePath)
+			mainLogger.info("created symbolic link for include directory.", metadata:["source":"\(sourceIncludePath.path)", "destination":"\(boostPackageIncludePath.path)"])
+			
+			// create the symbolic links for the source directory (if the module has source)
+			if curPackage.value.hasSource == true {
+				let sourceSourcePath = boostSourceModulePath.appendingPathComponent("src")
+				let boostPackageSourcePath = currentModulePath.appendingPathComponent("src")
+				if FileManager.default.fileExists(atPath:boostPackageSourcePath.path) {
+					mainLogger.info("removing old source directory for module '\(curPackage.value.packageName)'...")
+					try FileManager.default.removeItem(at:boostPackageSourcePath)
+				}
+				try FileManager.default.createSymbolicLink(at:boostPackageSourcePath, withDestinationURL:sourceSourcePath)
+				mainLogger.info("created symbolic link for the source directory.", metadata:["source":"\(sourceSourcePath.path)", "destination":"\(boostPackageSourcePath.path)"])
+			}
 		}
 	}
 }
@@ -311,6 +356,8 @@ struct PrepareModule:AsyncParsableCommand {
 
 	mutating func run() async throws {
 		let mainLogger = Logger(label:"boost-build-plugin")
+
+		let modulePath = URL(fileURLWithPath:moduleBase).appendingPathComponent(moduleName)
 
 		// add the git submodule
 		let addCommand = try await Command("git", arguments:["submodule", "add", "https://github.com/boostorg/\(moduleName).git"], workingDirectory:modulePath).runSync()

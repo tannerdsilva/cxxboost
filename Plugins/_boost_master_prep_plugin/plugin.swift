@@ -12,6 +12,7 @@ struct MyCommand:CommandPlugin {
     	let firstArgument = arguments.first!
     
 		let baseDir = context.package.directory
+		let workDirectory = context.pluginWorkDirectory
 		
 		// name the build tool that we are going to run
 		let runTool = try context.tool(named:"_boost_master_prep")
@@ -19,7 +20,7 @@ struct MyCommand:CommandPlugin {
 		// run the build tool
 		let process = Process()
 		process.executableURL = URL(fileURLWithPath:runTool.path.string)
-		process.arguments = ["prepare-boost-source", "\(baseDir)", firstArgument]
+		process.arguments = ["prepare-boost-source", workDirectory.string, baseDir.string, firstArgument]
 
 		// run the build tool
 		try process.run()	
