@@ -2,7 +2,8 @@ import ArgumentParser
 import SwiftSlash
 import Foundation
 import Logging
-// import
+import SwiftParser
+import SwiftSyntax
 
 struct ValidationError:Swift.Error {
 	let message:String
@@ -10,19 +11,64 @@ struct ValidationError:Swift.Error {
 
 @main
 struct CLI:AsyncParsableCommand {
-	static var configuration = CommandConfiguration(
+	static let configuration = CommandConfiguration(
 		commandName:"_build_master_prep",
 		abstract:"prepares the boost source directory for building.",
 		subcommands:[
 			PrepareModule.self,
 			// BoostdepBuilder.self,
-			PrepareBoostSource.self
+			PrepareBoostSource.self,
+			ParseConditions.self,
 		]
 	)
 }
 
+struct ConditionsReader {
+	let conditions:Dictionary<String, ArrayExprSyntax>
+	init(packageURL:URL) throws {
+		var myLogger = Logger(label:"boost-build-plugin")
+		myLogger.logLevel = .info
+		let asURL = packageURL.appendingPathComponent("Conditions.swift")
+		let readData = try Data(contentsOf:asURL)
+		let readString = String(data:readData, encoding:.utf8)!
+		let syntaxParser = Parser.parse(source:readString)
+		let allExceptions = try syntaxParser.parsePackageConditionConfig(logger:myLogger)
+		self.conditions = allExceptions
+	}
+}
+
+struct ParseConditions:AsyncParsableCommand {
+	static let configuration = CommandConfiguration(
+		commandName:"parse-conditions",
+		abstract:"parses the conditions.swift file and generates a package.swift file."
+	)
+
+	@Argument(help:"the path to the conditions.swift file.")
+	var conditionsFilePath:String
+
+	mutating func run() async throws {
+		var myLogger = Logger(label:"boost-build-plugin")
+		myLogger.logLevel = .trace
+		let asURL = URL(fileURLWithPath:conditionsFilePath)
+
+		let readData = try Data(contentsOf:asURL)
+		let readString = String(data:readData, encoding:.utf8)!
+
+
+		let syntaxParser = Parser.parse(source:readString)
+		let myThing = try syntaxParser.parsePackageConditionConfig(logger:myLogger)
+		
+	}
+}
+
+
 // represents a module in the boost source code.
-struct BoostSourceModule:Codable, Hashable {
+struct BoostSourceModule:Hashable {
+
+	enum ModuleMapHeader:Hashable, Equatable {
+		case headerFile(String)
+		case headerDirectory(String)
+	}
 
 	// this is used to match the module names from the loose structure of boostdep output
 	static func processInputName(_ inputName:String, basedIn base:URL) -> (String, String, URL) {
@@ -43,25 +89,120 @@ struct BoostSourceModule:Codable, Hashable {
 	let basePath:URL
 
 	// the excludes for this module
-	var excludes:[String]
+	let includeHeaders:[ModuleMapHeader]
 
 	// indicates whether or not this module has source code
 	var hasSource:Bool
 
-	init(boostdepListName:String, excludes:[String], hasSource:Bool, basedIn base:URL) {
+	// the excludes for this module
+	let excludesArr:ArrayExprSyntax?
+
+	init(boostdepListName:String, hasSource:Bool, basedIn base:URL, excludesArrs:[String:ArrayExprSyntax]?, logger:Logger) throws {
 		let (boostName, ourName, path) = Self.processInputName(boostdepListName, basedIn:base)
-		
 		self.boostdepName = boostName
 		self.packageName = ourName
 		self.basePath = path
-		self.excludes = excludes
 		self.hasSource = hasSource
+		self.excludesArr = excludesArrs?[ourName]
+		
+		let sourceIncludeDir = path.appendingPathComponent("include", isDirectory:true)
+		let sourceIncludeBoostDir = sourceIncludeDir.appendingPathComponent("boost", isDirectory:true)
+		let includeContents = try FileManager.default.contentsOfDirectory(atPath:sourceIncludeBoostDir.path)
+		var includeHeaders = [ModuleMapHeader]()
+		
+		for curContent in includeContents {
+			if curContent.hasSuffix(".hpp") {
+				includeHeaders.append(.headerFile(curContent))
+			} else if curContent.contains(".") == false {
+				includeHeaders.append(.headerDirectory(curContent))
+			}
+		}
+		self.includeHeaders = includeHeaders
+		let sourceSourceDir = path.appendingPathComponent("src", isDirectory:true)
+
+		// determine if the module directory exists
+		guard FileManager.default.fileExists(atPath:path.path) else {
+			throw ValidationError(message:"the module '\(path.path)' does not exist.")
+		}
+	}
+
+	func generateTargetDependencyLine() -> FunctionCallExprSyntax {
+		let declRefExpr = DeclReferenceExprSyntax(baseName:TokenSyntax.identifier("product"))
+		let memberAccessExpr = MemberAccessExprSyntax(period:TokenSyntax.periodToken(), declName:declRefExpr)
+
+		let nameLabel = LabeledExprSyntax(label:"name", colon:TokenSyntax.colonToken(), expression:StringLiteralExprSyntax(content:self.packageName), trailingComma:TokenSyntax.commaToken())
+		let packageLabel = LabeledExprSyntax(label:"package", colon:TokenSyntax.colonToken(), expression:StringLiteralExprSyntax(content:"_boost_master_prep"), trailingComma:TokenSyntax.commaToken())
+	
+		let labeledList = LabeledExprListSyntax([
+			nameLabel,
+			packageLabel
+		])
+
+		return FunctionCallExprSyntax(calledExpression:memberAccessExpr, leftParen:TokenSyntax.leftParenToken(), arguments:labeledList, rightParen:TokenSyntax.rightParenToken(), trailingClosure:nil)
+	}
+
+	func generateModuleMapContents() -> String {
+		var moduleMapContent = "module \(self.packageName) [system] {\n"
+		for curEntry in self.includeHeaders {
+			switch curEntry {
+				case .headerFile(let headerName):
+					moduleMapContent += "\theader \"./boost/\(headerName)\"\n"
+				case .headerDirectory(let headerName):
+					moduleMapContent += "\theader \"./boost/\(headerName)/*\"\n"
+			}
+		}
+		moduleMapContent += "\texport *\n"
+		moduleMapContent += "}"
+		return moduleMapContent
 	}
 }
 
 struct PackageDescriptionWithDependencies {
 	let source:BoostSourceModule
 	let primaryDepends:[BoostSourceModule]
+
+	let targetNameLabel:LabeledExprSyntax
+	let targetDependenciesLabel:LabeledExprSyntax
+	let targetPathLabel:LabeledExprSyntax
+	let targetExcludesLabel:LabeledExprSyntax
+	let targetSourcesLabel:LabeledExprSyntax
+	let publicHeadersPathLabel:LabeledExprSyntax
+	let packageAccessLabel:LabeledExprSyntax
+
+	init(source:BoostSourceModule, primaryDepends:[BoostSourceModule]) {
+		self.source = source
+		self.primaryDepends = primaryDepends
+
+		// target stuff
+		self.targetNameLabel = LabeledExprSyntax(label:TokenSyntax.identifier("name"), colon:.colonToken(), expression:StringLiteralExprSyntax(content:self.source.packageName), trailingComma:.commaToken())
+		self.targetDependenciesLabel = LabeledExprSyntax(label:TokenSyntax.identifier("dependencies"), colon:.colonToken(), expression:ArrayExprSyntax(elements:ArrayElementListSyntax {
+			for (i, dependency) in primaryDepends.enumerated().reversed() {
+				switch i {
+					case 0:
+						ArrayElementSyntax(expression:StringLiteralExprSyntax(content:dependency.packageName))
+					default:
+						ArrayElementSyntax(expression:StringLiteralExprSyntax(content:dependency.packageName))
+				}
+			}
+		}), trailingComma:TokenSyntax.commaToken())
+		self.targetPathLabel = LabeledExprSyntax(label:TokenSyntax.identifier("path"), colon:.colonToken(), expression:StringLiteralExprSyntax(content:"./"), trailingComma:TokenSyntax.commaToken())
+		self.targetExcludesLabel = LabeledExprSyntax(label:TokenSyntax.identifier("exclude"), colon:.colonToken(), expression:ArrayExprSyntax(elements:ArrayElementListSyntax {
+		}), trailingComma:TokenSyntax.commaToken())
+		let targetSourcesLabel:LabeledExprSyntax
+		if (self.source.hasSource == true) {
+			// enable the source directory
+			targetSourcesLabel = LabeledExprSyntax(label:TokenSyntax.identifier("sources"), colon:.colonToken(), expression:ArrayExprSyntax(elements:[
+				ArrayElementSyntax(expression:StringLiteralExprSyntax(content:"src"))
+			]), trailingComma:TokenSyntax.commaToken())
+		} else {
+			// explicitly empty source directory
+			targetSourcesLabel = LabeledExprSyntax(label:TokenSyntax.identifier("sources"), colon:.colonToken(), expression:ArrayExprSyntax(elements:ArrayElementListSyntax {}), trailingComma:TokenSyntax.commaToken())
+		}
+		self.targetSourcesLabel = targetSourcesLabel
+		self.publicHeadersPathLabel = LabeledExprSyntax(label:TokenSyntax.identifier("publicHeadersPath"), colon:.colonToken(), expression:StringLiteralExprSyntax(content:"include"), trailingComma:TokenSyntax.commaToken())
+		self.packageAccessLabel = LabeledExprSyntax(label:TokenSyntax.identifier("packageAccess"), colon:.colonToken(), expression:BooleanLiteralExprSyntax(booleanLiteral:false))
+		
+	}
 }
 
 struct GitTool {
@@ -119,9 +260,12 @@ struct PrepareBoostSource:AsyncParsableCommand {
 	@Argument(help:"the commit hash or tag to checkout and prepare")
 	var boostCheckout:String
 
+	@Flag(help:"indicates whether or not to clean the build directory before building.")
+	var cleanBuild:Bool = false
+
 	mutating func run() async throws {
 		var mainLogger = Logger(label:"boost-build-plugin")
-		mainLogger.logLevel = .debug
+		mainLogger.logLevel = .trace
 
 		mainLogger.critical("preparing boost source code for building in the swift package manager. this will take some time...")
 
@@ -143,8 +287,10 @@ struct PrepareBoostSource:AsyncParsableCommand {
 		mainLogger.info("removing existing boost source...")
 
 		// remove any of the current boost source code
-		if FileManager.default.fileExists(atPath:boostPath.path) {
-			try FileManager.default.removeItem(atPath:boostPath.path)
+		if (cleanBuild == true) {
+			if FileManager.default.fileExists(atPath:boostPath.path) {
+				try FileManager.default.removeItem(atPath:boostPath.path)
+			}
 		}
 
 		mainLogger.info("acquiring boost source code with git...this may take some time, since boost has many submodules...")
@@ -155,7 +301,7 @@ struct PrepareBoostSource:AsyncParsableCommand {
 			throw ValidationError(message:"the command '\(checkoutCommand)' failed with exit code \(checkoutCommand.exitCode).")
 		}
 
-		// checkout the correct commit
+		// // checkout the correct commit
 		let checkoutCommitCommand = try await Command("git", arguments:["checkout", boostCheckout], workingDirectory:baseURL.appendingPathComponent("boost")).runSync()
 		guard checkoutCommitCommand.exitCode == 0 else {
 			throw ValidationError(message:"the command '\(checkoutCommitCommand)' failed with exit code \(checkoutCommitCommand.exitCode).")
@@ -169,17 +315,22 @@ struct PrepareBoostSource:AsyncParsableCommand {
 			throw ValidationError(message:"the command '\(gitSubmoduleCommand)' failed with exit code \(gitSubmoduleCommand.exitCode).")
 		}
 
-		// now we need to build boostdep
-
 		// build more paths. we are navigating to the boostdep tool.
 		let boostTools = boostPath.appendingPathComponent("tools")
 		let boostToolBoostdep = boostTools.appendingPathComponent("boostdep")
 		let boostdepBuildDir = boostToolBoostdep.appendingPathComponent("build")
 
-		// build boostdep
+		mainLogger.info("bootstrapping boost...")
+
+		// bootstrap the project
+		let boostrapCommand = try await Command(bash:"./bootstrap.sh", workingDirectory:boostPath).runSync()
+		guard boostrapCommand.exitCode == 0 else {
+			throw ValidationError(message:"the command '\(boostrapCommand)' failed with exit code \(boostrapCommand.exitCode).")
+		}
 
 		mainLogger.info("building boostdep...")
 
+		// build boostdep
 		let makecommand = try await Command(bash:"cmake .. && make", workingDirectory:boostdepBuildDir).runSync()
 		guard makecommand.exitCode == 0 else {
 			throw ValidationError(message:"the command '\(makecommand)' failed with exit results \(makecommand.stdout.map { String(data:$0, encoding:.utf8) }).")
@@ -199,39 +350,7 @@ struct PrepareBoostSource:AsyncParsableCommand {
 		mainLogger.info("found \(allModuleNames.count) modules in boost source.")
 
 		// this is used to match the module names from the loose structure of boostdep output
-		let regexName = try! Regex<(Substring, Substring)>("^([a-zA-Z0-9_~]+):$")
-
-		// determine the excludes for all of the modules
-		let boostdepExcludesCommand = try Command(boostdepBuildDir.appendingPathComponent("boostdep").path, arguments:["--list-exceptions"], workingDirectory:boostPath)
-		let boostdepExcludesCommandResult = try await boostdepExcludesCommand.runSync()
-		guard boostdepExcludesCommandResult.exitCode == 0 else {
-			throw ValidationError(message:"the command '\(boostdepExcludesCommand)' failed with exit code \(boostdepExcludesCommandResult.exitCode).")
-		}
-
-		// build a hashmap of the excludes and their associated modules
-		var moduleExcludes:[String:[String]] = [:]
-		var currentModule:String? = nil
-		for exclude in boostdepExcludesCommandResult.stdout {
-			let asString = String(data:exclude, encoding:.utf8)!
-			
-			if let firstMatch = asString.matches(of:regexName).first {
-				if (currentModule != nil) {
-					mainLogger.info("stored \(moduleExcludes[currentModule!]!.count) excludes for module '\(currentModule!)'.")
-				}
-				let matchedString = firstMatch.output
-				currentModule = String(matchedString.0)
-			} else {
-				// this is an exclude. append it to the current module
-				let trimmed = asString.trimmed()
-				if var hasCurrentExcludes = moduleExcludes[currentModule!] {
-					hasCurrentExcludes.append(trimmed)
-					mainLogger.debug("adding exclude '\(trimmed)' to module '\(currentModule!)'.")
-					moduleExcludes[currentModule!] = hasCurrentExcludes
-				} else {
-					moduleExcludes[currentModule!] = [trimmed]
-				}
-			}
-		}
+		let regexName = try! Regex<(Substring, Substring)>("^([a-zA-Z0-9_~/]+)(?=:)")
 
 		// build a list of the buildable targets
 		let boostdepBuildableCommand = try await Command(boostdepBuildDir.appendingPathComponent("boostdep").path, arguments:["--list-buildable"], workingDirectory:boostPath).runSync()
@@ -240,14 +359,16 @@ struct PrepareBoostSource:AsyncParsableCommand {
 		}
 		let buildableTargets = Set(boostdepBuildableCommand.stdout.compactMap({ String(data:$0, encoding:.utf8)!.trimmed() }))
 
+		let condReader = try ConditionsReader(packageURL:URL(fileURLWithPath:packageBase))
+		let packageConditions = condReader.conditions
+		
 		var moduleBuild = [String:BoostSourceModule]()
 		for moduleName in allModuleNames {
-			let excludes = moduleExcludes[moduleName] ?? []
 			let hasSource = buildableTargets.contains(moduleName)
-			let newModule = BoostSourceModule(boostdepListName:moduleName, excludes:excludes, hasSource:hasSource, basedIn:boostPath)
+			let newModule = try BoostSourceModule(boostdepListName:moduleName, hasSource:hasSource, basedIn:boostPath, excludesArrs:packageConditions, logger:mainLogger)
 			moduleBuild[moduleName] = newModule
-
 		}
+
 		var moduleDependencies:[String:Set<BoostSourceModule>] = [:]
 		for moduleName in allModuleNames {
 
@@ -299,11 +420,11 @@ struct PrepareBoostSource:AsyncParsableCommand {
 			// remove the old symbolic links
 			let sourceIncludePath = boostSourceModulePath.appendingPathComponent("include")
 			let boostPackageIncludePath = currentModulePath.appendingPathComponent("include")
-			if FileManager.default.fileExists(atPath:boostPackageIncludePath.path) {
-				mainLogger.info("removing old include directory for module '\(curPackage.value.packageName)'...")
-				try FileManager.default.removeItem(at:boostPackageIncludePath)
+			if FileManager.default.fileExists(atPath:boostPackageIncludePath.path) == false {
+				mainLogger.info("creating include directory for module '\(curPackage.value.packageName)'...")
+				try FileManager.default.createDirectory(at:boostPackageIncludePath, withIntermediateDirectories:true)
 			}
-			try FileManager.default.createSymbolicLink(at:boostPackageIncludePath, withDestinationURL:sourceIncludePath)
+			try FileManager.default.createSymbolicLink(at:boostPackageIncludePath.appendingPathComponent("boost"), withDestinationURL:sourceIncludePath.appendingPathComponent("boost"))
 			mainLogger.info("created symbolic link for include directory.", metadata:["source":"\(sourceIncludePath.path)", "destination":"\(boostPackageIncludePath.path)"])
 			
 			// create the symbolic links for the source directory (if the module has source)
@@ -317,6 +438,10 @@ struct PrepareBoostSource:AsyncParsableCommand {
 				try FileManager.default.createSymbolicLink(at:boostPackageSourcePath, withDestinationURL:sourceSourcePath)
 				mainLogger.info("created symbolic link for the source directory.", metadata:["source":"\(sourceSourcePath.path)", "destination":"\(boostPackageSourcePath.path)"])
 			}
+
+			// write the modulemap
+			let moduleMapContent = curPackage.value.generateModuleMapContents()
+			try moduleMapContent.write(to:boostPackageIncludePath.appendingPathComponent("module.modulemap"), atomically:true, encoding:.utf8)
 		}
 	}
 }

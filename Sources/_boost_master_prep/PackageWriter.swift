@@ -29,37 +29,6 @@ extension PackageDescriptionWithDependencies {
 			}
 		}))
 
-		// target stuff
-		let targetNameLabel = LabeledExprSyntax(label:TokenSyntax.identifier("name"), colon:.colonToken(), expression:StringLiteralExprSyntax(content:self.source.packageName), trailingComma:.commaToken())
-		let targetDependenciesLabel = LabeledExprSyntax(label:TokenSyntax.identifier("dependencies"), colon:.colonToken(), expression:ArrayExprSyntax(elements:ArrayElementListSyntax {
-			for (i, dependency) in self.primaryDepends.enumerated().reversed() {
-				switch i {
-					case 0:
-						ArrayElementSyntax(expression:StringLiteralExprSyntax(content:dependency.packageName))
-					default:
-						ArrayElementSyntax(expression:StringLiteralExprSyntax(content:dependency.packageName))
-				}
-			}
-		}), trailingComma:TokenSyntax.commaToken())
-		let targetPathLabel = LabeledExprSyntax(label:TokenSyntax.identifier("path"), colon:.colonToken(), expression:StringLiteralExprSyntax(content:"./"), trailingComma:TokenSyntax.commaToken())
-		let targetExcludesLabel = LabeledExprSyntax(label:TokenSyntax.identifier("exclude"), colon:.colonToken(), expression:ArrayExprSyntax(elements:ArrayElementListSyntax {
-			for curExclude in self.source.excludes {
-				ArrayElementSyntax(expression:StringLiteralExprSyntax(content:curExclude))
-			}
-		}), trailingComma:TokenSyntax.commaToken())
-		let targetSourcesLabel:LabeledExprSyntax
-		if (self.source.hasSource == true) {
-			// enable the source directory
-			targetSourcesLabel = LabeledExprSyntax(label:TokenSyntax.identifier("sources"), colon:.colonToken(), expression:ArrayExprSyntax(elements:[
-				ArrayElementSyntax(expression:StringLiteralExprSyntax(content:"src"))
-			]), trailingComma:TokenSyntax.commaToken())
-		} else {
-			// explicitly empty source directory
-			targetSourcesLabel = LabeledExprSyntax(label:TokenSyntax.identifier("sources"), colon:.colonToken(), expression:ArrayExprSyntax(elements:ArrayElementListSyntax {}), trailingComma:TokenSyntax.commaToken())
-		}
-		let publicHeadersPathLabel = LabeledExprSyntax(label:TokenSyntax.identifier("publicHeadersPath"), colon:.colonToken(), expression:StringLiteralExprSyntax(content:"include"), trailingComma:TokenSyntax.commaToken())
-		let packageAccessLabel = LabeledExprSyntax(label:TokenSyntax.identifier("packageAccess"), colon:.colonToken(), expression:BooleanLiteralExprSyntax(booleanLiteral:false))
-		
 		let targetLabel = LabeledExprSyntax(label:TokenSyntax.identifier("targets"), colon:.colonToken(), expression:ArrayExprSyntax(elements:ArrayElementListSyntax {
 			ArrayElementSyntax(expression:FunctionCallExprSyntax(calledExpression:MemberAccessExprSyntax(period:TokenSyntax.periodToken(), declName:DeclReferenceExprSyntax(baseName:TokenSyntax.identifier("target"))), leftParen:TokenSyntax.leftParenToken(), arguments:[
 				targetNameLabel,
@@ -70,13 +39,15 @@ extension PackageDescriptionWithDependencies {
 				publicHeadersPathLabel,
 				packageAccessLabel
 			], rightParen:TokenSyntax.rightParenToken()))
-		}))
+		}), trailingComma:TokenSyntax.commaToken())
+		let cxxVersionLabel = LabeledExprSyntax(label:TokenSyntax.identifier("cxxLanguageStandard"), colon:.colonToken(), expression:MemberAccessExprSyntax(period:TokenSyntax.periodToken(), declName:DeclReferenceExprSyntax(baseName:TokenSyntax.identifier("cxx14"))))
 		let packageArgumentList = LabeledExprListSyntax {
 			packageNameLabel
 			Self.packagePlatforms
 			packageProductsLabel
 			packageDependenciesLabel
 			targetLabel
+			cxxVersionLabel
 		}
 		let packageInitFunctionCall = FunctionCallExprSyntax(calledExpression:DeclReferenceExprSyntax(baseName:TokenSyntax.identifier("Package")), leftParen:TokenSyntax.leftParenToken(), arguments:packageArgumentList, rightParen:TokenSyntax.rightParenToken())
 		let patternInit = PatternBindingSyntax(pattern:IdentifierPatternSyntax(identifier:TokenSyntax.identifier("package")), typeAnnotation:TypeAnnotationSyntax(colon:TokenSyntax.colonToken(), type:TypeSyntax("Package")), initializer:InitializerClauseSyntax(equal:TokenSyntax.equalToken(), value:packageInitFunctionCall))
@@ -95,6 +66,23 @@ extension PackageDescriptionWithDependencies {
 		}
 	}
 }
+
+extension BoostSourceModule {
+	func generateTargetDependencyLine() {
+		let windowsDecl = DeclReferenceExprSyntax(baseName:TokenSyntax.identifier("windows"))
+		let windowsAccess = MemberAccessExprSyntax(period:TokenSyntax.periodToken(), declName:windowsDecl)
+		let windowsArray = ArrayElementListSyntax(ArrayElementSyntax(windowsAccess))!
+		let platformsArraySyntax = ArrayExprSyntax(leftSquare:TokenSyntax.leftSquareToken(), elements:windowsArray, rightSquare:TokenSyntax.rightSquareToken())
+		let platformsLabelExpression = LabeledExprListSyntax(LabeledExprSyntax(label:TokenSyntax.identifier("platforms"), colon:TokenSyntax.colonToken(), expression:platformsArraySyntax))!
+
+		let whenDeclRef = DeclReferenceExprSyntax(baseName:TokenSyntax.identifier("when"))
+		let whenAccess = MemberAccessExprSyntax(period:TokenSyntax.periodToken(), declName:whenDeclRef)
+
+		let whenCondition = FunctionCallExprSyntax(calledExpression:whenAccess, leftParen:TokenSyntax.leftParenToken(), arguments:platformsLabelExpression, rightParen:TokenSyntax.rightParenToken())
+	
+	}
+}
+
 
 // struct ExistingModulePackageDescription {
 // 	let parsedName:String
