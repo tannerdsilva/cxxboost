@@ -32,7 +32,7 @@ struct ConditionsReader {
 		let readData = try Data(contentsOf:asURL)
 		let readString = String(data:readData, encoding:.utf8)!
 		let syntaxParser = Parser.parse(source:readString)
-		let allExceptions = try syntaxParser.parsePackageConditionConfig(logger:myLogger)
+		let allExceptions = try syntaxParser.parseExcludesConfig(logger:myLogger)
 		self.conditions = allExceptions
 	}
 }
@@ -56,7 +56,7 @@ struct ParseConditions:AsyncParsableCommand {
 
 
 		let syntaxParser = Parser.parse(source:readString)
-		let myThing = try syntaxParser.parsePackageConditionConfig(logger:myLogger)
+		let myThing = try syntaxParser.parseExcludesConfig(logger:myLogger)
 		
 	}
 }
@@ -98,7 +98,9 @@ struct BoostSourceModule:Hashable {
 	let excludesArr:ArrayExprSyntax?
 
 	init(boostdepListName:String, hasSource:Bool, basedIn base:URL, excludesArrs:[String:ArrayExprSyntax]?, logger:Logger) throws {
+		// determine the name of the module and its location
 		let (boostName, ourName, path) = Self.processInputName(boostdepListName, basedIn:base)
+		
 		self.boostdepName = boostName
 		self.packageName = ourName
 		self.basePath = path
@@ -169,7 +171,7 @@ struct PackageDescriptionWithDependencies {
 	let publicHeadersPathLabel:LabeledExprSyntax
 	let packageAccessLabel:LabeledExprSyntax
 
-	init(source:BoostSourceModule, primaryDepends:[BoostSourceModule]) {
+	init(source:BoostSourceModule, primaryDepends:[BoostSourceModule], loadedExcludes:[String:ArrayExprSyntax]) {
 		self.source = source
 		self.primaryDepends = primaryDepends
 
@@ -186,8 +188,7 @@ struct PackageDescriptionWithDependencies {
 			}
 		}), trailingComma:TokenSyntax.commaToken())
 		self.targetPathLabel = LabeledExprSyntax(label:TokenSyntax.identifier("path"), colon:.colonToken(), expression:StringLiteralExprSyntax(content:"./"), trailingComma:TokenSyntax.commaToken())
-		self.targetExcludesLabel = LabeledExprSyntax(label:TokenSyntax.identifier("exclude"), colon:.colonToken(), expression:ArrayExprSyntax(elements:ArrayElementListSyntax {
-		}), trailingComma:TokenSyntax.commaToken())
+		self.targetExcludesLabel = LabeledExprSyntax(label:TokenSyntax.identifier("exclude"), colon:.colonToken(), expression:loadedExcludes[source.packageName] ?? ArrayExprSyntax(expressions: []), trailingComma:TokenSyntax.commaToken())
 		let targetSourcesLabel:LabeledExprSyntax
 		if (self.source.hasSource == true) {
 			// enable the source directory
@@ -201,7 +202,6 @@ struct PackageDescriptionWithDependencies {
 		self.targetSourcesLabel = targetSourcesLabel
 		self.publicHeadersPathLabel = LabeledExprSyntax(label:TokenSyntax.identifier("publicHeadersPath"), colon:.colonToken(), expression:StringLiteralExprSyntax(content:"include"), trailingComma:TokenSyntax.commaToken())
 		self.packageAccessLabel = LabeledExprSyntax(label:TokenSyntax.identifier("packageAccess"), colon:.colonToken(), expression:BooleanLiteralExprSyntax(booleanLiteral:false))
-		
 	}
 }
 
@@ -402,7 +402,7 @@ struct PrepareBoostSource:AsyncParsableCommand {
 		let moduleDirectory = URL(fileURLWithPath:packageBase).appendingPathComponent("Modules")
 		for curPackage in moduleBuild {
 			let currentModulePath = moduleDirectory.appendingPathComponent(curPackage.value.packageName)
-			let packageDescription = PackageDescriptionWithDependencies(source:curPackage.value, primaryDepends:Array(moduleDependencies[curPackage.key] ?? []))
+			let packageDescription = PackageDescriptionWithDependencies(source:curPackage.value, primaryDepends:Array(moduleDependencies[curPackage.key] ?? []), loadedExcludes:packageConditions)
 			let source = packageDescription.generatePackageDescriptionSourceCode()
 			let formattedString = source.formatted().description
 

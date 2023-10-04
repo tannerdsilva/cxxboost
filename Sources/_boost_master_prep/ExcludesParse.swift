@@ -7,7 +7,7 @@ import SwiftSyntax
 
 extension SourceFileSyntax {
 	struct NotFound:Swift.Error {}
-	func parsePackageConditionConfig(logger:Logger) throws -> [String:ArrayExprSyntax] {
+	func parseExcludesConfig(logger:Logger) throws -> [String:ArrayExprSyntax] {
 
 		logger.debug("searching through \(statements.count) statements in source file.")
 		
@@ -34,7 +34,7 @@ extension SourceFileSyntax {
 						let firstBinding = asVarDecl.bindings.first!
 
 						// validate the binding pattern, it must have the right identifier and stuff
-						guard let patternPat = firstBinding.pattern.as(IdentifierPatternSyntax.self), patternPat.identifier.text == "packageConditions" else {
+						guard let patternPat = firstBinding.pattern.as(IdentifierPatternSyntax.self), patternPat.identifier.text == "packageExcludes" else {
 							logger.debug("binding pattern identifier is not packageConditions.")
 							continue
 						}
@@ -54,7 +54,7 @@ extension SourceFileSyntax {
 							}
 							packageConditions[key] = valueExpr
 						}
-						logger.info("returning package conditions: \(packageConditions.count)")
+						logger.info("returning package exceptions: \(packageConditions.count)")
 						return packageConditions
 					}
 					continue
