@@ -4,10 +4,10 @@ import SwiftParser
 import Foundation
 
 extension PackageDescriptionWithDependencies {
-	fileprivate static let macOSPlatformLine = FunctionCallExprSyntax(calledExpression:MemberAccessExprSyntax(period:TokenSyntax.periodToken(), declName:DeclReferenceExprSyntax(baseName:TokenSyntax.identifier("macOS"))), leftParen:TokenSyntax.leftParenToken(), arguments:[
+	internal static let macOSPlatformLine = FunctionCallExprSyntax(calledExpression:MemberAccessExprSyntax(period:TokenSyntax.periodToken(), declName:DeclReferenceExprSyntax(baseName:TokenSyntax.identifier("macOS"))), leftParen:TokenSyntax.leftParenToken(), arguments:[
 		LabeledExprSyntax(expression:MemberAccessExprSyntax(period:TokenSyntax.periodToken(), declName:DeclReferenceExprSyntax(baseName:TokenSyntax.identifier("v13")))),
 	], rightParen:TokenSyntax.rightParenToken())
-	fileprivate static let packagePlatforms = LabeledExprSyntax(label:TokenSyntax.identifier("platforms"), colon:.colonToken(), expression:ArrayExprSyntax(elements:[
+	internal static let packagePlatforms = LabeledExprSyntax(label:TokenSyntax.identifier("platforms"), colon:.colonToken(), expression:ArrayExprSyntax(elements:[
 		ArrayElementSyntax(expression:macOSPlatformLine)
 	]))
 	func generatePackageDescriptionSourceCode() -> SourceFileSyntax {
