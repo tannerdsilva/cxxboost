@@ -1,13 +1,13 @@
 // import ArgumentParser
 // import SwiftSlash
-// import Foundation
+import Foundation
 import Logging
 import SwiftParser
 import SwiftSyntax
 
 extension SourceFileSyntax {
-	struct NotFound:Swift.Error {}
-	func parseExcludesConfig(logger:Logger) throws -> [String:ArrayExprSyntax] {
+	fileprivate struct CheckoutValueNotFound:Swift.Error {}
+	fileprivate func parseCheckoutValue(logger:Logger) throws -> String {
 
 		logger.debug("searching through \(statements.count) statements in source file.")
 		
@@ -34,34 +34,34 @@ extension SourceFileSyntax {
 						let firstBinding = asVarDecl.bindings.first!
 
 						// validate the binding pattern, it must have the right identifier and stuff
-						guard let patternPat = firstBinding.pattern.as(IdentifierPatternSyntax.self), patternPat.identifier.text == "packageExcludes" else {
+						guard let patternPat = firstBinding.pattern.as(IdentifierPatternSyntax.self), patternPat.identifier.text == "boostCheckout" else {
 							logger.debug("binding pattern identifier is not packageConditions.")
 							continue
 						}
-						guard let dictExpr = firstBinding.initializer?.value.as(DictionaryExprSyntax.self), let dictContent = dictExpr.content.as(DictionaryElementListSyntax.self) else {
+						guard let checkoutTag = firstBinding.initializer?.value.as(StringLiteralExprSyntax.self), let firstSegment = checkoutTag.segments.first?.as(StringSegmentSyntax.self) else {
 							logger.debug("initializer is not a dictionary expression.")
 							continue
 						}
-						var packageConditions:[String:ArrayExprSyntax] = [:]
-						for dictElement in dictContent {
-							guard let keyExpr = dictElement.key.as(StringLiteralExprSyntax.self), let asStringLiteral = keyExpr.segments.first?.as(StringSegmentSyntax.self) else {
-								logger.debug("keys in the dictionary must be a string literal")
-								continue
-							}
-							let key = asStringLiteral.content.text
-							guard let valueExpr = dictElement.value.as(ArrayExprSyntax.self) else {
-								continue
-							}
-							packageConditions[key] = valueExpr
-						}
-						logger.info("returning package exceptions: \(packageConditions.count)")
-						return packageConditions
+						return firstSegment.content.text
 					}
 					continue
 				default:
 				continue
 			}
 		}
-		throw NotFound()
+		throw CheckoutValueNotFound()
 	}
+}
+
+internal func parsePackageCheckoutValue(logger:Logger, packageURL:URL) throws -> String {
+	let asURL = packageURL.appendingPathComponent("BoostCheckout.swift")
+	logger.trace("attempting to read file '\(asURL.path)'")
+	let readData = try Data(contentsOf:asURL)
+	logger.trace("read \(readData.count) bytes from file.")
+	let readString = String(data:readData, encoding:.utf8)!
+	logger.trace("parsing swift syntax for checkout value...")
+	let syntaxParser = Parser.parse(source:readString)
+	let parsedValue = try syntaxParser.parseCheckoutValue(logger:logger)
+	logger.trace("parsed checkout value: \(parsedValue)")
+	return parsedValue
 }
