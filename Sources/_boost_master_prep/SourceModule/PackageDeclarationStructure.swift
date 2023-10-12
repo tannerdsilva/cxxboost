@@ -8,44 +8,57 @@ import SwiftBasicFormat
 
 // declarations of the swift syntax used to define the target values within a structure
 extension BoostSourceModule {
+
+	/// the name value of this target.
 	var targetStructNameLabelValue:StringLiteralExprSyntax {
 		StringLiteralExprSyntax(content:self.name.packageTargetName)
 	}
 
+	/// the dependencies value of this target. it is an array of package names.
 	var targetStructDependenciesLabelValue:ArrayExprSyntax {
 		ArrayExprSyntax(elements:ArrayElementListSyntax {
-			for (i, dependency) in self.dependencies.enumerated().reversed() {
-				switch i {
-					case 0:
-						ArrayElementSyntax(expression:StringLiteralExprSyntax(content:dependency.packageTargetName))
-					default:
-						ArrayElementSyntax(expression:StringLiteralExprSyntax(content:dependency.packageTargetName))
-				}
+			for dependency in self.dependencies {
+				ArrayElementSyntax(expression:StringLiteralExprSyntax(content:dependency.packageTargetName))
 			}
 		})
 	}
+
+	/// the path value of this target. it is the relative path to the target directory
 	var targetStructPathLabelValue:StringLiteralExprSyntax {
 		StringLiteralExprSyntax(content:"./Modules/\(self.name.packageTargetName)/")
 	}
+	
+	/// the excludes value of this target. it is an array of path strings that are excluded from the target.
 	var targetStructExcludesLabelValue:ArrayExprSyntax {
-		ArrayExprSyntax(elements:ArrayElementListSyntax([ArrayElementSyntax(expression:StringLiteralExprSyntax(content:".cant-see-me"))]))
+		let hiddenPathValue = StringLiteralExprSyntax(content:".cant-see-me")
+		let singleItemArray = ArrayElementSyntax(expression:hiddenPathValue)
+		let arrayList = ArrayElementListSyntax([singleItemArray])
+		return ArrayExprSyntax(leftSquare:TokenSyntax.leftSquareToken(), elements:arrayList, rightSquare:TokenSyntax.rightSquareToken())
 	}
+	
+	
 	var targetStructSourcesLabelValue:ArrayExprSyntax {
 		let targetSourcesLabelValue:ArrayExprSyntax
 		if (self.hasSource == true) {
-			// enable the source directory
-			targetSourcesLabelValue = ArrayExprSyntax(elements:[
-				ArrayElementSyntax(expression:StringLiteralExprSyntax(content:"src"))
-			])
+			// enable the source directory with a single value
+			let onlySourceValue = StringLiteralExprSyntax(content:"src")
+			let arrayElement = ArrayElementSyntax(expression:onlySourceValue)
+			let singleItemList = ArrayElementListSyntax([arrayElement])
+			targetSourcesLabelValue = ArrayExprSyntax(leftSquare:TokenSyntax.leftSquareToken(), elements:singleItemList, rightSquare:TokenSyntax.rightSquareToken())
 		} else {
 			// explicitly empty source directory
-			targetSourcesLabelValue = ArrayExprSyntax(elements:ArrayElementListSyntax {})
+			let emptyArray = ArrayElementListSyntax([])
+			targetSourcesLabelValue = ArrayExprSyntax(leftSquare:TokenSyntax.leftSquareToken(), elements:emptyArray, rightSquare:TokenSyntax.rightSquareToken())
 		}
 		return targetSourcesLabelValue
 	}
+	
+	
 	var targetStructPublicHeadersPathLabelValue:StringLiteralExprSyntax {
 		StringLiteralExprSyntax(content:"include")
 	}
+	
+	
 	var targetStructPublicAccessLabelValue:BooleanLiteralExprSyntax {
 		BooleanLiteralExprSyntax(booleanLiteral:false)
 	}
@@ -117,7 +130,6 @@ extension BoostSourceModule {
 // build the target declaration structure
 extension BoostSourceModule {
 	var targetStructDecl:StructDeclSyntax {
-		let formatter = BasicFormat(indentationWidth:Trivia.tab)
 		let memblock = MemberBlockSyntax(leftBrace:TokenSyntax.leftBraceToken(), members:MemberBlockItemListSyntax([
 			MemberBlockItemSyntax(decl:self.targetStructNameVarDecl),
 			MemberBlockItemSyntax(decl:self.targetStructDependenciesVarDecl),
@@ -126,8 +138,32 @@ extension BoostSourceModule {
 			MemberBlockItemSyntax(decl:self.targetStructSourcesVarDecl),
 			MemberBlockItemSyntax(decl:self.targetStructStructHeadersPathVarDecl),
 			MemberBlockItemSyntax(decl:self.targetStructAccessVarDecl)
-		]), rightBrace:TokenSyntax.rightBraceToken()).formatted(using:formatter).as(MemberBlockSyntax.self)!
-		let myStruct = StructDeclSyntax(attributes:AttributeListSyntax(), modifiers:DeclModifierListSyntax([DeclModifierSyntax(name:TokenSyntax.keyword(.fileprivate))]), structKeyword:TokenSyntax.keyword(.`struct`), name:TokenSyntax.identifier(self.name.packageTargetName), memberBlock:memblock).formatted(using:formatter).as(StructDeclSyntax.self)!
+		]), rightBrace:TokenSyntax.rightBraceToken())
+		let myStruct = StructDeclSyntax(attributes:AttributeListSyntax(), modifiers:DeclModifierListSyntax([DeclModifierSyntax(name:TokenSyntax.keyword(.fileprivate))]), structKeyword:TokenSyntax.keyword(.`struct`), name:TokenSyntax.identifier(self.name.packageTargetName), memberBlock:memblock)
 		return myStruct
+	}
+}
+
+extension BoostSourceModule {
+	var targetProductDecl:FunctionCallExprSyntax {
+		// build the primary function call
+		let libraryDeclReference = DeclReferenceExprSyntax(baseName:TokenSyntax.identifier("library"))
+		let memberAccessExpression = MemberAccessExprSyntax(period:TokenSyntax.periodToken(), declName:libraryDeclReference)
+		
+		// create the arguments for the function call
+		let labeledList:LabeledExprListSyntax
+		// name argument
+		let nameLabelExpr = LabeledExprSyntax(label:TokenSyntax.identifier("name"), colon:TokenSyntax.colonToken(), expression:targetStruct4PackageNameMA, trailingComma:TokenSyntax.commaToken())
+
+		// targets argument. there will only ever be one element in this array so we can hard code it.
+		let arrayElement = ArrayElementSyntax(expression:targetStruct4PackageNameMA)
+		let arrayElementList = ArrayElementListSyntax([arrayElement])
+		let arrayExpr = ArrayExprSyntax(leftSquare:TokenSyntax.leftSquareToken(), elements:arrayElementList, rightSquare:TokenSyntax.rightSquareToken())
+		let targetsLabelExpr = LabeledExprSyntax(label:TokenSyntax.identifier("targets"), colon:TokenSyntax.colonToken(), expression:arrayExpr)
+		
+		labeledList = LabeledExprListSyntax([nameLabelExpr, targetsLabelExpr])
+
+		let memblock = FunctionCallExprSyntax(calledExpression:memberAccessExpression, leftParen:TokenSyntax.leftParenToken(), arguments:labeledList, rightParen:TokenSyntax.rightParenToken())
+		return memblock
 	}
 }

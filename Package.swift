@@ -4,13 +4,17 @@
 import PackageDescription
 
 fileprivate struct iostreams {
-        static let name: String = "iostreams"
-        static let dependencies: Array<Target.Dependency> = ["range", "static_assert", "iterator", "detail", "smart_ptr", "preprocessor", "mpl", "assert", "utility", "type_traits", "regex", "core", "config", "numeric-conversion", "integer", "random", "function", "throw_exception"]
-        static let path: String = "./Modules/iostreams/"
-        static let exclude: Array<String> = [".cant-see-me"]
-        static let sources: Array<String> = ["src"]
-        static let publicHeadersPath: String = "include"
-        static let packageAccess: Bool = false
+	static let name: String = "iostreams"
+	static let dependencies: Array<Target.Dependency> = ["range", "static_assert", "iterator", "detail", "smart_ptr", "preprocessor", "mpl", "assert", "utility", "type_traits", "regex", "core", "config", "numeric-conversion", "integer", "random", "function", "throw_exception"]
+	static let path: String = "./Modules/iostreams/"
+	static let exclude: Array<String> = [".cant-see-me"]
+	static let sources: Array<String> = ["src"]
+	#if os(Linux)
+	static let publicHeadersPath: String = "include"
+	#else
+	static let publicHeadersPath: String = "include"
+	#endif
+	static let packageAccess: Bool = false
 }
 
 let package = Package(
@@ -38,11 +42,29 @@ let package = Package(
 			.product(name:"SwiftParser", package:"swift-syntax"),
 			.product(name:"SwiftBasicFormat", package:"swift-syntax")
 		]),
-		.plugin(name:"_boost_master_prep_plugin", capability:.command(
-			intent:.custom(verb:"boost-checkout", description:"prepare boost and all of its submodules from source for building."), permissions: [.allowNetworkConnections(scope:.all(), reason:"downloading boost source code"), .writeToPackageDirectory(reason:"needs to manage submodules in master repo")]
-		), dependencies: ["_boost_master_prep"]),
+		.plugin(
+			name:"_boost_master_prep_plugin",
+			capability:.command(
+				intent:.custom(
+					verb:"boost-checkout", 
+					description:"prepare boost and all of its submodules from source for building."
+				),
+				permissions:[
+					.allowNetworkConnections(
+						scope:.all(), 
+						reason:"downloading boost source code"
+					),
+					.writeToPackageDirectory(
+						reason:"needs to manage submodules in master repo"
+					)
+				]
+			),
+			dependencies: ["_boost_master_prep"]
+		),
 		.plugin(name:"_boost_master_package_render", capability:.command(
-			intent:.custom(verb:"package-render", description:"render the target information into the package description"), permissions: [.writeToPackageDirectory(reason:"needs to manage submodules in master repo")]
+			intent:.custom(verb:"package-render", description:"render the target information into the package description"), permissions: [.writeToPackageDirectory(
+					reason:"needs to manage submodules in master repo"
+				)]
 		), dependencies: ["_boost_master_prep"]),
 		.plugin(name:"_boost_master_buildtool", capability:.buildTool(), dependencies:["_boost_master_prep"]),
 		.systemLibrary(name:"libopenmpi", path:"./libopenmpi", pkgConfig:"ompi", providers:[

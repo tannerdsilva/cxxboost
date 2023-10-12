@@ -8,6 +8,9 @@ import SwiftSyntax
 /// represents a module in the boost source code.
 struct BoostSourceModule:Codable, Hashable {
 
+	/// the prefix for the package target name
+	static let packageTargetNamePrefix = "cxxboost_"
+
 	/// represents a header file or directory in the module map.
 	enum ModuleMapHeader:Codable, Hashable, Equatable {
 		case headerFile(String)
@@ -189,20 +192,20 @@ extension BoostSourceModule.Name {
 	var packageTargetName:String {
 		switch self {
 			case .uniform(let name):
-				return "cxxboost_" + name
+				return BoostSourceModule.packageTargetNamePrefix + name
 			case .split(let firstpart, let secondpart):
-				return "cxxboost_" + firstpart + "-" + secondpart
+				return BoostSourceModule.packageTargetNamePrefix + firstpart + "__" + secondpart
 		}
 	}
 
 	init?(packageTargetName:String) {
-		guard packageTargetName.hasPrefix("cxxboost_") else {
+		guard packageTargetName.hasPrefix(BoostSourceModule.packageTargetNamePrefix) else {
 			return nil
 		}
-		let modPackTargName = packageTargetName.dropFirst("cxxboost_".count)
+		let modPackTargName = packageTargetName.dropFirst(BoostSourceModule.packageTargetNamePrefix.count)
 		switch modPackTargName.contains("-") {
 			case true:
-				let splitName = modPackTargName.split(separator:"-", maxSplits:1, omittingEmptySubsequences:false)
+				let splitName = modPackTargName.split(separator:"__", maxSplits:1, omittingEmptySubsequences:false)
 				guard splitName.count == 2 else {
 					return nil
 				}

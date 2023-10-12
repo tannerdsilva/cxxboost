@@ -37,13 +37,9 @@ extension CLI {
 			let baseURL = URL(fileURLWithPath:packageBase)
 			let modulesDir = baseURL.appendingPathComponent("Modules")
 			let modulesFile = modulesDir.appendingPathComponent("boost-modules.json")
-
-			let modulesData = try Data(contentsOf:modulesFile)
-			let decoder = JSONDecoder()
-			let decodedModules = try decoder.decode([String:[String:BoostSourceModule]].self, from:modulesData)
-			let firstItem = decodedModules.first!.value
-			
-			let myParsedPackage = try ParsedBasePackage.load(log:Logger(label:"boost-build-plugin"), packageDirectory:baseURL)
+			var makeLabel = Logger(label:"boost-build-plugin")
+			makeLabel.logLevel = .trace
+			try updatePackageDescription(log:makeLabel, packageBase:baseURL)
 		}
 	}
 }

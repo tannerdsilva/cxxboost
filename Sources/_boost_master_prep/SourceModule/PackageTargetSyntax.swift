@@ -33,7 +33,6 @@ extension BoostSourceModule {
 
 extension BoostSourceModule {
 	var packageTargetLine:FunctionCallExprSyntax {
-		let formatter = BasicFormat(indentationWidth:Trivia.tab)
 		let declRefExpr = DeclReferenceExprSyntax(baseName:TokenSyntax.identifier("target"))
 		let memberAccessExpr = MemberAccessExprSyntax(period:TokenSyntax.periodToken(), declName:declRefExpr)
 		let labeledList = LabeledExprListSyntax([
@@ -44,7 +43,7 @@ extension BoostSourceModule {
 			self.targetSourcesLabel,
 			self.publicHeadersPathLabel,
 			self.packageAccessLabel
-		]).formatted(using:formatter).as(LabeledExprListSyntax.self)!
-		return FunctionCallExprSyntax(calledExpression:memberAccessExpr, leftParen:TokenSyntax.leftParenToken(), arguments:labeledList, rightParen:TokenSyntax.rightParenToken(), trailingClosure:nil).formatted(using:formatter).as(FunctionCallExprSyntax.self)!
+		])
+		return FunctionCallExprSyntax(calledExpression:memberAccessExpr, leftParen:TokenSyntax.leftParenToken(), arguments:labeledList, rightParen:TokenSyntax.rightParenToken(), trailingClosure:nil)
 	}
 }
