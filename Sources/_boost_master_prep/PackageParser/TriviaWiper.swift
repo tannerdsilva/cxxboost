@@ -2,7 +2,6 @@ import Foundation
 import Logging
 import SwiftParser
 import SwiftSyntax
-import SwiftBasicFormat
 
 internal class TriviaWiper:SyntaxRewriter {
 	let logger:Logger

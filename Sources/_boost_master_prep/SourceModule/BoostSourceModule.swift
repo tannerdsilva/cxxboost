@@ -103,21 +103,9 @@ struct BoostSourceModule:Codable, Hashable {
 		self.cloneName = base.lastPathComponent
 	}
 
-	func generateTargetDependencyLine() -> FunctionCallExprSyntax {
-		let declRefExpr = DeclReferenceExprSyntax(baseName:TokenSyntax.identifier("product"))
-		let memberAccessExpr = MemberAccessExprSyntax(period:TokenSyntax.periodToken(), declName:declRefExpr)
-		let nameLabel = LabeledExprSyntax(label:"name", colon:TokenSyntax.colonToken(), expression:StringLiteralExprSyntax(content:self.name.packageTargetName), trailingComma:TokenSyntax.commaToken())
-		let packageLabel = LabeledExprSyntax(label:"package", colon:TokenSyntax.colonToken(), expression:StringLiteralExprSyntax(content:"_boost_master_prep"), trailingComma:TokenSyntax.commaToken())
-		let labeledList = LabeledExprListSyntax([
-			nameLabel,
-			packageLabel
-		])
-		return FunctionCallExprSyntax(calledExpression:memberAccessExpr, leftParen:TokenSyntax.leftParenToken(), arguments:labeledList, rightParen:TokenSyntax.rightParenToken(), trailingClosure:nil)
-	}
-
 	/// writes the module map file within the module directory.
 	/// - parameter destination: the path to the module directory.
-	func writeModuleMapContents(destination path:URL) throws {
+	func buildModuleMapContents() -> String {
 		var moduleMapContent = "module \(self.name.packageTargetName) [system] {\n"
 		for curEntry in self.includeHeaders {
 			switch curEntry {
@@ -129,7 +117,67 @@ struct BoostSourceModule:Codable, Hashable {
 		}
 		moduleMapContent += "\texport *\n"
 		moduleMapContent += "}"
-		try moduleMapContent.write(to:path.appendingPathComponent("module.modulemap"), atomically:true, encoding:.utf8)
+		return moduleMapContent
+	}
+
+	func initializeModule(log:Logger, allModulesPath:URL) async throws {
+		let ourModulePath = allModulesPath.appendingPathComponent(self.name.packageTargetName)
+		let moduleIncludes = ourModulePath.appendingPathComponent("include")
+		let moduleCantSeeMe = moduleIncludes.appendingPathComponent(".cant-see-me")
+		let moduleSources = ourModulePath.appendingPathComponent("src")
+
+		// create the include and cant-see-me directories
+		if FileManager.default.fileExists(atPath:moduleIncludes.path) == false {
+			log.info("the module include path does not exist. it is being created.")
+			try FileManager.default.createDirectory(at:moduleIncludes, withIntermediateDirectories:true, attributes:nil)
+		}
+		if FileManager.default.fileExists(atPath:moduleCantSeeMe.path) == false {
+			log.info("the module cant-see-me path does not exist. it is being created.")
+			try FileManager.default.createDirectory(at:moduleIncludes, withIntermediateDirectories:true, attributes:nil)
+		}
+
+		// write the module map file.
+		let moduleMapFile = moduleIncludes.appendingPathComponent("module.modulemap")
+		let mapContents = self.buildModuleMapContents()
+		try mapContents.write(to:moduleMapFile, atomically:true, encoding:.utf8)
+
+		// clone the submodule if needed.
+		let submoduleCloneCommandResult = try await Command("git", arguments:["submodule", "add", self.remoteURL], workingDirectory:moduleCantSeeMe).runSync()
+		switch submoduleCloneCommandResult.exitCode {
+			case 0:
+				// valid result
+				break;
+			case 128:	
+				// check the output to ensure it contains "already exists"
+				let firstLine = submoduleCloneCommandResult.stderr[0]
+				let firstLineString = String(data:firstLine, encoding:.utf8)!
+				if firstLineString.contains("already exists") == false {
+					throw ValidationError(message:"the command '\(submoduleCloneCommandResult)' failed with exit code \(submoduleCloneCommandResult.exitCode).")
+				}
+			default:
+				throw ValidationError(message:"the command '\(submoduleCloneCommandResult)' failed with exit code \(submoduleCloneCommandResult.exitCode).")
+		}
+
+		let clonedName = moduleCantSeeMe.appendingPathComponent(self.cloneName)
+		
+		// checkout the correct commit hash
+		let gitFetchResult = try await Command("git", arguments:["fetch"], workingDirectory:moduleCantSeeMe).runSync()
+		guard gitFetchResult.exitCode == 0 else {
+			throw ValidationError(message:"the command '\(gitFetchResult)' failed with exit code \(gitFetchResult.exitCode).")
+		}
+
+		let submoduleCheckoutCommandResult2 = try await Command("git", arguments:["checkout", self.commitHash], workingDirectory:clonedName).runSync()
+		guard submoduleCheckoutCommandResult2.exitCode == 0 else {
+			throw ValidationError(message:"the command '\(submoduleCheckoutCommandResult2)' failed with exit code \(submoduleCheckoutCommandResult2.exitCode).")
+		}
+
+		// symlink the include directory into the module directory
+		try FileManager.default.createSymbolicLink(at:moduleIncludes.appendingPathComponent("boost"), withDestinationURL:self.name.pathToSourceInBoostProject(projectLocation:clonedName).appendingPathComponent("include").appendingPathComponent("boost"))
+
+		// symlink the source directory into the module directory
+		if self.hasSource {
+			try FileManager.default.createSymbolicLink(at:moduleSources, withDestinationURL:self.name.pathToSourceInBoostProject(projectLocation:clonedName).appendingPathComponent("src"))
+		}
 	}
 }
 
