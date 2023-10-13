@@ -123,7 +123,7 @@ struct BoostSourceModule:Codable, Hashable {
 	func initializeModule(log:Logger, allModulesPath:URL) async throws {
 		let ourModulePath = allModulesPath.appendingPathComponent(self.name.packageTargetName)
 		let moduleIncludes = ourModulePath.appendingPathComponent("include")
-		let moduleCantSeeMe = moduleIncludes.appendingPathComponent(".cant-see-me")
+		let moduleCantSeeMe = ourModulePath.appendingPathComponent(".cant-see-me")
 		let moduleSources = ourModulePath.appendingPathComponent("src")
 
 		// create the include directory if it does not exist. every module has an include directory, so this is always needed.
