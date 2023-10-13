@@ -126,26 +126,34 @@ struct BoostSourceModule:Codable, Hashable {
 		let moduleCantSeeMe = moduleIncludes.appendingPathComponent(".cant-see-me")
 		let moduleSources = ourModulePath.appendingPathComponent("src")
 
-		// create the include and cant-see-me directories
+		// create the include directory if it does not exist. every module has an include directory, so this is always needed.
 		if FileManager.default.fileExists(atPath:moduleIncludes.path) == false {
 			log.info("the module include path does not exist. it is being created.")
 			try FileManager.default.createDirectory(at:moduleIncludes, withIntermediateDirectories:true, attributes:nil)
 		}
+		// create hte .cant-see-me directory if it does not exist. every module has a .cant-see-me directory, so this is always needed.
 		if FileManager.default.fileExists(atPath:moduleCantSeeMe.path) == false {
 			log.info("the module cant-see-me path does not exist. it is being created.")
-			try FileManager.default.createDirectory(at:moduleIncludes, withIntermediateDirectories:true, attributes:nil)
+			try FileManager.default.createDirectory(at:moduleCantSeeMe, withIntermediateDirectories:true, attributes:nil)
 		}
 
-		// write the module map file.
+		// write the module map file in the include directory
 		let moduleMapFile = moduleIncludes.appendingPathComponent("module.modulemap")
 		let mapContents = self.buildModuleMapContents()
-		try mapContents.write(to:moduleMapFile, atomically:true, encoding:.utf8)
+		do {
+			try mapContents.write(to:moduleMapFile, atomically:true, encoding:.utf8)
+			log.info("successfully wrote module map file to '\(moduleMapFile.path)'.")
+		} catch let error {
+			log.error("failed to write module map file to '\(moduleMapFile.path)': \(error)")
+			throw ValidationError(message:"failed to write module map file to '\(moduleMapFile.path)': \(error)")
+		}
 
 		// clone the submodule if needed.
 		let submoduleCloneCommandResult = try await Command("git", arguments:["submodule", "add", self.remoteURL], workingDirectory:moduleCantSeeMe).runSync()
 		switch submoduleCloneCommandResult.exitCode {
 			case 0:
 				// valid result
+				log.info("the submodule was cloned successfully.")
 				break;
 			case 128:	
 				// check the output to ensure it contains "already exists"
@@ -158,18 +166,21 @@ struct BoostSourceModule:Codable, Hashable {
 				throw ValidationError(message:"the command '\(submoduleCloneCommandResult)' failed with exit code \(submoduleCloneCommandResult.exitCode).")
 		}
 
+		// this is the path that the project was cloned to
 		let clonedName = moduleCantSeeMe.appendingPathComponent(self.cloneName)
 		
 		// checkout the correct commit hash
-		let gitFetchResult = try await Command("git", arguments:["fetch"], workingDirectory:moduleCantSeeMe).runSync()
+		let gitFetchResult = try await Command("git", arguments:["fetch"], workingDirectory:clonedName).runSync()
 		guard gitFetchResult.exitCode == 0 else {
 			throw ValidationError(message:"the command '\(gitFetchResult)' failed with exit code \(gitFetchResult.exitCode).")
 		}
+		log.info("successfully fetched the latest changes from the submodule.")
 
 		let submoduleCheckoutCommandResult2 = try await Command("git", arguments:["checkout", self.commitHash], workingDirectory:clonedName).runSync()
 		guard submoduleCheckoutCommandResult2.exitCode == 0 else {
 			throw ValidationError(message:"the command '\(submoduleCheckoutCommandResult2)' failed with exit code \(submoduleCheckoutCommandResult2.exitCode).")
 		}
+		log.info("successfully checked out the correct commit hash.")
 
 		// symlink the include directory into the module directory
 		try FileManager.default.createSymbolicLink(at:moduleIncludes.appendingPathComponent("boost"), withDestinationURL:self.name.pathToSourceInBoostProject(projectLocation:clonedName).appendingPathComponent("include").appendingPathComponent("boost"))
