@@ -196,14 +196,14 @@ struct BoostSourceModule:Codable, Hashable {
 		log.info("successfully checked out the correct commit hash.")
 
 		// symlink the include directory into the module directory
-		let symIncludeDest = clonedIncludeName.appendingPathComponent("boost")
-		let symIncludeSource = moduleIncludes.appendingPathComponent("boost")
+		let symIncludeSource = clonedIncludeName.appendingPathComponent("boost")
+		let symIncludeDest = moduleIncludes.appendingPathComponent("boost")
 		do {
-			log.info("attempting to create symlink from (source) '\(symIncludeDest)' to (destination) '\(symIncludeSource)'")
-			try FileManager.default.createSymbolicLink(at:symIncludeDest, withDestinationURL:symIncludeSource)
-			log.info("successfully created symlink from (source) '\(symIncludeDest)' to (destination) '\(symIncludeSource)'")
+			log.info("attempting to create symlink from (source) '\(symIncludeSource)' to (destination) '\(symIncludeDest)'")
+			try FileManager.default.createSymbolicLink(at:symIncludeSource, withDestinationURL:symIncludeDest)
+			log.info("successfully created symlink from (source) '\(symIncludeSource)' to (destination) '\(symIncludeDest)'")
 		} catch let error {
-			log.critical("failed to create symlink from (source) '\(symIncludeDest)' to (destination) '\(symIncludeSource)': \(error)")
+			log.critical("failed to create symlink from (source) '\(symIncludeSource)' to (destination) '\(symIncludeDest)': \(error)")
 			throw error
 		}
 		// symlink the source directory into the module directory
