@@ -208,7 +208,7 @@ struct BoostSourceModule:Codable, Hashable {
 		}
 		// symlink the source directory into the module directory
 		if self.hasSource {
-			try FileManager.default.createSymbolicLink(at:clonedName.appendingPathComponent("src"), withDestinationURL:moduleSources)
+			try FileManager.default.createSymbolicLink(at:moduleSources, withDestinationURL:clonedSourceName)
 		}
 	}
 }
