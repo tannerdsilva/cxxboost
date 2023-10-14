@@ -152,6 +152,7 @@ struct BoostSourceModule:Codable, Hashable {
 		// this is the path that the project was cloned to
 		let clonedName = moduleCantSeeMe.appendingPathComponent(self.cloneName)
 		let clonedIncludeName = clonedName.appendingPathComponent("include")
+		let clonedSourceName = clonedName.appendingPathComponent("src")
 
 		// clone the submodule if needed.
 		let submoduleCloneCommand = try Command("git", arguments:["-C", packageBasePath.path, "submodule", "add", self.remoteURL, clonedName.path])
@@ -196,13 +197,13 @@ struct BoostSourceModule:Codable, Hashable {
 
 		// symlink the include directory into the module directory
 		let symIncludeDest = clonedIncludeName
-		let symIncludeSource = self.name.pathToSourceInBoostProject(projectLocation:clonedName).appendingPathComponent("include").appendingPathComponent("boost")
+		let symIncludeSource = moduleIncludes.appendingPathComponent("boost")
 		do {
-			log.info("attempting to create symlink from '\(symIncludeSource.path)' to '\(symIncludeDest.path)'")
-			try FileManager.default.createSymbolicLink(at:clonedIncludeName, withDestinationURL:self.name.pathToSourceInBoostProject(projectLocation:clonedName).appendingPathComponent("include").appendingPathComponent("boost"))
-			log.info("successfully created symlink from '\(symIncludeSource.path)' to '\(symIncludeDest.path)'")
+			log.info("attempting to create symlink from (source) '\(symIncludeDest)' to (destination) '\(symIncludeSource)'")
+			try FileManager.default.createSymbolicLink(at:symIncludeDest, withDestinationURL:symIncludeSource)
+			log.info("successfully created symlink from (source) '\(symIncludeDest)' to (destination) '\(symIncludeSource)'")
 		} catch let error {
-			log.critical("failed to create symlink from '\(symIncludeSource.path)' to '\(symIncludeDest.path)': \(error)")
+			log.critical("failed to create symlink from (source) '\(symIncludeDest)' to (destination) '\(symIncludeSource)': \(error)")
 			throw error
 		}
 		// symlink the source directory into the module directory
