@@ -153,7 +153,10 @@ struct BoostSourceModule:Codable, Hashable {
 		let clonedName = moduleCantSeeMe.appendingPathComponent(self.cloneName)
 
 		// clone the submodule if needed.
-		let submoduleCloneCommandResult = try await Command("git", arguments:["-C", packageBasePath.path, "submodule", "add", self.remoteURL, "./Modules/\(self.name.packageTargetName)/.cant-see-me/"], workingDirectory:moduleCantSeeMe).runSync()
+		let submoduleCloneCommand = try Command("git", arguments:["-C", packageBasePath.path, "submodule", "add", self.remoteURL, moduleCantSeeMe.path])
+		log.critical("attempting to run command '\(submoduleCloneCommand)'")
+		
+		let submoduleCloneCommandResult = try await submoduleCloneCommand.runSync()
 		switch submoduleCloneCommandResult.exitCode {
 			case 0:
 				// valid result
