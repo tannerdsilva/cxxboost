@@ -151,9 +151,10 @@ struct BoostSourceModule:Codable, Hashable {
 
 		// this is the path that the project was cloned to
 		let clonedName = moduleCantSeeMe.appendingPathComponent(self.cloneName)
+		let clonedIncludeName = clonedName.appendingPathComponent("include")
 
 		// clone the submodule if needed.
-		let submoduleCloneCommand = try Command("git", arguments:["-C", packageBasePath.path, "submodule", "add", self.remoteURL, moduleCantSeeMe.path])
+		let submoduleCloneCommand = try Command("git", arguments:["-C", packageBasePath.path, "submodule", "add", self.remoteURL, clonedName.path])
 		log.critical("attempting to run command '\(submoduleCloneCommand)'")
 		
 		let submoduleCloneCommandResult = try await submoduleCloneCommand.runSync()
@@ -187,11 +188,11 @@ struct BoostSourceModule:Codable, Hashable {
 		log.info("successfully checked out the correct commit hash.")
 
 		// symlink the include directory into the module directory
-		try FileManager.default.createSymbolicLink(at:moduleIncludes.appendingPathComponent("boost"), withDestinationURL:self.name.pathToSourceInBoostProject(projectLocation:clonedName).appendingPathComponent("include").appendingPathComponent("boost"))
+		try FileManager.default.createSymbolicLink(at:clonedIncludeName, withDestinationURL:self.name.pathToSourceInBoostProject(projectLocation:clonedName).appendingPathComponent("include").appendingPathComponent("boost"))
 
 		// symlink the source directory into the module directory
 		if self.hasSource {
-			try FileManager.default.createSymbolicLink(at:moduleSources, withDestinationURL:self.name.pathToSourceInBoostProject(projectLocation:clonedName).appendingPathComponent("src"))
+			try FileManager.default.createSymbolicLink(at:clonedName.appendingPathComponent("src"), withDestinationURL:self.name.pathToSourceInBoostProject(projectLocation:clonedName).appendingPathComponent("src"))
 		}
 	}
 }
