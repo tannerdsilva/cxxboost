@@ -165,8 +165,15 @@ struct BoostSourceModule:Codable, Hashable {
 				break;
 			case 128:	
 				// check the output to ensure it contains "already exists"
-				let firstLine = submoduleCloneCommandResult.stderr[0]
-				let firstLineString = String(data:firstLine, encoding:.utf8)!
+				for curLine in submoduleCloneCommandResult.stderr {
+					let curLineString = String(data:curLine, encoding:.utf8)!.trimmed()
+					log.critical("stderr: \(curLineString)")
+				}
+				for curLine in submoduleCloneCommandResult.stdout {
+					let curLineString = String(data:curLine, encoding:.utf8)!.trimmed()
+					log.critical("stdout: \(curLineString)")
+				}
+				let firstLineString = String(data:submoduleCloneCommandResult.stderr[0], encoding:.utf8)!.trimmed()
 				if firstLineString.contains("already exists") == false {
 					throw ValidationError(message:"the command '\(submoduleCloneCommandResult)' failed with exit code \(submoduleCloneCommandResult.exitCode).")
 				}
