@@ -155,7 +155,7 @@ struct BoostSourceModule:Codable, Hashable {
 		let clonedSourceName = clonedName.appendingPathComponent("src")
 
 		// clone the submodule if needed.
-		let submoduleCloneCommand = try Command("git", arguments:["-C", packageBasePath.path, "submodule", "add", self.remoteURL, clonedName.path])
+		let submoduleCloneCommand = try Command("git", arguments:["-C", packageBasePath.path, "submodule", "add", self.remoteURL, clonedName.path], workingDirectory:packageBasePath)
 		log.critical("attempting to run command '\(submoduleCloneCommand)'")
 		
 		let submoduleCloneCommandResult = try await submoduleCloneCommand.runSync()
