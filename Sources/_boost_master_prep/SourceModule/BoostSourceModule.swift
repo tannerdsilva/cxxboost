@@ -100,7 +100,7 @@ struct BoostSourceModule:Codable, Hashable {
 			throw ValidationError(message:"the command '\(gitRevParseCommand)' failed because there was unexpected output.")
 		}
 		self.commitHash = String(data:gitRevParseCommand.stdout[0], encoding:.utf8)!.trimmed()
-		self.cloneName = base.lastPathComponent
+		self.cloneName = path.lastPathComponent
 	}
 
 	/// writes the module map file within the module directory.
