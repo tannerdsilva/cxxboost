@@ -120,7 +120,8 @@ struct BoostSourceModule:Codable, Hashable {
 		return moduleMapContent
 	}
 
-	func initializeModule(log:Logger, allModulesPath:URL) async throws {
+	func initializeModule(log:Logger, packageBasePath:URL) async throws {
+		let allModulesPath = packageBasePath.appendingPathComponent("Modules")
 		let ourModulePath = allModulesPath.appendingPathComponent(self.name.packageTargetName)
 		let moduleIncludes = ourModulePath.appendingPathComponent("include")
 		let moduleCantSeeMe = ourModulePath.appendingPathComponent(".cant-see-me")
@@ -148,8 +149,11 @@ struct BoostSourceModule:Codable, Hashable {
 			throw ValidationError(message:"failed to write module map file to '\(moduleMapFile.path)': \(error)")
 		}
 
+		// this is the path that the project was cloned to
+		let clonedName = moduleCantSeeMe.appendingPathComponent(self.cloneName)
+
 		// clone the submodule if needed.
-		let submoduleCloneCommandResult = try await Command("git", arguments:["submodule", "add", self.remoteURL], workingDirectory:moduleCantSeeMe).runSync()
+		let submoduleCloneCommandResult = try await Command("git", arguments:["-C", packageBasePath.path, "submodule", "add", self.remoteURL, "./Modules/\(self.name.packageTargetName)/.cant-see-me/"], workingDirectory:moduleCantSeeMe).runSync()
 		switch submoduleCloneCommandResult.exitCode {
 			case 0:
 				// valid result
@@ -165,9 +169,6 @@ struct BoostSourceModule:Codable, Hashable {
 			default:
 				throw ValidationError(message:"the command '\(submoduleCloneCommandResult)' failed with exit code \(submoduleCloneCommandResult.exitCode).")
 		}
-
-		// this is the path that the project was cloned to
-		let clonedName = moduleCantSeeMe.appendingPathComponent(self.cloneName)
 		
 		// checkout the correct commit hash
 		let gitFetchResult = try await Command("git", arguments:["fetch"], workingDirectory:clonedName).runSync()

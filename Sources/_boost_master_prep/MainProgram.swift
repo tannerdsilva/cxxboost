@@ -259,7 +259,7 @@ struct PrepareBoostSource:AsyncParsableCommand {
 		for moduleName in allModuleNames {
 			let hasSource = buildableTargets.contains(moduleName)
 			let newModule = try await BoostSourceModule(boostdepListName:moduleName, hasSource:hasSource, basedIn:boostPath, dependencies:moduleDependencies[moduleName] ?? [],logger:mainLogger)
-			try await newModule.initializeModule(log:mainLogger, allModulesPath:packBaseURL.appendingPathComponent("Modules"))
+			try await newModule.initializeModule(log:mainLogger, packageBasePath:packBaseURL)
 			moduleBuild[moduleName] = newModule
 		}
 		
