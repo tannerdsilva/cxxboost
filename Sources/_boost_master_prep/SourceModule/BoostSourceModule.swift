@@ -196,7 +196,7 @@ struct BoostSourceModule:Codable, Hashable {
 		log.info("successfully checked out the correct commit hash.")
 
 		// symlink the include directory into the module directory
-		let symIncludeDest = clonedIncludeName
+		let symIncludeDest = clonedIncludeName.appendingPathComponent("boost")
 		let symIncludeSource = moduleIncludes.appendingPathComponent("boost")
 		do {
 			log.info("attempting to create symlink from (source) '\(symIncludeDest)' to (destination) '\(symIncludeSource)'")
