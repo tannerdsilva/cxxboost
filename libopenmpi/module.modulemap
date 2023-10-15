@@ -1,0 +1,4 @@
+module openmpi [system] {
+    header "mpi.h"
+    export *
+}

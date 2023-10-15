@@ -1,0 +1,5 @@
+module cxxboost_portable_binary_archives [system] {
+	header "./boost/archive/portable_binary_archive.hpp"
+	header "./boost/archive/portable_binary_iarchive.hpp"
+	header "./boost/archive/portable_binary_oarchive.hpp"
+}
