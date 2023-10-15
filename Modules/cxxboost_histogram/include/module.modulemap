@@ -1,0 +1,5 @@
+module cxxboost_histogram [system] {
+	header "./boost/histogram.hpp"
+	header "./boost/histogram/*"
+	export *
+}

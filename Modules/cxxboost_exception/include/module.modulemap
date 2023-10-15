@@ -1,0 +1,5 @@
+module cxxboost_exception [system] {
+	header "./boost/exception_ptr.hpp"
+	header "./boost/exception/*"
+	export *
+}

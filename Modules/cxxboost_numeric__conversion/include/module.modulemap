@@ -1,0 +1,5 @@
+module cxxboost_numeric__conversion [system] {
+	header "./boost/cast.hpp"
+	header "./boost/numeric/*"
+	export *
+}

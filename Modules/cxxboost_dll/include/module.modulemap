@@ -1,0 +1,5 @@
+module cxxboost_dll [system] {
+	header "./boost/dll.hpp"
+	header "./boost/dll/*"
+	export *
+}

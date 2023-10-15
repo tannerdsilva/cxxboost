@@ -1,0 +1,6 @@
+module cxxboost_lexical_cast [system] {
+	header "./boost/lexical_cast.hpp"
+	header "./boost/detail/*"
+	header "./boost/lexical_cast/*"
+	export *
+}

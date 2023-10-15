@@ -1,0 +1,5 @@
+module cxxboost_stacktrace [system] {
+	header "./boost/stacktrace.hpp"
+	header "./boost/stacktrace/*"
+	export *
+}

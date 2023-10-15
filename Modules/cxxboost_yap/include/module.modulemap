@@ -1,0 +1,4 @@
+module cxxboost_yap [system] {
+	header "./boost/yap/*"
+	export *
+}

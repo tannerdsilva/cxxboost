@@ -1,0 +1,5 @@
+module cxxboost_beast [system] {
+	header "./boost/beast/*"
+	header "./boost/beast.hpp"
+	export *
+}

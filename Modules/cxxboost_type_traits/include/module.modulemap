@@ -1,0 +1,7 @@
+module cxxboost_type_traits [system] {
+	header "./boost/type_traits/*"
+	header "./boost/type_traits.hpp"
+	header "./boost/aligned_storage.hpp"
+	header "./boost/utility/*"
+	export *
+}

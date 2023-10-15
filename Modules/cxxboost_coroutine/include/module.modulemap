@@ -1,0 +1,4 @@
+module cxxboost_coroutine [system] {
+	header "./boost/coroutine/*"
+	export *
+}

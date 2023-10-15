@@ -1,0 +1,6 @@
+module cxxboost_system [system] {
+	header "./boost/cerrno.hpp"
+	header "./boost/system.hpp"
+	header "./boost/system/*"
+	export *
+}

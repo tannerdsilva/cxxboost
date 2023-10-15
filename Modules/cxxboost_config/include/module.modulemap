@@ -1,0 +1,10 @@
+module cxxboost_config [system] {
+	header "./boost/config/*"
+	header "./boost/config.hpp"
+	header "./boost/limits.hpp"
+	header "./boost/version.hpp"
+	header "./boost/detail/*"
+	header "./boost/cxx11_char_types.hpp"
+	header "./boost/cstdint.hpp"
+	export *
+}

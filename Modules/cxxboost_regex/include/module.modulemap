@@ -1,0 +1,7 @@
+module cxxboost_regex [system] {
+	header "./boost/cregex.hpp"
+	header "./boost/regex.hpp"
+	header "./boost/regex/*"
+	header "./boost/regex_fwd.hpp"
+	export *
+}

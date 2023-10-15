@@ -1,0 +1,5 @@
+module cxxboost_endian [system] {
+	header "./boost/endian/*"
+	header "./boost/endian.hpp"
+	export *
+}

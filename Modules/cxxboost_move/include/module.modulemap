@@ -1,0 +1,4 @@
+module cxxboost_move [system] {
+	header "./boost/move/*"
+	export *
+}

@@ -1,0 +1,4 @@
+module cxxboost_tuple [system] {
+	header "./boost/tuple/*"
+	export *
+}

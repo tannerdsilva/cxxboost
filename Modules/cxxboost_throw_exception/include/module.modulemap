@@ -1,0 +1,5 @@
+module cxxboost_throw_exception [system] {
+	header "./boost/throw_exception.hpp"
+	header "./boost/exception/*"
+	export *
+}

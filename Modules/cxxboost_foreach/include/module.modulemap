@@ -1,0 +1,5 @@
+module cxxboost_foreach [system] {
+	header "./boost/foreach_fwd.hpp"
+	header "./boost/foreach.hpp"
+	export *
+}

@@ -1,0 +1,5 @@
+module cxxboost_geometry [system] {
+	header "./boost/geometry/*"
+	header "./boost/geometry.hpp"
+	export *
+}

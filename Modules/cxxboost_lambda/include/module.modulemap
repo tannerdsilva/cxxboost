@@ -1,0 +1,4 @@
+module cxxboost_lambda [system] {
+	header "./boost/lambda/*"
+	export *
+}

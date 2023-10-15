@@ -1,0 +1,4 @@
+module cxxboost_polygon [system] {
+	header "./boost/polygon/*"
+	export *
+}

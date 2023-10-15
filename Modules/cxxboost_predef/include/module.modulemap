@@ -1,0 +1,4 @@
+module cxxboost_predef [system] {
+	header "./boost/predef/*"
+	export *
+}

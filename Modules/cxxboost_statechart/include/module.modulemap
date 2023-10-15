@@ -1,0 +1,4 @@
+module cxxboost_statechart [system] {
+	header "./boost/statechart/*"
+	export *
+}

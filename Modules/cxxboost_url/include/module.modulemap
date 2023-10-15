@@ -1,0 +1,5 @@
+module cxxboost_url [system] {
+	header "./boost/url/*"
+	header "./boost/url.hpp"
+	export *
+}

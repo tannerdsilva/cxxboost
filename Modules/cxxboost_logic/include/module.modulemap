@@ -1,0 +1,4 @@
+module cxxboost_logic [system] {
+	header "./boost/logic/*"
+	export *
+}

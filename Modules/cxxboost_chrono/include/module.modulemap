@@ -1,0 +1,5 @@
+module cxxboost_chrono [system] {
+	header "./boost/chrono/*"
+	header "./boost/chrono.hpp"
+	export *
+}

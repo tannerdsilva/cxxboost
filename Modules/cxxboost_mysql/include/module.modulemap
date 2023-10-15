@@ -1,0 +1,5 @@
+module cxxboost_mysql [system] {
+	header "./boost/mysql.hpp"
+	header "./boost/mysql/*"
+	export *
+}

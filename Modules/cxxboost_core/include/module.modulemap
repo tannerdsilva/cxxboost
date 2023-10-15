@@ -1,0 +1,15 @@
+module cxxboost_core [system] {
+	header "./boost/non_type.hpp"
+	header "./boost/core/*"
+	header "./boost/type.hpp"
+	header "./boost/checked_delete.hpp"
+	header "./boost/detail/*"
+	header "./boost/swap.hpp"
+	header "./boost/visit_each.hpp"
+	header "./boost/iterator.hpp"
+	header "./boost/get_pointer.hpp"
+	header "./boost/ref.hpp"
+	header "./boost/noncopyable.hpp"
+	header "./boost/utility/*"
+	export *
+}

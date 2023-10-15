@@ -1,0 +1,4 @@
+module cxxboost_lockfree [system] {
+	header "./boost/lockfree/*"
+	export *
+}

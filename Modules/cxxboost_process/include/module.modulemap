@@ -1,0 +1,5 @@
+module cxxboost_process [system] {
+	header "./boost/process.hpp"
+	header "./boost/process/*"
+	export *
+}

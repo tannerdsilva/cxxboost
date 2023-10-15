@@ -1,0 +1,5 @@
+module cxxboost_align [system] {
+	header "./boost/align.hpp"
+	header "./boost/align/*"
+	export *
+}

@@ -1,0 +1,4 @@
+module cxxboost_test [system] {
+	header "./boost/test/*"
+	export *
+}

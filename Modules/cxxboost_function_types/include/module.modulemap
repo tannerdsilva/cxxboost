@@ -1,0 +1,4 @@
+module cxxboost_function_types [system] {
+	header "./boost/function_types/*"
+	export *
+}

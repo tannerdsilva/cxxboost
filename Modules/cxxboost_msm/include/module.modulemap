@@ -1,0 +1,4 @@
+module cxxboost_msm [system] {
+	header "./boost/msm/*"
+	export *
+}

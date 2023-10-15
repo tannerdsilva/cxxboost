@@ -1,0 +1,5 @@
+module cxxboost_format [system] {
+	header "./boost/format/*"
+	header "./boost/format.hpp"
+	export *
+}

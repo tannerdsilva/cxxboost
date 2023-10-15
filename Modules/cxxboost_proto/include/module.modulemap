@@ -1,0 +1,4 @@
+module cxxboost_proto [system] {
+	header "./boost/proto/*"
+	export *
+}

@@ -1,0 +1,4 @@
+module cxxboost_numeric__odeint [system] {
+	header "./boost/numeric/*"
+	export *
+}

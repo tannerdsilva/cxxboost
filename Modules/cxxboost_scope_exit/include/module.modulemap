@@ -1,0 +1,4 @@
+module cxxboost_scope_exit [system] {
+	header "./boost/scope_exit.hpp"
+	export *
+}

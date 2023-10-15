@@ -1,0 +1,4 @@
+module cxxboost_compatibility [system] {
+	header "./boost/compatibility/*"
+	export *
+}

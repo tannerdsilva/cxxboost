@@ -1,0 +1,4 @@
+module cxxboost_xpressive [system] {
+	header "./boost/xpressive/*"
+	export *
+}

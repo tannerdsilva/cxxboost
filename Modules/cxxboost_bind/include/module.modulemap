@@ -1,0 +1,7 @@
+module cxxboost_bind [system] {
+	header "./boost/mem_fn.hpp"
+	header "./boost/is_placeholder.hpp"
+	header "./boost/bind/*"
+	header "./boost/bind.hpp"
+	export *
+}

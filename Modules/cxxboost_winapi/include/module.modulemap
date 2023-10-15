@@ -1,0 +1,5 @@
+module cxxboost_winapi [system] {
+	header "./boost/detail/*"
+	header "./boost/winapi/*"
+	export *
+}

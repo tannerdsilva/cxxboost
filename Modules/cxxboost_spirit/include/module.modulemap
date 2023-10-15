@@ -1,0 +1,5 @@
+module cxxboost_spirit [system] {
+	header "./boost/spirit/*"
+	header "./boost/spirit.hpp"
+	export *
+}

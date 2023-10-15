@@ -1,0 +1,5 @@
+module cxxboost_preprocessor [system] {
+	header "./boost/preprocessor.hpp"
+	header "./boost/preprocessor/*"
+	export *
+}

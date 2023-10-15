@@ -1,0 +1,4 @@
+module cxxboost_property_map_parallel [system] {
+	header "./boost/property_map/*"
+	export *
+}

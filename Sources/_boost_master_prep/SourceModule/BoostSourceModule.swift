@@ -155,7 +155,7 @@ struct BoostSourceModule:Codable, Hashable {
 		let clonedSourceName = clonedName.appendingPathComponent("src")
 
 		// clone the submodule if needed.
-		let submoduleCloneCommand = try Command("git", arguments:["-C", packageBasePath.path, "submodule", "add", self.remoteURL, clonedName.path], workingDirectory:packageBasePath)
+		let submoduleCloneCommand = try Command("git", arguments:["-C", packageBasePath.path, "submodule", "add", "--force", self.remoteURL, clonedName.path], workingDirectory:packageBasePath)
 		log.critical("attempting to run command '\(submoduleCloneCommand)'")
 		
 		let submoduleCloneCommandResult = try await submoduleCloneCommand.runSync()
@@ -199,6 +199,7 @@ struct BoostSourceModule:Codable, Hashable {
 		let symIncludeDest = clonedIncludeName.appendingPathComponent("boost")
 		let symIncludeSource = moduleIncludes.appendingPathComponent("boost")
 		do {
+			try? FileManager.default.removeItem(at:symIncludeSource)
 			log.info("attempting to create symlink from (source) '\(symIncludeSource)' to (destination) '\(symIncludeDest)'")
 			try FileManager.default.createSymbolicLink(at:symIncludeSource, withDestinationURL:symIncludeDest)
 			log.info("successfully created symlink from (source) '\(symIncludeSource)' to (destination) '\(symIncludeDest)'")
@@ -208,6 +209,7 @@ struct BoostSourceModule:Codable, Hashable {
 		}
 		// symlink the source directory into the module directory
 		if self.hasSource {
+			try? FileManager.default.removeItem(at:moduleSources)
 			try FileManager.default.createSymbolicLink(at:moduleSources, withDestinationURL:clonedSourceName)
 		}
 	}

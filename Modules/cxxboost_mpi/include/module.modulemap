@@ -1,0 +1,5 @@
+module cxxboost_mpi [system] {
+	header "./boost/mpi.hpp"
+	header "./boost/mpi/*"
+	export *
+}

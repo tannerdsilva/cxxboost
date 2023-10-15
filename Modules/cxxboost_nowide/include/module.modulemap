@@ -1,0 +1,4 @@
+module cxxboost_nowide [system] {
+	header "./boost/nowide/*"
+	export *
+}

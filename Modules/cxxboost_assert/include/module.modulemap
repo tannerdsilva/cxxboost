@@ -1,0 +1,6 @@
+module cxxboost_assert [system] {
+	header "./boost/assert/*"
+	header "./boost/current_function.hpp"
+	header "./boost/assert.hpp"
+	export *
+}

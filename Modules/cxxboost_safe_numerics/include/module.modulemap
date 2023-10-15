@@ -1,0 +1,4 @@
+module cxxboost_safe_numerics [system] {
+	header "./boost/safe_numerics/*"
+	export *
+}

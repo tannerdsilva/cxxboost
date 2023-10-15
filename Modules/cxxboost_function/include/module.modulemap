@@ -1,0 +1,6 @@
+module cxxboost_function [system] {
+	header "./boost/function.hpp"
+	header "./boost/function/*"
+	header "./boost/function_equal.hpp"
+	export *
+}

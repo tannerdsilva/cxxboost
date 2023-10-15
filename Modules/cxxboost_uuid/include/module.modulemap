@@ -1,0 +1,4 @@
+module cxxboost_uuid [system] {
+	header "./boost/uuid/*"
+	export *
+}

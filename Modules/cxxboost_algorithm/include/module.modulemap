@@ -1,0 +1,4 @@
+module cxxboost_algorithm [system] {
+	header "./boost/algorithm/*"
+	export *
+}

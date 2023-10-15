@@ -1,0 +1,8 @@
+module cxxboost_integer [system] {
+	header "./boost/integer.hpp"
+	header "./boost/integer_fwd.hpp"
+	header "./boost/integer_traits.hpp"
+	header "./boost/integer/*"
+	header "./boost/pending/*"
+	export *
+}

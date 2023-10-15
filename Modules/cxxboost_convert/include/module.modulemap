@@ -1,0 +1,6 @@
+module cxxboost_convert [system] {
+	header "./boost/make_default.hpp"
+	header "./boost/convert/*"
+	header "./boost/convert.hpp"
+	export *
+}

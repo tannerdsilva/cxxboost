@@ -1,0 +1,5 @@
+module cxxboost_mp11 [system] {
+	header "./boost/mp11/*"
+	header "./boost/mp11.hpp"
+	export *
+}

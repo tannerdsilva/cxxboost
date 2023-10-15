@@ -1,0 +1,4 @@
+module cxxboost_interprocess [system] {
+	header "./boost/interprocess/*"
+	export *
+}

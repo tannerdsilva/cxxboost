@@ -1,0 +1,4 @@
+module cxxboost_fusion [system] {
+	header "./boost/fusion/*"
+	export *
+}

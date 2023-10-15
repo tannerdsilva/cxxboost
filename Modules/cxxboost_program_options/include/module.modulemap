@@ -1,0 +1,5 @@
+module cxxboost_program_options [system] {
+	header "./boost/program_options/*"
+	header "./boost/program_options.hpp"
+	export *
+}

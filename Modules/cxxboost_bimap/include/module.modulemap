@@ -1,0 +1,5 @@
+module cxxboost_bimap [system] {
+	header "./boost/bimap.hpp"
+	header "./boost/bimap/*"
+	export *
+}

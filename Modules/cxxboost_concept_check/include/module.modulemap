@@ -1,0 +1,7 @@
+module cxxboost_concept_check [system] {
+	header "./boost/concept_check.hpp"
+	header "./boost/concept_check/*"
+	header "./boost/concept/*"
+	header "./boost/concept_archetype.hpp"
+	export *
+}

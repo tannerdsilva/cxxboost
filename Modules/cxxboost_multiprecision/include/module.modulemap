@@ -1,0 +1,4 @@
+module cxxboost_multiprecision [system] {
+	header "./boost/multiprecision/*"
+	export *
+}

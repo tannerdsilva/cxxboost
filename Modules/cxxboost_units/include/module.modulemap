@@ -1,0 +1,4 @@
+module cxxboost_units [system] {
+	header "./boost/units/*"
+	export *
+}

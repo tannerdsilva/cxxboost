@@ -1,0 +1,5 @@
+module cxxboost_functional [system] {
+	header "./boost/functional.hpp"
+	header "./boost/functional/*"
+	export *
+}

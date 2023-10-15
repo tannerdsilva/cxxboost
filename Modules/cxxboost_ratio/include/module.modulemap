@@ -1,0 +1,5 @@
+module cxxboost_ratio [system] {
+	header "./boost/ratio/*"
+	header "./boost/ratio.hpp"
+	export *
+}

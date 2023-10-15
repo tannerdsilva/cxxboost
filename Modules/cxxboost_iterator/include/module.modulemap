@@ -1,0 +1,12 @@
+module cxxboost_iterator [system] {
+	header "./boost/shared_container_iterator.hpp"
+	header "./boost/next_prior.hpp"
+	header "./boost/iterator_adaptors.hpp"
+	header "./boost/pointee.hpp"
+	header "./boost/generator_iterator.hpp"
+	header "./boost/iterator/*"
+	header "./boost/indirect_reference.hpp"
+	header "./boost/function_output_iterator.hpp"
+	header "./boost/pending/*"
+	export *
+}

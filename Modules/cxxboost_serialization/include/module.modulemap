@@ -1,0 +1,5 @@
+module cxxboost_serialization [system] {
+	header "./boost/archive/*"
+	header "./boost/serialization/*"
+	export *
+}

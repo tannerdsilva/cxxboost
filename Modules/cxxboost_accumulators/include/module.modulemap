@@ -1,0 +1,4 @@
+module cxxboost_accumulators [system] {
+	header "./boost/accumulators/*"
+	export *
+}

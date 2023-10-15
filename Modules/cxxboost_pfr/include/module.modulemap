@@ -1,0 +1,5 @@
+module cxxboost_pfr [system] {
+	header "./boost/pfr.hpp"
+	header "./boost/pfr/*"
+	export *
+}

@@ -1,0 +1,4 @@
+module cxxboost_ptr_container [system] {
+	header "./boost/ptr_container/*"
+	export *
+}

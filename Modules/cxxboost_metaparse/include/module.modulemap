@@ -1,0 +1,5 @@
+module cxxboost_metaparse [system] {
+	header "./boost/metaparse.hpp"
+	header "./boost/metaparse/*"
+	export *
+}

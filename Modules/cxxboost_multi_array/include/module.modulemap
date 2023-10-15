@@ -1,0 +1,5 @@
+module cxxboost_multi_array [system] {
+	header "./boost/multi_array/*"
+	header "./boost/multi_array.hpp"
+	export *
+}

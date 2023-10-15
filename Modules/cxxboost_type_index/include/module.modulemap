@@ -1,0 +1,5 @@
+module cxxboost_type_index [system] {
+	header "./boost/type_index.hpp"
+	header "./boost/type_index/*"
+	export *
+}

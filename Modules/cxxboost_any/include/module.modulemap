@@ -1,0 +1,5 @@
+module cxxboost_any [system] {
+	header "./boost/any/*"
+	header "./boost/any.hpp"
+	export *
+}

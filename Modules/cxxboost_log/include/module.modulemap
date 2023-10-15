@@ -1,0 +1,4 @@
+module cxxboost_log [system] {
+	header "./boost/log/*"
+	export *
+}

@@ -1,0 +1,6 @@
+module cxxboost_math [system] {
+	header "./boost/math/*"
+	header "./boost/math_fwd.hpp"
+	header "./boost/cstdfloat.hpp"
+	export *
+}

@@ -1,0 +1,5 @@
+module cxxboost_phoenix [system] {
+	header "./boost/phoenix/*"
+	header "./boost/phoenix.hpp"
+	export *
+}

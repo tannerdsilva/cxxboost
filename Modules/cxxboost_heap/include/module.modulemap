@@ -1,0 +1,4 @@
+module cxxboost_heap [system] {
+	header "./boost/heap/*"
+	export *
+}

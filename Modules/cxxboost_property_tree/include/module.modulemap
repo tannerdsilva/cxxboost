@@ -1,0 +1,4 @@
+module cxxboost_property_tree [system] {
+	header "./boost/property_tree/*"
+	export *
+}

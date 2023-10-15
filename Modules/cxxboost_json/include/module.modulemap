@@ -1,0 +1,5 @@
+module cxxboost_json [system] {
+	header "./boost/json.hpp"
+	header "./boost/json/*"
+	export *
+}

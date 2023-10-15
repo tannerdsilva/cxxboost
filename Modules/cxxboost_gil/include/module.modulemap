@@ -1,0 +1,5 @@
+module cxxboost_gil [system] {
+	header "./boost/gil/*"
+	header "./boost/gil.hpp"
+	export *
+}

@@ -1,0 +1,6 @@
+module cxxboost_graph [system] {
+	header "./boost/graph/*"
+	header "./boost/detail/*"
+	header "./boost/pending/*"
+	export *
+}

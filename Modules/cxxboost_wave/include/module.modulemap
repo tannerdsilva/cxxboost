@@ -1,0 +1,5 @@
+module cxxboost_wave [system] {
+	header "./boost/wave.hpp"
+	header "./boost/wave/*"
+	export *
+}

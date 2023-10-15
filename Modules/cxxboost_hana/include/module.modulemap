@@ -1,0 +1,5 @@
+module cxxboost_hana [system] {
+	header "./boost/hana.hpp"
+	header "./boost/hana/*"
+	export *
+}

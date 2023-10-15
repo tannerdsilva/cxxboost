@@ -1,0 +1,10 @@
+module cxxboost_utility [system] {
+	header "./boost/utility.hpp"
+	header "./boost/operators_v1.hpp"
+	header "./boost/detail/*"
+	header "./boost/call_traits.hpp"
+	header "./boost/operators.hpp"
+	header "./boost/compressed_pair.hpp"
+	header "./boost/utility/*"
+	export *
+}

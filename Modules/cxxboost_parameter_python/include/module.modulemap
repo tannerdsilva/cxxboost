@@ -1,0 +1,4 @@
+module cxxboost_parameter_python [system] {
+	header "./boost/parameter/*"
+	export *
+}

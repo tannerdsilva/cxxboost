@@ -1,0 +1,5 @@
+module cxxboost_signals2 [system] {
+	header "./boost/signals2/*"
+	header "./boost/signals2.hpp"
+	export *
+}

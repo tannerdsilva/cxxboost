@@ -1,0 +1,5 @@
+module cxxboost_filesystem [system] {
+	header "./boost/filesystem.hpp"
+	header "./boost/filesystem/*"
+	export *
+}

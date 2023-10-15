@@ -1,0 +1,4 @@
+module cxxboost_mpl [system] {
+	header "./boost/mpl/*"
+	export *
+}

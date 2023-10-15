@@ -1,0 +1,5 @@
+module cxxboost_range [system] {
+	header "./boost/range.hpp"
+	header "./boost/range/*"
+	export *
+}

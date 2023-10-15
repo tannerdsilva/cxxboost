@@ -1,0 +1,7 @@
+module cxxboost_optional [system] {
+	header "./boost/none_t.hpp"
+	header "./boost/optional/*"
+	header "./boost/optional.hpp"
+	header "./boost/none.hpp"
+	export *
+}

@@ -1,0 +1,4 @@
+module cxxboost_tti [system] {
+	header "./boost/tti/*"
+	export *
+}

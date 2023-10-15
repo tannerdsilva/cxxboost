@@ -1,0 +1,4 @@
+module cxxboost_vmd [system] {
+	header "./boost/vmd/*"
+	export *
+}

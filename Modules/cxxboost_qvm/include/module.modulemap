@@ -1,0 +1,6 @@
+module cxxboost_qvm [system] {
+	header "./boost/qvm/*"
+	header "./boost/qvm.hpp"
+	header "./boost/qvm_lite.hpp"
+	export *
+}

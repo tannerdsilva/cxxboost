@@ -1,0 +1,6 @@
+module cxxboost_contract [system] {
+	header "./boost/contract/*"
+	header "./boost/contract_macro.hpp"
+	header "./boost/contract.hpp"
+	export *
+}

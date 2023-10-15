@@ -1,0 +1,5 @@
+module cxxboost_compute [system] {
+	header "./boost/compute.hpp"
+	header "./boost/compute/*"
+	export *
+}

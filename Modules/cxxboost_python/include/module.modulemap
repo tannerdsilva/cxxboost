@@ -1,0 +1,5 @@
+module cxxboost_python [system] {
+	header "./boost/python.hpp"
+	header "./boost/python/*"
+	export *
+}

@@ -1,0 +1,5 @@
+module cxxboost_thread [system] {
+	header "./boost/thread.hpp"
+	header "./boost/thread/*"
+	export *
+}

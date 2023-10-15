@@ -1,0 +1,4 @@
+module cxxboost_iostreams [system] {
+	header "./boost/iostreams/*"
+	export *
+}

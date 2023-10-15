@@ -1,0 +1,5 @@
+module cxxboost_assign [system] {
+	header "./boost/assign.hpp"
+	header "./boost/assign/*"
+	export *
+}

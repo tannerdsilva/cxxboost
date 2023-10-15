@@ -1,0 +1,5 @@
+module cxxboost_io [system] {
+	header "./boost/io/*"
+	header "./boost/io_fwd.hpp"
+	export *
+}

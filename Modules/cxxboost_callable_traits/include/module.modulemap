@@ -1,0 +1,5 @@
+module cxxboost_callable_traits [system] {
+	header "./boost/callable_traits/*"
+	header "./boost/callable_traits.hpp"
+	export *
+}

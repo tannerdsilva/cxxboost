@@ -1,0 +1,6 @@
+module cxxboost_atomic [system] {
+	header "./boost/memory_order.hpp"
+	header "./boost/atomic.hpp"
+	header "./boost/atomic/*"
+	export *
+}

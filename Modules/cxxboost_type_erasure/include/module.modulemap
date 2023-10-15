@@ -1,0 +1,4 @@
+module cxxboost_type_erasure [system] {
+	header "./boost/type_erasure/*"
+	export *
+}

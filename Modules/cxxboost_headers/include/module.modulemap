@@ -1,0 +1,4 @@
+module cxxboost_headers [system] {
+	header "./boost/headers/*"
+	export *
+}

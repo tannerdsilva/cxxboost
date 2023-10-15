@@ -1,0 +1,5 @@
+module cxxboost_flyweight [system] {
+	header "./boost/flyweight.hpp"
+	header "./boost/flyweight/*"
+	export *
+}

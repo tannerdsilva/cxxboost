@@ -1,0 +1,4 @@
+module cxxboost_sort [system] {
+	header "./boost/sort/*"
+	export *
+}

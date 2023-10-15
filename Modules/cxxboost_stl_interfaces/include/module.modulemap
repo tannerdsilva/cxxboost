@@ -1,0 +1,4 @@
+module cxxboost_stl_interfaces [system] {
+	header "./boost/stl_interfaces/*"
+	export *
+}

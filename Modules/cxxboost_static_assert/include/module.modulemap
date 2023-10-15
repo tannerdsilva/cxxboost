@@ -1,0 +1,4 @@
+module cxxboost_static_assert [system] {
+	header "./boost/static_assert.hpp"
+	export *
+}

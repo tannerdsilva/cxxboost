@@ -1,0 +1,5 @@
+module cxxboost_variant2 [system] {
+	header "./boost/variant2/*"
+	header "./boost/variant2.hpp"
+	export *
+}

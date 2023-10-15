@@ -1,0 +1,6 @@
+module cxxboost_unordered [system] {
+	header "./boost/unordered_map.hpp"
+	header "./boost/unordered/*"
+	header "./boost/unordered_set.hpp"
+	export *
+}

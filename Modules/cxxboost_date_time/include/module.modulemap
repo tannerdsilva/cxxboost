@@ -1,0 +1,5 @@
+module cxxboost_date_time [system] {
+	header "./boost/date_time/*"
+	header "./boost/date_time.hpp"
+	export *
+}

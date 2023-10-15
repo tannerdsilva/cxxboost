@@ -1,0 +1,5 @@
+module cxxboost_asio [system] {
+	header "./boost/asio/*"
+	header "./boost/asio.hpp"
+	export *
+}

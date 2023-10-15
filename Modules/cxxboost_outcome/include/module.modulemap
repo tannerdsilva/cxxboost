@@ -1,0 +1,5 @@
+module cxxboost_outcome [system] {
+	header "./boost/outcome/*"
+	header "./boost/outcome.hpp"
+	export *
+}

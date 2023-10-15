@@ -1,0 +1,5 @@
+module cxxboost_container_hash [system] {
+	header "./boost/container_hash/*"
+	header "./boost/functional/*"
+	export *
+}

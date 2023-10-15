@@ -1,0 +1,7 @@
+module cxxboost_detail [system] {
+	header "./boost/blank.hpp"
+	header "./boost/blank_fwd.hpp"
+	header "./boost/detail/*"
+	header "./boost/cstdlib.hpp"
+	export *
+}

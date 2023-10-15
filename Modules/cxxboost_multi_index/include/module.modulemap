@@ -1,0 +1,6 @@
+module cxxboost_multi_index [system] {
+	header "./boost/multi_index_container.hpp"
+	header "./boost/multi_index/*"
+	header "./boost/multi_index_container_fwd.hpp"
+	export *
+}

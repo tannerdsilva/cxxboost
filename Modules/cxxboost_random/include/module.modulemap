@@ -1,0 +1,6 @@
+module cxxboost_random [system] {
+	header "./boost/nondet_random.hpp"
+	header "./boost/random.hpp"
+	header "./boost/random/*"
+	export *
+}

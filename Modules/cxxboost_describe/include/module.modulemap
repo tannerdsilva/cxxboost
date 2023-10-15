@@ -1,0 +1,5 @@
+module cxxboost_describe [system] {
+	header "./boost/describe/*"
+	header "./boost/describe.hpp"
+	export *
+}

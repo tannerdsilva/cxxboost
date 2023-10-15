@@ -1,0 +1,4 @@
+module cxxboost_numeric__ublas [system] {
+	header "./boost/numeric/*"
+	export *
+}

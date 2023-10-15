@@ -1,0 +1,4 @@
+module cxxboost_icl [system] {
+	header "./boost/icl/*"
+	export *
+}

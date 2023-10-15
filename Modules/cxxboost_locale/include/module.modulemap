@@ -1,0 +1,5 @@
+module cxxboost_locale [system] {
+	header "./boost/locale/*"
+	header "./boost/locale.hpp"
+	export *
+}

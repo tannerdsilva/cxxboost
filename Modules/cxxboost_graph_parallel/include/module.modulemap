@@ -1,0 +1,4 @@
+module cxxboost_graph_parallel [system] {
+	header "./boost/graph/*"
+	export *
+}

@@ -1,0 +1,5 @@
+module cxxboost_parameter [system] {
+	header "./boost/parameter/*"
+	header "./boost/parameter.hpp"
+	export *
+}

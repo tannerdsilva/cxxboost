@@ -1,0 +1,4 @@
+module cxxboost_numeric__interval [system] {
+	header "./boost/numeric/*"
+	export *
+}

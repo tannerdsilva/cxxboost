@@ -1,0 +1,6 @@
+module cxxboost_dynamic_bitset [system] {
+	header "./boost/dynamic_bitset_fwd.hpp"
+	header "./boost/dynamic_bitset.hpp"
+	header "./boost/dynamic_bitset/*"
+	export *
+}

@@ -1,0 +1,5 @@
+module cxxboost_local_function [system] {
+	header "./boost/local_function/*"
+	header "./boost/local_function.hpp"
+	export *
+}

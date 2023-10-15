@@ -1,0 +1,5 @@
+module cxxboost_leaf [system] {
+	header "./boost/leaf/*"
+	header "./boost/leaf.hpp"
+	export *
+}

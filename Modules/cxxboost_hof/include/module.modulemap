@@ -1,0 +1,5 @@
+module cxxboost_hof [system] {
+	header "./boost/hof/*"
+	header "./boost/hof.hpp"
+	export *
+}

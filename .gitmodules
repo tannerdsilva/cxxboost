@@ -1,0 +1,444 @@
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_histogram/.cant-see-me/histogram"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_histogram/.cant-see-me/histogram
+	url = https://github.com/boostorg/histogram.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_sort/.cant-see-me/sort"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_sort/.cant-see-me/sort
+	url = https://github.com/boostorg/sort.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_type_index/.cant-see-me/type_index"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_type_index/.cant-see-me/type_index
+	url = https://github.com/boostorg/type_index.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_random/.cant-see-me/random"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_random/.cant-see-me/random
+	url = https://github.com/boostorg/random.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_fusion/.cant-see-me/fusion"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_fusion/.cant-see-me/fusion
+	url = https://github.com/boostorg/fusion.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_exception/.cant-see-me/exception"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_exception/.cant-see-me/exception
+	url = https://github.com/boostorg/exception.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_program_options/.cant-see-me/program_options"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_program_options/.cant-see-me/program_options
+	url = https://github.com/boostorg/program_options.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_multi_array/.cant-see-me/multi_array"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_multi_array/.cant-see-me/multi_array
+	url = https://github.com/boostorg/multi_array.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_process/.cant-see-me/process"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_process/.cant-see-me/process
+	url = https://github.com/boostorg/process.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_flyweight/.cant-see-me/flyweight"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_flyweight/.cant-see-me/flyweight
+	url = https://github.com/boostorg/flyweight.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_function/.cant-see-me/function"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_function/.cant-see-me/function
+	url = https://github.com/boostorg/function.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_io/.cant-see-me/io"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_io/.cant-see-me/io
+	url = https://github.com/boostorg/io.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_lexical_cast/.cant-see-me/lexical_cast"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_lexical_cast/.cant-see-me/lexical_cast
+	url = https://github.com/boostorg/lexical_cast.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_coroutine/.cant-see-me/coroutine"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_coroutine/.cant-see-me/coroutine
+	url = https://github.com/boostorg/coroutine.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_mysql/.cant-see-me/mysql"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_mysql/.cant-see-me/mysql
+	url = https://github.com/boostorg/mysql.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_python/.cant-see-me/python"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_python/.cant-see-me/python
+	url = https://github.com/boostorg/python.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_rational/.cant-see-me/rational"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_rational/.cant-see-me/rational
+	url = https://github.com/boostorg/rational.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_move/.cant-see-me/move"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_move/.cant-see-me/move
+	url = https://github.com/boostorg/move.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_property_map/.cant-see-me/property_map"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_property_map/.cant-see-me/property_map
+	url = https://github.com/boostorg/property_map.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_url/.cant-see-me/url"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_url/.cant-see-me/url
+	url = https://github.com/boostorg/url.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_nowide/.cant-see-me/nowide"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_nowide/.cant-see-me/nowide
+	url = https://github.com/boostorg/nowide.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_ratio/.cant-see-me/ratio"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_ratio/.cant-see-me/ratio
+	url = https://github.com/boostorg/ratio.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_variant2/.cant-see-me/variant2"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_variant2/.cant-see-me/variant2
+	url = https://github.com/boostorg/variant2.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_range/.cant-see-me/range"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_range/.cant-see-me/range
+	url = https://github.com/boostorg/range.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_date_time/.cant-see-me/date_time"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_date_time/.cant-see-me/date_time
+	url = https://github.com/boostorg/date_time.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_smart_ptr/.cant-see-me/smart_ptr"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_smart_ptr/.cant-see-me/smart_ptr
+	url = https://github.com/boostorg/smart_ptr.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_integer/.cant-see-me/integer"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_integer/.cant-see-me/integer
+	url = https://github.com/boostorg/integer.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_geometry/.cant-see-me/geometry"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_geometry/.cant-see-me/geometry
+	url = https://github.com/boostorg/geometry.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_context/.cant-see-me/context"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_context/.cant-see-me/context
+	url = https://github.com/boostorg/context.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_coroutine2/.cant-see-me/coroutine2"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_coroutine2/.cant-see-me/coroutine2
+	url = https://github.com/boostorg/coroutine2.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_throw_exception/.cant-see-me/throw_exception"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_throw_exception/.cant-see-me/throw_exception
+	url = https://github.com/boostorg/throw_exception.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_intrusive/.cant-see-me/intrusive"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_intrusive/.cant-see-me/intrusive
+	url = https://github.com/boostorg/intrusive.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_leaf/.cant-see-me/leaf"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_leaf/.cant-see-me/leaf
+	url = https://github.com/boostorg/leaf.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_wave/.cant-see-me/wave"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_wave/.cant-see-me/wave
+	url = https://github.com/boostorg/wave.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_fiber/.cant-see-me/fiber"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_fiber/.cant-see-me/fiber
+	url = https://github.com/boostorg/fiber.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_metaparse/.cant-see-me/metaparse"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_metaparse/.cant-see-me/metaparse
+	url = https://github.com/boostorg/metaparse.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_dynamic_bitset/.cant-see-me/dynamic_bitset"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_dynamic_bitset/.cant-see-me/dynamic_bitset
+	url = https://github.com/boostorg/dynamic_bitset.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_winapi/.cant-see-me/winapi"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_winapi/.cant-see-me/winapi
+	url = https://github.com/boostorg/winapi.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_graph_parallel/.cant-see-me/graph_parallel"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_graph_parallel/.cant-see-me/graph_parallel
+	url = https://github.com/boostorg/graph_parallel.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_local_function/.cant-see-me/local_function"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_local_function/.cant-see-me/local_function
+	url = https://github.com/boostorg/local_function.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_any/.cant-see-me/any"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_any/.cant-see-me/any
+	url = https://github.com/boostorg/any.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_static_string/.cant-see-me/static_string"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_static_string/.cant-see-me/static_string
+	url = https://github.com/boostorg/static_string.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_preprocessor/.cant-see-me/preprocessor"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_preprocessor/.cant-see-me/preprocessor
+	url = https://github.com/boostorg/preprocessor.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_log/.cant-see-me/log"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_log/.cant-see-me/log
+	url = https://github.com/boostorg/log.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_json/.cant-see-me/json"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_json/.cant-see-me/json
+	url = https://github.com/boostorg/json.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_regex/.cant-see-me/regex"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_regex/.cant-see-me/regex
+	url = https://github.com/boostorg/regex.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_conversion/.cant-see-me/conversion"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_conversion/.cant-see-me/conversion
+	url = https://github.com/boostorg/conversion.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_mp11/.cant-see-me/mp11"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_mp11/.cant-see-me/mp11
+	url = https://github.com/boostorg/mp11.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_compatibility/.cant-see-me/compatibility"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_compatibility/.cant-see-me/compatibility
+	url = https://github.com/boostorg/compatibility.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_describe/.cant-see-me/describe"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_describe/.cant-see-me/describe
+	url = https://github.com/boostorg/describe.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_filesystem/.cant-see-me/filesystem"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_filesystem/.cant-see-me/filesystem
+	url = https://github.com/boostorg/filesystem.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_graph/.cant-see-me/graph"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_graph/.cant-see-me/graph
+	url = https://github.com/boostorg/graph.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_mpi/.cant-see-me/mpi"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_mpi/.cant-see-me/mpi
+	url = https://github.com/boostorg/mpi.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_safe_numerics/.cant-see-me/safe_numerics"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_safe_numerics/.cant-see-me/safe_numerics
+	url = https://github.com/boostorg/safe_numerics.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_typeof/.cant-see-me/typeof"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_typeof/.cant-see-me/typeof
+	url = https://github.com/boostorg/typeof.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_units/.cant-see-me/units"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_units/.cant-see-me/units
+	url = https://github.com/boostorg/units.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_align/.cant-see-me/align"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_align/.cant-see-me/align
+	url = https://github.com/boostorg/align.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_numeric__conversion/.cant-see-me/conversion"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_numeric__conversion/.cant-see-me/conversion
+	url = https://github.com/boostorg/numeric_conversion.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_system/.cant-see-me/system"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_system/.cant-see-me/system
+	url = https://github.com/boostorg/system.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_gil/.cant-see-me/gil"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_gil/.cant-see-me/gil
+	url = https://github.com/boostorg/gil.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_thread/.cant-see-me/thread"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_thread/.cant-see-me/thread
+	url = https://github.com/boostorg/thread.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_circular_buffer/.cant-see-me/circular_buffer"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_circular_buffer/.cant-see-me/circular_buffer
+	url = https://github.com/boostorg/circular_buffer.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_atomic/.cant-see-me/atomic"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_atomic/.cant-see-me/atomic
+	url = https://github.com/boostorg/atomic.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_multiprecision/.cant-see-me/multiprecision"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_multiprecision/.cant-see-me/multiprecision
+	url = https://github.com/boostorg/multiprecision.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_numeric__interval/.cant-see-me/interval"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_numeric__interval/.cant-see-me/interval
+	url = https://github.com/boostorg/interval.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_spirit/.cant-see-me/spirit"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_spirit/.cant-see-me/spirit
+	url = https://github.com/boostorg/spirit.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_endian/.cant-see-me/endian"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_endian/.cant-see-me/endian
+	url = https://github.com/boostorg/endian.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_msm/.cant-see-me/msm"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_msm/.cant-see-me/msm
+	url = https://github.com/boostorg/msm.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_scope_exit/.cant-see-me/scope_exit"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_scope_exit/.cant-see-me/scope_exit
+	url = https://github.com/boostorg/scope_exit.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_parameter/.cant-see-me/parameter"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_parameter/.cant-see-me/parameter
+	url = https://github.com/boostorg/parameter.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_lockfree/.cant-see-me/lockfree"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_lockfree/.cant-see-me/lockfree
+	url = https://github.com/boostorg/lockfree.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_statechart/.cant-see-me/statechart"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_statechart/.cant-see-me/statechart
+	url = https://github.com/boostorg/statechart.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_beast/.cant-see-me/beast"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_beast/.cant-see-me/beast
+	url = https://github.com/boostorg/beast.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_functional/.cant-see-me/functional"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_functional/.cant-see-me/functional
+	url = https://github.com/boostorg/functional.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_algorithm/.cant-see-me/algorithm"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_algorithm/.cant-see-me/algorithm
+	url = https://github.com/boostorg/algorithm.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_static_assert/.cant-see-me/static_assert"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_static_assert/.cant-see-me/static_assert
+	url = https://github.com/boostorg/static_assert.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_xpressive/.cant-see-me/xpressive"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_xpressive/.cant-see-me/xpressive
+	url = https://github.com/boostorg/xpressive.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_function_types/.cant-see-me/function_types"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_function_types/.cant-see-me/function_types
+	url = https://github.com/boostorg/function_types.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_chrono/.cant-see-me/chrono"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_chrono/.cant-see-me/chrono
+	url = https://github.com/boostorg/chrono.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_foreach/.cant-see-me/foreach"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_foreach/.cant-see-me/foreach
+	url = https://github.com/boostorg/foreach.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_outcome/.cant-see-me/outcome"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_outcome/.cant-see-me/outcome
+	url = https://github.com/boostorg/outcome.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_parameter_python/.cant-see-me/parameter_python"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_parameter_python/.cant-see-me/parameter_python
+	url = https://github.com/boostorg/parameter_python.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_type_traits/.cant-see-me/type_traits"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_type_traits/.cant-see-me/type_traits
+	url = https://github.com/boostorg/type_traits.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_bind/.cant-see-me/bind"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_bind/.cant-see-me/bind
+	url = https://github.com/boostorg/bind.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_type_erasure/.cant-see-me/type_erasure"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_type_erasure/.cant-see-me/type_erasure
+	url = https://github.com/boostorg/type_erasure.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_container/.cant-see-me/container"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_container/.cant-see-me/container
+	url = https://github.com/boostorg/container.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_bimap/.cant-see-me/bimap"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_bimap/.cant-see-me/bimap
+	url = https://github.com/boostorg/bimap.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_stacktrace/.cant-see-me/stacktrace"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_stacktrace/.cant-see-me/stacktrace
+	url = https://github.com/boostorg/stacktrace.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_headers/.cant-see-me/headers"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_headers/.cant-see-me/headers
+	url = https://github.com/boostorg/headers.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_iostreams/.cant-see-me/iostreams"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_iostreams/.cant-see-me/iostreams
+	url = https://github.com/boostorg/iostreams.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_config/.cant-see-me/config"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_config/.cant-see-me/config
+	url = https://github.com/boostorg/config.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_crc/.cant-see-me/crc"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_crc/.cant-see-me/crc
+	url = https://github.com/boostorg/crc.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_iterator/.cant-see-me/iterator"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_iterator/.cant-see-me/iterator
+	url = https://github.com/boostorg/iterator.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_numeric__odeint/.cant-see-me/odeint"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_numeric__odeint/.cant-see-me/odeint
+	url = https://github.com/boostorg/odeint.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_polygon/.cant-see-me/polygon"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_polygon/.cant-see-me/polygon
+	url = https://github.com/boostorg/polygon.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_lambda/.cant-see-me/lambda"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_lambda/.cant-see-me/lambda
+	url = https://github.com/boostorg/lambda.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_concept_check/.cant-see-me/concept_check"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_concept_check/.cant-see-me/concept_check
+	url = https://github.com/boostorg/concept_check.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_locale/.cant-see-me/locale"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_locale/.cant-see-me/locale
+	url = https://github.com/boostorg/locale.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_predef/.cant-see-me/predef"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_predef/.cant-see-me/predef
+	url = https://github.com/boostorg/predef.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_math/.cant-see-me/math"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_math/.cant-see-me/math
+	url = https://github.com/boostorg/math.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_mpl/.cant-see-me/mpl"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_mpl/.cant-see-me/mpl
+	url = https://github.com/boostorg/mpl.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_lambda2/.cant-see-me/lambda2"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_lambda2/.cant-see-me/lambda2
+	url = https://github.com/boostorg/lambda2.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_numeric__ublas/.cant-see-me/ublas"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_numeric__ublas/.cant-see-me/ublas
+	url = https://github.com/boostorg/ublas.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_convert/.cant-see-me/convert"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_convert/.cant-see-me/convert
+	url = https://github.com/boostorg/convert.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_uuid/.cant-see-me/uuid"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_uuid/.cant-see-me/uuid
+	url = https://github.com/boostorg/uuid.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_vmd/.cant-see-me/vmd"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_vmd/.cant-see-me/vmd
+	url = https://github.com/boostorg/vmd.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_tuple/.cant-see-me/tuple"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_tuple/.cant-see-me/tuple
+	url = https://github.com/boostorg/tuple.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_hof/.cant-see-me/hof"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_hof/.cant-see-me/hof
+	url = https://github.com/boostorg/hof.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_test/.cant-see-me/test"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_test/.cant-see-me/test
+	url = https://github.com/boostorg/test.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_assert/.cant-see-me/assert"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_assert/.cant-see-me/assert
+	url = https://github.com/boostorg/assert.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_tokenizer/.cant-see-me/tokenizer"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_tokenizer/.cant-see-me/tokenizer
+	url = https://github.com/boostorg/tokenizer.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_core/.cant-see-me/core"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_core/.cant-see-me/core
+	url = https://github.com/boostorg/core.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_format/.cant-see-me/format"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_format/.cant-see-me/format
+	url = https://github.com/boostorg/format.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_timer/.cant-see-me/timer"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_timer/.cant-see-me/timer
+	url = https://github.com/boostorg/timer.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_multi_index/.cant-see-me/multi_index"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_multi_index/.cant-see-me/multi_index
+	url = https://github.com/boostorg/multi_index.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_variant/.cant-see-me/variant"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_variant/.cant-see-me/variant
+	url = https://github.com/boostorg/variant.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_poly_collection/.cant-see-me/poly_collection"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_poly_collection/.cant-see-me/poly_collection
+	url = https://github.com/boostorg/poly_collection.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_stl_interfaces/.cant-see-me/stl_interfaces"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_stl_interfaces/.cant-see-me/stl_interfaces
+	url = https://github.com/boostorg/stl_interfaces.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_property_tree/.cant-see-me/property_tree"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_property_tree/.cant-see-me/property_tree
+	url = https://github.com/boostorg/property_tree.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_accumulators/.cant-see-me/accumulators"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_accumulators/.cant-see-me/accumulators
+	url = https://github.com/boostorg/accumulators.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_signals2/.cant-see-me/signals2"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_signals2/.cant-see-me/signals2
+	url = https://github.com/boostorg/signals2.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_array/.cant-see-me/array"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_array/.cant-see-me/array
+	url = https://github.com/boostorg/array.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_pool/.cant-see-me/pool"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_pool/.cant-see-me/pool
+	url = https://github.com/boostorg/pool.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_serialization/.cant-see-me/serialization"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_serialization/.cant-see-me/serialization
+	url = https://github.com/boostorg/serialization.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_yap/.cant-see-me/yap"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_yap/.cant-see-me/yap
+	url = https://github.com/boostorg/yap.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_logic/.cant-see-me/logic"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_logic/.cant-see-me/logic
+	url = https://github.com/boostorg/logic.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_utility/.cant-see-me/utility"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_utility/.cant-see-me/utility
+	url = https://github.com/boostorg/utility.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_asio/.cant-see-me/asio"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_asio/.cant-see-me/asio
+	url = https://github.com/boostorg/asio.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_contract/.cant-see-me/contract"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_contract/.cant-see-me/contract
+	url = https://github.com/boostorg/contract.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_dll/.cant-see-me/dll"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_dll/.cant-see-me/dll
+	url = https://github.com/boostorg/dll.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_hana/.cant-see-me/hana"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_hana/.cant-see-me/hana
+	url = https://github.com/boostorg/hana.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_pfr/.cant-see-me/pfr"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_pfr/.cant-see-me/pfr
+	url = https://github.com/boostorg/pfr.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_proto/.cant-see-me/proto"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_proto/.cant-see-me/proto
+	url = https://github.com/boostorg/proto.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_interprocess/.cant-see-me/interprocess"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_interprocess/.cant-see-me/interprocess
+	url = https://github.com/boostorg/interprocess.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_optional/.cant-see-me/optional"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_optional/.cant-see-me/optional
+	url = https://github.com/boostorg/optional.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_callable_traits/.cant-see-me/callable_traits"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_callable_traits/.cant-see-me/callable_traits
+	url = https://github.com/boostorg/callable_traits.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_ptr_container/.cant-see-me/ptr_container"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_ptr_container/.cant-see-me/ptr_container
+	url = https://github.com/boostorg/ptr_container.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_qvm/.cant-see-me/qvm"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_qvm/.cant-see-me/qvm
+	url = https://github.com/boostorg/qvm.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_heap/.cant-see-me/heap"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_heap/.cant-see-me/heap
+	url = https://github.com/boostorg/heap.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_tti/.cant-see-me/tti"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_tti/.cant-see-me/tti
+	url = https://github.com/boostorg/tti.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_unordered/.cant-see-me/unordered"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_unordered/.cant-see-me/unordered
+	url = https://github.com/boostorg/unordered.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_container_hash/.cant-see-me/container_hash"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_container_hash/.cant-see-me/container_hash
+	url = https://github.com/boostorg/container_hash.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_icl/.cant-see-me/icl"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_icl/.cant-see-me/icl
+	url = https://github.com/boostorg/icl.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_phoenix/.cant-see-me/phoenix"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_phoenix/.cant-see-me/phoenix
+	url = https://github.com/boostorg/phoenix.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_assign/.cant-see-me/assign"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_assign/.cant-see-me/assign
+	url = https://github.com/boostorg/assign.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_property_map_parallel/.cant-see-me/property_map_parallel"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_property_map_parallel/.cant-see-me/property_map_parallel
+	url = https://github.com/boostorg/property_map_parallel.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_detail/.cant-see-me/detail"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_detail/.cant-see-me/detail
+	url = https://github.com/boostorg/detail.git
+[submodule "/Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_compute/.cant-see-me/compute"]
+	path = /Users/tannerdsilva/Code/cxxboost/Modules/cxxboost_compute/.cant-see-me/compute
+	url = https://github.com/boostorg/compute.git

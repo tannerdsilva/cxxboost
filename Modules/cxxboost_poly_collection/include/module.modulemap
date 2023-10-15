@@ -1,0 +1,4 @@
+module cxxboost_poly_collection [system] {
+	header "./boost/poly_collection/*"
+	export *
+}

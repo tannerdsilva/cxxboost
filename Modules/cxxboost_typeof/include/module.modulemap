@@ -1,0 +1,4 @@
+module cxxboost_typeof [system] {
+	header "./boost/typeof/*"
+	export *
+}

@@ -1,0 +1,4 @@
+module cxxboost_intrusive [system] {
+	header "./boost/intrusive/*"
+	export *
+}
