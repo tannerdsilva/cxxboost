@@ -1,0 +1,19 @@
+module cxxboost_stacktrace [system] {
+	header "boost/stacktrace.hpp"
+	header "boost/stacktrace/stacktrace_fwd.hpp"
+	header "boost/stacktrace/safe_dump_to.hpp"
+	header "boost/stacktrace/detail/addr2line_impls.hpp"
+	header "boost/stacktrace/detail/void_ptr_cast.hpp"
+	header "boost/stacktrace/detail/to_hex_array.hpp"
+	header "boost/stacktrace/detail/unwind_base_impls.hpp"
+	header "boost/stacktrace/detail/try_dec_convert.hpp"
+	header "boost/stacktrace/detail/location_from_symbol.hpp"
+	header "boost/stacktrace/detail/to_dec_array.hpp"
+	header "boost/stacktrace/detail/libbacktrace_impls.hpp"
+	header "boost/stacktrace/detail/push_options.h"
+	header "boost/stacktrace/detail/frame_decl.hpp"
+	header "boost/stacktrace/detail/pop_options.h"
+	header "boost/stacktrace/stacktrace.hpp"
+	header "boost/stacktrace/frame.hpp"
+	export *
+}

@@ -1,0 +1,8 @@
+module cxxboost_any [system] {
+	header "boost/any/basic_any.hpp"
+	header "boost/any/unique_any.hpp"
+	header "boost/any/fwd.hpp"
+	header "boost/any/bad_any_cast.hpp"
+	header "boost/any.hpp"
+	export *
+}

@@ -1,0 +1,16 @@
+module cxxboost_integer [system] {
+	header "boost/integer.hpp"
+	header "boost/integer_fwd.hpp"
+	header "boost/integer_traits.hpp"
+	header "boost/integer/common_factor.hpp"
+	header "boost/integer/common_factor_rt.hpp"
+	header "boost/integer/static_log2.hpp"
+	header "boost/integer/static_min_max.hpp"
+	header "boost/integer/integer_mask.hpp"
+	header "boost/integer/common_factor_ct.hpp"
+	header "boost/integer/mod_inverse.hpp"
+	header "boost/integer/integer_log2.hpp"
+	header "boost/integer/extended_euclidean.hpp"
+	header "boost/pending/integer_log2.hpp"
+	export *
+}

@@ -1,0 +1,6 @@
+module cxxboost_tokenizer [system] {
+	header "boost/token_iterator.hpp"
+	header "boost/tokenizer.hpp"
+	header "boost/token_functions.hpp"
+	export *
+}

@@ -1,0 +1,20 @@
+module cxxboost_convert [system] {
+	header "boost/make_default.hpp"
+	header "boost/convert/lexical_cast.hpp"
+	header "boost/convert/stream.hpp"
+	header "boost/convert/strtol.hpp"
+	header "boost/convert/printf.hpp"
+	header "boost/convert/spirit.hpp"
+	header "boost/convert/detail/is_callable.hpp"
+	header "boost/convert/detail/config.hpp"
+	header "boost/convert/detail/is_string.hpp"
+	header "boost/convert/detail/is_fun.hpp"
+	header "boost/convert/detail/has_member.hpp"
+	header "boost/convert/detail/range.hpp"
+	header "boost/convert/detail/char.hpp"
+	header "boost/convert/base.hpp"
+	header "boost/convert/parameters.hpp"
+	header "boost/convert/charconv.hpp"
+	header "boost/convert.hpp"
+	export *
+}

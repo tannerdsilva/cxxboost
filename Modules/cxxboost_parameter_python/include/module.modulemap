@@ -1,0 +1,6 @@
+module cxxboost_parameter_python [system] {
+	header "boost/parameter/python.hpp"
+	header "boost/parameter/aux_/python/invoker_iterate.hpp"
+	header "boost/parameter/aux_/python/invoker.hpp"
+	export *
+}

@@ -295,6 +295,7 @@ fileprivate struct cxxboost_circular_buffer {
 	static let packageAccess: Bool = false
 }
 fileprivate struct cxxboost_compatibility {
+	// not used in this swift package
 	static let name: String = "cxxboost_compatibility"
 	static let dependencies: Array<Target.Dependency> = []
 	static let path: String = "./Modules/cxxboost_compatibility/"
@@ -1000,6 +1001,7 @@ fileprivate struct cxxboost_hana {
 	static let packageAccess: Bool = false
 }
 fileprivate struct cxxboost_headers {
+	// this code is deliberately not used in this package. it is empty.
 	static let name: String = "cxxboost_headers"
 	static let dependencies: Array<Target.Dependency> = []
 	static let path: String = "./Modules/cxxboost_headers/"
@@ -3021,32 +3023,23 @@ let package = Package(
 		.package(url: "https://github.com/tannerdsilva/SwiftSlash.git", from: "3.4.0")
 	],
 	targets: [
+		.executableTarget(name: "_boost_master_prep", dependencies: [
+				.product(name: "SwiftSlash", package: "SwiftSlash"),
+				.product(name: "ArgumentParser", package: "swift-argument-parser"),
+				.product(name: "Logging", package: "swift-log"),
+				.product(name: "SwiftSyntax", package: "swift-syntax"),
+				.product(name: "SwiftSyntaxBuilder", package: "swift-syntax"),
+				.product(name: "SwiftParser", package: "swift-syntax"),
+				.product(name: "SwiftBasicFormat", package: "swift-syntax")
+			]),
+		.plugin(name: "_boost_master_prep_plugin", capability: .command(intent: .custom(verb: "boost-checkout", description: "prepare boost and all of its submodules from source for building."), permissions: [.allowNetworkConnections(scope: .all(), reason: "downloading boost source code"), .writeToPackageDirectory(reason: "needs to manage submodules in master repo")]), dependencies: ["_boost_master_prep"]),
+		.plugin(name: "_boost_master_package_render", capability: .command(intent: .custom(verb: "package-render", description: "render the target information into the package description"), permissions: [.writeToPackageDirectory(reason: "needs to manage submodules in master repo")]), dependencies: ["_boost_master_prep"]),
+		.plugin(name: "_boost_master_buildtool", capability: .buildTool(), dependencies: ["_boost_master_prep"]),
 		.systemLibrary(
 			name: "libopenmpi",
 			path: "./libopenmpi",
 			pkgConfig: "ompi",
-			providers: [.apt(["libopenmpi-dev"]), .brew(["open-mpi"])]
-		),
-		.plugin(name: "_boost_master_buildtool", capability: .buildTool(), dependencies: ["_boost_master_prep"]),
-		.plugin(name: "_boost_master_package_render", capability: .command(intent: .custom(verb: "package-render", description: "render the target information into the package description"), permissions: [.writeToPackageDirectory(reason: "needs to manage submodules in master repo")]), dependencies: ["_boost_master_prep"]),
-		.plugin(name: "_boost_master_prep_plugin", capability: .command(intent: .custom(verb: "boost-checkout", description: "prepare boost and all of its submodules from source for building."), permissions: [.writeToPackageDirectory(reason: "needs to manage submodules in master repo"), .allowNetworkConnections(scope: .all(), reason: "downloading boost source code")]), dependencies: ["_boost_master_prep"]),
-		.executableTarget(name: "_boost_master_prep", dependencies: [
-				.product(name: "SwiftBasicFormat", package: "swift-syntax"),
-				.product(name: "SwiftParser", package: "swift-syntax"),
-				.product(name: "SwiftSyntaxBuilder", package: "swift-syntax"),
-				.product(name: "SwiftSyntax", package: "swift-syntax"),
-				.product(name: "Logging", package: "swift-log"),
-				.product(name: "ArgumentParser", package: "swift-argument-parser"),
-				.product(name: "SwiftSlash", package: "SwiftSlash")
-			]),
-		.target(
-			name: cxxboost_math.name,
-			dependencies: cxxboost_math.dependencies,
-			path: cxxboost_math.path,
-			exclude: cxxboost_math.exclude,
-			sources: cxxboost_math.sources,
-			publicHeadersPath: cxxboost_math.publicHeadersPath,
-			packageAccess: cxxboost_math.packageAccess
+			providers: [.brew(["open-mpi"]), .apt(["libopenmpi-dev"])]
 		),
 		.target(
 			name: cxxboost_poly_collection.name,
@@ -3058,256 +3051,13 @@ let package = Package(
 			packageAccess: cxxboost_poly_collection.packageAccess
 		),
 		.target(
-			name: cxxboost_bind.name,
-			dependencies: cxxboost_bind.dependencies,
-			path: cxxboost_bind.path,
-			exclude: cxxboost_bind.exclude,
-			sources: cxxboost_bind.sources,
-			publicHeadersPath: cxxboost_bind.publicHeadersPath,
-			packageAccess: cxxboost_bind.packageAccess
-		),
-		.target(
-			name: cxxboost_json.name,
-			dependencies: cxxboost_json.dependencies,
-			path: cxxboost_json.path,
-			exclude: cxxboost_json.exclude,
-			sources: cxxboost_json.sources,
-			publicHeadersPath: cxxboost_json.publicHeadersPath,
-			packageAccess: cxxboost_json.packageAccess
-		),
-		.target(
-			name: cxxboost_algorithm.name,
-			dependencies: cxxboost_algorithm.dependencies,
-			path: cxxboost_algorithm.path,
-			exclude: cxxboost_algorithm.exclude,
-			sources: cxxboost_algorithm.sources,
-			publicHeadersPath: cxxboost_algorithm.publicHeadersPath,
-			packageAccess: cxxboost_algorithm.packageAccess
-		),
-		.target(
-			name: cxxboost_exception.name,
-			dependencies: cxxboost_exception.dependencies,
-			path: cxxboost_exception.path,
-			exclude: cxxboost_exception.exclude,
-			sources: cxxboost_exception.sources,
-			publicHeadersPath: cxxboost_exception.publicHeadersPath,
-			packageAccess: cxxboost_exception.packageAccess
-		),
-		.target(
-			name: cxxboost_flyweight.name,
-			dependencies: cxxboost_flyweight.dependencies,
-			path: cxxboost_flyweight.path,
-			exclude: cxxboost_flyweight.exclude,
-			sources: cxxboost_flyweight.sources,
-			publicHeadersPath: cxxboost_flyweight.publicHeadersPath,
-			packageAccess: cxxboost_flyweight.packageAccess
-		),
-		.target(
-			name: cxxboost_histogram.name,
-			dependencies: cxxboost_histogram.dependencies,
-			path: cxxboost_histogram.path,
-			exclude: cxxboost_histogram.exclude,
-			sources: cxxboost_histogram.sources,
-			publicHeadersPath: cxxboost_histogram.publicHeadersPath,
-			packageAccess: cxxboost_histogram.packageAccess
-		),
-		.target(
-			name: cxxboost_function_types.name,
-			dependencies: cxxboost_function_types.dependencies,
-			path: cxxboost_function_types.path,
-			exclude: cxxboost_function_types.exclude,
-			sources: cxxboost_function_types.sources,
-			publicHeadersPath: cxxboost_function_types.publicHeadersPath,
-			packageAccess: cxxboost_function_types.packageAccess
-		),
-		.target(
-			name: cxxboost_program_options.name,
-			dependencies: cxxboost_program_options.dependencies,
-			path: cxxboost_program_options.path,
-			exclude: cxxboost_program_options.exclude,
-			sources: cxxboost_program_options.sources,
-			publicHeadersPath: cxxboost_program_options.publicHeadersPath,
-			packageAccess: cxxboost_program_options.packageAccess
-		),
-		.target(
-			name: cxxboost_smart_ptr.name,
-			dependencies: cxxboost_smart_ptr.dependencies,
-			path: cxxboost_smart_ptr.path,
-			exclude: cxxboost_smart_ptr.exclude,
-			sources: cxxboost_smart_ptr.sources,
-			publicHeadersPath: cxxboost_smart_ptr.publicHeadersPath,
-			packageAccess: cxxboost_smart_ptr.packageAccess
-		),
-		.target(
-			name: cxxboost_multiprecision.name,
-			dependencies: cxxboost_multiprecision.dependencies,
-			path: cxxboost_multiprecision.path,
-			exclude: cxxboost_multiprecision.exclude,
-			sources: cxxboost_multiprecision.sources,
-			publicHeadersPath: cxxboost_multiprecision.publicHeadersPath,
-			packageAccess: cxxboost_multiprecision.packageAccess
-		),
-		.target(
-			name: cxxboost_timer.name,
-			dependencies: cxxboost_timer.dependencies,
-			path: cxxboost_timer.path,
-			exclude: cxxboost_timer.exclude,
-			sources: cxxboost_timer.sources,
-			publicHeadersPath: cxxboost_timer.publicHeadersPath,
-			packageAccess: cxxboost_timer.packageAccess
-		),
-		.target(
-			name: cxxboost_url.name,
-			dependencies: cxxboost_url.dependencies,
-			path: cxxboost_url.path,
-			exclude: cxxboost_url.exclude,
-			sources: cxxboost_url.sources,
-			publicHeadersPath: cxxboost_url.publicHeadersPath,
-			packageAccess: cxxboost_url.packageAccess
-		),
-		.target(
-			name: cxxboost_parameter_python.name,
-			dependencies: cxxboost_parameter_python.dependencies,
-			path: cxxboost_parameter_python.path,
-			exclude: cxxboost_parameter_python.exclude,
-			sources: cxxboost_parameter_python.sources,
-			publicHeadersPath: cxxboost_parameter_python.publicHeadersPath,
-			packageAccess: cxxboost_parameter_python.packageAccess
-		),
-		.target(
-			name: cxxboost_metaparse.name,
-			dependencies: cxxboost_metaparse.dependencies,
-			path: cxxboost_metaparse.path,
-			exclude: cxxboost_metaparse.exclude,
-			sources: cxxboost_metaparse.sources,
-			publicHeadersPath: cxxboost_metaparse.publicHeadersPath,
-			packageAccess: cxxboost_metaparse.packageAccess
-		),
-		.target(
-			name: cxxboost_signals2.name,
-			dependencies: cxxboost_signals2.dependencies,
-			path: cxxboost_signals2.path,
-			exclude: cxxboost_signals2.exclude,
-			sources: cxxboost_signals2.sources,
-			publicHeadersPath: cxxboost_signals2.publicHeadersPath,
-			packageAccess: cxxboost_signals2.packageAccess
-		),
-		.target(
-			name: cxxboost_convert.name,
-			dependencies: cxxboost_convert.dependencies,
-			path: cxxboost_convert.path,
-			exclude: cxxboost_convert.exclude,
-			sources: cxxboost_convert.sources,
-			publicHeadersPath: cxxboost_convert.publicHeadersPath,
-			packageAccess: cxxboost_convert.packageAccess
-		),
-		.target(
-			name: cxxboost_static_assert.name,
-			dependencies: cxxboost_static_assert.dependencies,
-			path: cxxboost_static_assert.path,
-			exclude: cxxboost_static_assert.exclude,
-			sources: cxxboost_static_assert.sources,
-			publicHeadersPath: cxxboost_static_assert.publicHeadersPath,
-			packageAccess: cxxboost_static_assert.packageAccess
-		),
-		.target(
-			name: cxxboost_throw_exception.name,
-			dependencies: cxxboost_throw_exception.dependencies,
-			path: cxxboost_throw_exception.path,
-			exclude: cxxboost_throw_exception.exclude,
-			sources: cxxboost_throw_exception.sources,
-			publicHeadersPath: cxxboost_throw_exception.publicHeadersPath,
-			packageAccess: cxxboost_throw_exception.packageAccess
-		),
-		.target(
-			name: cxxboost_icl.name,
-			dependencies: cxxboost_icl.dependencies,
-			path: cxxboost_icl.path,
-			exclude: cxxboost_icl.exclude,
-			sources: cxxboost_icl.sources,
-			publicHeadersPath: cxxboost_icl.publicHeadersPath,
-			packageAccess: cxxboost_icl.packageAccess
-		),
-		.target(
-			name: cxxboost_chrono.name,
-			dependencies: cxxboost_chrono.dependencies,
-			path: cxxboost_chrono.path,
-			exclude: cxxboost_chrono.exclude,
-			sources: cxxboost_chrono.sources,
-			publicHeadersPath: cxxboost_chrono.publicHeadersPath,
-			packageAccess: cxxboost_chrono.packageAccess
-		),
-		.target(
-			name: cxxboost_yap.name,
-			dependencies: cxxboost_yap.dependencies,
-			path: cxxboost_yap.path,
-			exclude: cxxboost_yap.exclude,
-			sources: cxxboost_yap.sources,
-			publicHeadersPath: cxxboost_yap.publicHeadersPath,
-			packageAccess: cxxboost_yap.packageAccess
-		),
-		.target(
-			name: cxxboost_vmd.name,
-			dependencies: cxxboost_vmd.dependencies,
-			path: cxxboost_vmd.path,
-			exclude: cxxboost_vmd.exclude,
-			sources: cxxboost_vmd.sources,
-			publicHeadersPath: cxxboost_vmd.publicHeadersPath,
-			packageAccess: cxxboost_vmd.packageAccess
-		),
-		.target(
-			name: cxxboost_mpi.name,
-			dependencies: cxxboost_mpi.dependencies,
-			path: cxxboost_mpi.path,
-			exclude: cxxboost_mpi.exclude,
-			sources: cxxboost_mpi.sources,
-			publicHeadersPath: cxxboost_mpi.publicHeadersPath,
-			packageAccess: cxxboost_mpi.packageAccess
-		),
-		.target(
-			name: cxxboost_serialization.name,
-			dependencies: cxxboost_serialization.dependencies,
-			path: cxxboost_serialization.path,
-			exclude: cxxboost_serialization.exclude,
-			sources: cxxboost_serialization.sources,
-			publicHeadersPath: cxxboost_serialization.publicHeadersPath,
-			packageAccess: cxxboost_serialization.packageAccess
-		),
-		.target(
-			name: cxxboost_typeof.name,
-			dependencies: cxxboost_typeof.dependencies,
-			path: cxxboost_typeof.path,
-			exclude: cxxboost_typeof.exclude,
-			sources: cxxboost_typeof.sources,
-			publicHeadersPath: cxxboost_typeof.publicHeadersPath,
-			packageAccess: cxxboost_typeof.packageAccess
-		),
-		.target(
-			name: cxxboost_heap.name,
-			dependencies: cxxboost_heap.dependencies,
-			path: cxxboost_heap.path,
-			exclude: cxxboost_heap.exclude,
-			sources: cxxboost_heap.sources,
-			publicHeadersPath: cxxboost_heap.publicHeadersPath,
-			packageAccess: cxxboost_heap.packageAccess
-		),
-		.target(
-			name: cxxboost_system.name,
-			dependencies: cxxboost_system.dependencies,
-			path: cxxboost_system.path,
-			exclude: cxxboost_system.exclude,
-			sources: cxxboost_system.sources,
-			publicHeadersPath: cxxboost_system.publicHeadersPath,
-			packageAccess: cxxboost_system.packageAccess
-		),
-		.target(
-			name: cxxboost_pfr.name,
-			dependencies: cxxboost_pfr.dependencies,
-			path: cxxboost_pfr.path,
-			exclude: cxxboost_pfr.exclude,
-			sources: cxxboost_pfr.sources,
-			publicHeadersPath: cxxboost_pfr.publicHeadersPath,
-			packageAccess: cxxboost_pfr.packageAccess
+			name: cxxboost_date_time.name,
+			dependencies: cxxboost_date_time.dependencies,
+			path: cxxboost_date_time.path,
+			exclude: cxxboost_date_time.exclude,
+			sources: cxxboost_date_time.sources,
+			publicHeadersPath: cxxboost_date_time.publicHeadersPath,
+			packageAccess: cxxboost_date_time.packageAccess
 		),
 		.target(
 			name: cxxboost_phoenix.name,
@@ -3319,6 +3069,96 @@ let package = Package(
 			packageAccess: cxxboost_phoenix.packageAccess
 		),
 		.target(
+			name: cxxboost_multi_array.name,
+			dependencies: cxxboost_multi_array.dependencies,
+			path: cxxboost_multi_array.path,
+			exclude: cxxboost_multi_array.exclude,
+			sources: cxxboost_multi_array.sources,
+			publicHeadersPath: cxxboost_multi_array.publicHeadersPath,
+			packageAccess: cxxboost_multi_array.packageAccess
+		),
+		.target(
+			name: cxxboost_outcome.name,
+			dependencies: cxxboost_outcome.dependencies,
+			path: cxxboost_outcome.path,
+			exclude: cxxboost_outcome.exclude,
+			sources: cxxboost_outcome.sources,
+			publicHeadersPath: cxxboost_outcome.publicHeadersPath,
+			packageAccess: cxxboost_outcome.packageAccess
+		),
+		.target(
+			name: cxxboost_core.name,
+			dependencies: cxxboost_core.dependencies,
+			path: cxxboost_core.path,
+			exclude: cxxboost_core.exclude,
+			sources: cxxboost_core.sources,
+			publicHeadersPath: cxxboost_core.publicHeadersPath,
+			packageAccess: cxxboost_core.packageAccess
+		),
+		.target(
+			name: cxxboost_thread.name,
+			dependencies: cxxboost_thread.dependencies,
+			path: cxxboost_thread.path,
+			exclude: cxxboost_thread.exclude,
+			sources: cxxboost_thread.sources,
+			publicHeadersPath: cxxboost_thread.publicHeadersPath,
+			packageAccess: cxxboost_thread.packageAccess
+		),
+		.target(
+			name: cxxboost_rational.name,
+			dependencies: cxxboost_rational.dependencies,
+			path: cxxboost_rational.path,
+			exclude: cxxboost_rational.exclude,
+			sources: cxxboost_rational.sources,
+			publicHeadersPath: cxxboost_rational.publicHeadersPath,
+			packageAccess: cxxboost_rational.packageAccess
+		),
+		.target(
+			name: cxxboost_multi_index.name,
+			dependencies: cxxboost_multi_index.dependencies,
+			path: cxxboost_multi_index.path,
+			exclude: cxxboost_multi_index.exclude,
+			sources: cxxboost_multi_index.sources,
+			publicHeadersPath: cxxboost_multi_index.publicHeadersPath,
+			packageAccess: cxxboost_multi_index.packageAccess
+		),
+		.target(
+			name: cxxboost_nowide.name,
+			dependencies: cxxboost_nowide.dependencies,
+			path: cxxboost_nowide.path,
+			exclude: cxxboost_nowide.exclude,
+			sources: cxxboost_nowide.sources,
+			publicHeadersPath: cxxboost_nowide.publicHeadersPath,
+			packageAccess: cxxboost_nowide.packageAccess
+		),
+		.target(
+			name: cxxboost_container_hash.name,
+			dependencies: cxxboost_container_hash.dependencies,
+			path: cxxboost_container_hash.path,
+			exclude: cxxboost_container_hash.exclude,
+			sources: cxxboost_container_hash.sources,
+			publicHeadersPath: cxxboost_container_hash.publicHeadersPath,
+			packageAccess: cxxboost_container_hash.packageAccess
+		),
+		.target(
+			name: cxxboost_coroutine.name,
+			dependencies: cxxboost_coroutine.dependencies,
+			path: cxxboost_coroutine.path,
+			exclude: cxxboost_coroutine.exclude,
+			sources: cxxboost_coroutine.sources,
+			publicHeadersPath: cxxboost_coroutine.publicHeadersPath,
+			packageAccess: cxxboost_coroutine.packageAccess
+		),
+		.target(
+			name: cxxboost_filesystem.name,
+			dependencies: cxxboost_filesystem.dependencies,
+			path: cxxboost_filesystem.path,
+			exclude: cxxboost_filesystem.exclude,
+			sources: cxxboost_filesystem.sources,
+			publicHeadersPath: cxxboost_filesystem.publicHeadersPath,
+			packageAccess: cxxboost_filesystem.packageAccess
+		),
+		.target(
 			name: cxxboost_conversion.name,
 			dependencies: cxxboost_conversion.dependencies,
 			path: cxxboost_conversion.path,
@@ -3326,6 +3166,825 @@ let package = Package(
 			sources: cxxboost_conversion.sources,
 			publicHeadersPath: cxxboost_conversion.publicHeadersPath,
 			packageAccess: cxxboost_conversion.packageAccess
+		),
+		.target(
+			name: cxxboost_json.name,
+			dependencies: cxxboost_json.dependencies,
+			path: cxxboost_json.path,
+			exclude: cxxboost_json.exclude,
+			sources: cxxboost_json.sources,
+			publicHeadersPath: cxxboost_json.publicHeadersPath,
+			packageAccess: cxxboost_json.packageAccess
+		),
+		.target(
+			name: cxxboost_log.name,
+			dependencies: cxxboost_log.dependencies,
+			path: cxxboost_log.path,
+			exclude: cxxboost_log.exclude,
+			sources: cxxboost_log.sources,
+			publicHeadersPath: cxxboost_log.publicHeadersPath,
+			packageAccess: cxxboost_log.packageAccess
+		),
+		.target(
+			name: cxxboost_graph.name,
+			dependencies: cxxboost_graph.dependencies,
+			path: cxxboost_graph.path,
+			exclude: cxxboost_graph.exclude,
+			sources: cxxboost_graph.sources,
+			publicHeadersPath: cxxboost_graph.publicHeadersPath,
+			packageAccess: cxxboost_graph.packageAccess
+		),
+		.target(
+			name: cxxboost_container.name,
+			dependencies: cxxboost_container.dependencies,
+			path: cxxboost_container.path,
+			exclude: cxxboost_container.exclude,
+			sources: cxxboost_container.sources,
+			publicHeadersPath: cxxboost_container.publicHeadersPath,
+			packageAccess: cxxboost_container.packageAccess
+		),
+		.target(
+			name: cxxboost_endian.name,
+			dependencies: cxxboost_endian.dependencies,
+			path: cxxboost_endian.path,
+			exclude: cxxboost_endian.exclude,
+			sources: cxxboost_endian.sources,
+			publicHeadersPath: cxxboost_endian.publicHeadersPath,
+			packageAccess: cxxboost_endian.packageAccess
+		),
+		.target(
+			name: cxxboost_coroutine2.name,
+			dependencies: cxxboost_coroutine2.dependencies,
+			path: cxxboost_coroutine2.path,
+			exclude: cxxboost_coroutine2.exclude,
+			sources: cxxboost_coroutine2.sources,
+			publicHeadersPath: cxxboost_coroutine2.publicHeadersPath,
+			packageAccess: cxxboost_coroutine2.packageAccess
+		),
+		.target(
+			name: cxxboost_iostreams.name,
+			dependencies: cxxboost_iostreams.dependencies,
+			path: cxxboost_iostreams.path,
+			exclude: cxxboost_iostreams.exclude,
+			sources: cxxboost_iostreams.sources,
+			publicHeadersPath: cxxboost_iostreams.publicHeadersPath,
+			packageAccess: cxxboost_iostreams.packageAccess
+		),
+		.target(
+			name: cxxboost_qvm.name,
+			dependencies: cxxboost_qvm.dependencies,
+			path: cxxboost_qvm.path,
+			exclude: cxxboost_qvm.exclude,
+			sources: cxxboost_qvm.sources,
+			publicHeadersPath: cxxboost_qvm.publicHeadersPath,
+			packageAccess: cxxboost_qvm.packageAccess
+		),
+		.target(
+			name: cxxboost_utility.name,
+			dependencies: cxxboost_utility.dependencies,
+			path: cxxboost_utility.path,
+			exclude: cxxboost_utility.exclude,
+			sources: cxxboost_utility.sources,
+			publicHeadersPath: cxxboost_utility.publicHeadersPath,
+			packageAccess: cxxboost_utility.packageAccess
+		),
+		.target(
+			name: cxxboost_beast.name,
+			dependencies: cxxboost_beast.dependencies,
+			path: cxxboost_beast.path,
+			exclude: cxxboost_beast.exclude,
+			sources: cxxboost_beast.sources,
+			publicHeadersPath: cxxboost_beast.publicHeadersPath,
+			packageAccess: cxxboost_beast.packageAccess
+		),
+		.target(
+			name: cxxboost_stl_interfaces.name,
+			dependencies: cxxboost_stl_interfaces.dependencies,
+			path: cxxboost_stl_interfaces.path,
+			exclude: cxxboost_stl_interfaces.exclude,
+			sources: cxxboost_stl_interfaces.sources,
+			publicHeadersPath: cxxboost_stl_interfaces.publicHeadersPath,
+			packageAccess: cxxboost_stl_interfaces.packageAccess
+		),
+		.target(
+			name: cxxboost_python.name,
+			dependencies: cxxboost_python.dependencies,
+			path: cxxboost_python.path,
+			exclude: cxxboost_python.exclude,
+			sources: cxxboost_python.sources,
+			publicHeadersPath: cxxboost_python.publicHeadersPath,
+			packageAccess: cxxboost_python.packageAccess
+		),
+		.target(
+			name: cxxboost_detail.name,
+			dependencies: cxxboost_detail.dependencies,
+			path: cxxboost_detail.path,
+			exclude: cxxboost_detail.exclude,
+			sources: cxxboost_detail.sources,
+			publicHeadersPath: cxxboost_detail.publicHeadersPath,
+			packageAccess: cxxboost_detail.packageAccess
+		),
+		.target(
+			name: cxxboost_mysql.name,
+			dependencies: cxxboost_mysql.dependencies,
+			path: cxxboost_mysql.path,
+			exclude: cxxboost_mysql.exclude,
+			sources: cxxboost_mysql.sources,
+			publicHeadersPath: cxxboost_mysql.publicHeadersPath,
+			packageAccess: cxxboost_mysql.packageAccess
+		),
+		.target(
+			name: cxxboost_metaparse.name,
+			dependencies: cxxboost_metaparse.dependencies,
+			path: cxxboost_metaparse.path,
+			exclude: cxxboost_metaparse.exclude,
+			sources: cxxboost_metaparse.sources,
+			publicHeadersPath: cxxboost_metaparse.publicHeadersPath,
+			packageAccess: cxxboost_metaparse.packageAccess
+		),
+		.target(
+			name: cxxboost_type_traits.name,
+			dependencies: cxxboost_type_traits.dependencies,
+			path: cxxboost_type_traits.path,
+			exclude: cxxboost_type_traits.exclude,
+			sources: cxxboost_type_traits.sources,
+			publicHeadersPath: cxxboost_type_traits.publicHeadersPath,
+			packageAccess: cxxboost_type_traits.packageAccess
+		),
+		.target(
+			name: cxxboost_static_string.name,
+			dependencies: cxxboost_static_string.dependencies,
+			path: cxxboost_static_string.path,
+			exclude: cxxboost_static_string.exclude,
+			sources: cxxboost_static_string.sources,
+			publicHeadersPath: cxxboost_static_string.publicHeadersPath,
+			packageAccess: cxxboost_static_string.packageAccess
+		),
+		.target(
+			name: cxxboost_serialization.name,
+			dependencies: cxxboost_serialization.dependencies,
+			path: cxxboost_serialization.path,
+			exclude: cxxboost_serialization.exclude,
+			sources: cxxboost_serialization.sources,
+			publicHeadersPath: cxxboost_serialization.publicHeadersPath,
+			packageAccess: cxxboost_serialization.packageAccess
+		),
+		.target(
+			name: cxxboost_atomic.name,
+			dependencies: cxxboost_atomic.dependencies,
+			path: cxxboost_atomic.path,
+			exclude: cxxboost_atomic.exclude,
+			sources: cxxboost_atomic.sources,
+			publicHeadersPath: cxxboost_atomic.publicHeadersPath,
+			packageAccess: cxxboost_atomic.packageAccess
+		),
+		.target(
+			name: cxxboost_io.name,
+			dependencies: cxxboost_io.dependencies,
+			path: cxxboost_io.path,
+			exclude: cxxboost_io.exclude,
+			sources: cxxboost_io.sources,
+			publicHeadersPath: cxxboost_io.publicHeadersPath,
+			packageAccess: cxxboost_io.packageAccess
+		),
+		.target(
+			name: cxxboost_stacktrace.name,
+			dependencies: cxxboost_stacktrace.dependencies,
+			path: cxxboost_stacktrace.path,
+			exclude: cxxboost_stacktrace.exclude,
+			sources: cxxboost_stacktrace.sources,
+			publicHeadersPath: cxxboost_stacktrace.publicHeadersPath,
+			packageAccess: cxxboost_stacktrace.packageAccess
+		),
+		.target(
+			name: cxxboost_statechart.name,
+			dependencies: cxxboost_statechart.dependencies,
+			path: cxxboost_statechart.path,
+			exclude: cxxboost_statechart.exclude,
+			sources: cxxboost_statechart.sources,
+			publicHeadersPath: cxxboost_statechart.publicHeadersPath,
+			packageAccess: cxxboost_statechart.packageAccess
+		),
+		.target(
+			name: cxxboost_lockfree.name,
+			dependencies: cxxboost_lockfree.dependencies,
+			path: cxxboost_lockfree.path,
+			exclude: cxxboost_lockfree.exclude,
+			sources: cxxboost_lockfree.sources,
+			publicHeadersPath: cxxboost_lockfree.publicHeadersPath,
+			packageAccess: cxxboost_lockfree.packageAccess
+		),
+		.target(
+			name: cxxboost_locale.name,
+			dependencies: cxxboost_locale.dependencies,
+			path: cxxboost_locale.path,
+			exclude: cxxboost_locale.exclude,
+			sources: cxxboost_locale.sources,
+			publicHeadersPath: cxxboost_locale.publicHeadersPath,
+			packageAccess: cxxboost_locale.packageAccess
+		),
+		.target(
+			name: cxxboost_spirit.name,
+			dependencies: cxxboost_spirit.dependencies,
+			path: cxxboost_spirit.path,
+			exclude: cxxboost_spirit.exclude,
+			sources: cxxboost_spirit.sources,
+			publicHeadersPath: cxxboost_spirit.publicHeadersPath,
+			packageAccess: cxxboost_spirit.packageAccess
+		),
+		.target(
+			name: cxxboost_scope_exit.name,
+			dependencies: cxxboost_scope_exit.dependencies,
+			path: cxxboost_scope_exit.path,
+			exclude: cxxboost_scope_exit.exclude,
+			sources: cxxboost_scope_exit.sources,
+			publicHeadersPath: cxxboost_scope_exit.publicHeadersPath,
+			packageAccess: cxxboost_scope_exit.packageAccess
+		),
+		.target(
+			name: cxxboost_math.name,
+			dependencies: cxxboost_math.dependencies,
+			path: cxxboost_math.path,
+			exclude: cxxboost_math.exclude,
+			sources: cxxboost_math.sources,
+			publicHeadersPath: cxxboost_math.publicHeadersPath,
+			packageAccess: cxxboost_math.packageAccess
+		),
+		.target(
+			name: cxxboost_assert.name,
+			dependencies: cxxboost_assert.dependencies,
+			path: cxxboost_assert.path,
+			exclude: cxxboost_assert.exclude,
+			sources: cxxboost_assert.sources,
+			publicHeadersPath: cxxboost_assert.publicHeadersPath,
+			packageAccess: cxxboost_assert.packageAccess
+		),
+		.target(
+			name: cxxboost_xpressive.name,
+			dependencies: cxxboost_xpressive.dependencies,
+			path: cxxboost_xpressive.path,
+			exclude: cxxboost_xpressive.exclude,
+			sources: cxxboost_xpressive.sources,
+			publicHeadersPath: cxxboost_xpressive.publicHeadersPath,
+			packageAccess: cxxboost_xpressive.packageAccess
+		),
+		.target(
+			name: cxxboost_move.name,
+			dependencies: cxxboost_move.dependencies,
+			path: cxxboost_move.path,
+			exclude: cxxboost_move.exclude,
+			sources: cxxboost_move.sources,
+			publicHeadersPath: cxxboost_move.publicHeadersPath,
+			packageAccess: cxxboost_move.packageAccess
+		),
+		.target(
+			name: cxxboost_integer.name,
+			dependencies: cxxboost_integer.dependencies,
+			path: cxxboost_integer.path,
+			exclude: cxxboost_integer.exclude,
+			sources: cxxboost_integer.sources,
+			publicHeadersPath: cxxboost_integer.publicHeadersPath,
+			packageAccess: cxxboost_integer.packageAccess
+		),
+		.target(
+			name: cxxboost_property_map_parallel.name,
+			dependencies: cxxboost_property_map_parallel.dependencies,
+			path: cxxboost_property_map_parallel.path,
+			exclude: cxxboost_property_map_parallel.exclude,
+			sources: cxxboost_property_map_parallel.sources,
+			publicHeadersPath: cxxboost_property_map_parallel.publicHeadersPath,
+			packageAccess: cxxboost_property_map_parallel.packageAccess
+		),
+		.target(
+			name: cxxboost_function.name,
+			dependencies: cxxboost_function.dependencies,
+			path: cxxboost_function.path,
+			exclude: cxxboost_function.exclude,
+			sources: cxxboost_function.sources,
+			publicHeadersPath: cxxboost_function.publicHeadersPath,
+			packageAccess: cxxboost_function.packageAccess
+		),
+		.target(
+			name: cxxboost_graph_parallel.name,
+			dependencies: cxxboost_graph_parallel.dependencies,
+			path: cxxboost_graph_parallel.path,
+			exclude: cxxboost_graph_parallel.exclude,
+			sources: cxxboost_graph_parallel.sources,
+			publicHeadersPath: cxxboost_graph_parallel.publicHeadersPath,
+			packageAccess: cxxboost_graph_parallel.packageAccess
+		),
+		.target(
+			name: cxxboost_interprocess.name,
+			dependencies: cxxboost_interprocess.dependencies,
+			path: cxxboost_interprocess.path,
+			exclude: cxxboost_interprocess.exclude,
+			sources: cxxboost_interprocess.sources,
+			publicHeadersPath: cxxboost_interprocess.publicHeadersPath,
+			packageAccess: cxxboost_interprocess.packageAccess
+		),
+		.target(
+			name: cxxboost_tuple.name,
+			dependencies: cxxboost_tuple.dependencies,
+			path: cxxboost_tuple.path,
+			exclude: cxxboost_tuple.exclude,
+			sources: cxxboost_tuple.sources,
+			publicHeadersPath: cxxboost_tuple.publicHeadersPath,
+			packageAccess: cxxboost_tuple.packageAccess
+		),
+		.target(
+			name: cxxboost_property_map.name,
+			dependencies: cxxboost_property_map.dependencies,
+			path: cxxboost_property_map.path,
+			exclude: cxxboost_property_map.exclude,
+			sources: cxxboost_property_map.sources,
+			publicHeadersPath: cxxboost_property_map.publicHeadersPath,
+			packageAccess: cxxboost_property_map.packageAccess
+		),
+		.target(
+			name: cxxboost_type_erasure.name,
+			dependencies: cxxboost_type_erasure.dependencies,
+			path: cxxboost_type_erasure.path,
+			exclude: cxxboost_type_erasure.exclude,
+			sources: cxxboost_type_erasure.sources,
+			publicHeadersPath: cxxboost_type_erasure.publicHeadersPath,
+			packageAccess: cxxboost_type_erasure.packageAccess
+		),
+		.target(
+			name: cxxboost_regex.name,
+			dependencies: cxxboost_regex.dependencies,
+			path: cxxboost_regex.path,
+			exclude: cxxboost_regex.exclude,
+			sources: cxxboost_regex.sources,
+			publicHeadersPath: cxxboost_regex.publicHeadersPath,
+			packageAccess: cxxboost_regex.packageAccess
+		),
+		.target(
+			name: cxxboost_predef.name,
+			dependencies: cxxboost_predef.dependencies,
+			path: cxxboost_predef.path,
+			exclude: cxxboost_predef.exclude,
+			sources: cxxboost_predef.sources,
+			publicHeadersPath: cxxboost_predef.publicHeadersPath,
+			packageAccess: cxxboost_predef.packageAccess
+		),
+		.target(
+			name: cxxboost_variant2.name,
+			dependencies: cxxboost_variant2.dependencies,
+			path: cxxboost_variant2.path,
+			exclude: cxxboost_variant2.exclude,
+			sources: cxxboost_variant2.sources,
+			publicHeadersPath: cxxboost_variant2.publicHeadersPath,
+			packageAccess: cxxboost_variant2.packageAccess
+		),
+		.target(
+			name: cxxboost_concept_check.name,
+			dependencies: cxxboost_concept_check.dependencies,
+			path: cxxboost_concept_check.path,
+			exclude: cxxboost_concept_check.exclude,
+			sources: cxxboost_concept_check.sources,
+			publicHeadersPath: cxxboost_concept_check.publicHeadersPath,
+			packageAccess: cxxboost_concept_check.packageAccess
+		),
+		.target(
+			name: cxxboost_config.name,
+			dependencies: cxxboost_config.dependencies,
+			path: cxxboost_config.path,
+			exclude: cxxboost_config.exclude,
+			sources: cxxboost_config.sources,
+			publicHeadersPath: cxxboost_config.publicHeadersPath,
+			packageAccess: cxxboost_config.packageAccess
+		),
+		.target(
+			name: cxxboost_foreach.name,
+			dependencies: cxxboost_foreach.dependencies,
+			path: cxxboost_foreach.path,
+			exclude: cxxboost_foreach.exclude,
+			sources: cxxboost_foreach.sources,
+			publicHeadersPath: cxxboost_foreach.publicHeadersPath,
+			packageAccess: cxxboost_foreach.packageAccess
+		),
+		.target(
+			name: cxxboost_bind.name,
+			dependencies: cxxboost_bind.dependencies,
+			path: cxxboost_bind.path,
+			exclude: cxxboost_bind.exclude,
+			sources: cxxboost_bind.sources,
+			publicHeadersPath: cxxboost_bind.publicHeadersPath,
+			packageAccess: cxxboost_bind.packageAccess
+		),
+		.target(
+			name: cxxboost_ptr_container.name,
+			dependencies: cxxboost_ptr_container.dependencies,
+			path: cxxboost_ptr_container.path,
+			exclude: cxxboost_ptr_container.exclude,
+			sources: cxxboost_ptr_container.sources,
+			publicHeadersPath: cxxboost_ptr_container.publicHeadersPath,
+			packageAccess: cxxboost_ptr_container.packageAccess
+		),
+		.target(
+			name: cxxboost_mpi.name,
+			dependencies: cxxboost_mpi.dependencies,
+			path: cxxboost_mpi.path,
+			exclude: cxxboost_mpi.exclude,
+			sources: cxxboost_mpi.sources,
+			publicHeadersPath: cxxboost_mpi.publicHeadersPath,
+			packageAccess: cxxboost_mpi.packageAccess
+		),
+		.target(
+			name: cxxboost_safe_numerics.name,
+			dependencies: cxxboost_safe_numerics.dependencies,
+			path: cxxboost_safe_numerics.path,
+			exclude: cxxboost_safe_numerics.exclude,
+			sources: cxxboost_safe_numerics.sources,
+			publicHeadersPath: cxxboost_safe_numerics.publicHeadersPath,
+			packageAccess: cxxboost_safe_numerics.packageAccess
+		),
+		.target(
+			name: cxxboost_align.name,
+			dependencies: cxxboost_align.dependencies,
+			path: cxxboost_align.path,
+			exclude: cxxboost_align.exclude,
+			sources: cxxboost_align.sources,
+			publicHeadersPath: cxxboost_align.publicHeadersPath,
+			packageAccess: cxxboost_align.packageAccess
+		),
+		.target(
+			name: cxxboost_parameter.name,
+			dependencies: cxxboost_parameter.dependencies,
+			path: cxxboost_parameter.path,
+			exclude: cxxboost_parameter.exclude,
+			sources: cxxboost_parameter.sources,
+			publicHeadersPath: cxxboost_parameter.publicHeadersPath,
+			packageAccess: cxxboost_parameter.packageAccess
+		),
+		.target(
+			name: cxxboost_chrono.name,
+			dependencies: cxxboost_chrono.dependencies,
+			path: cxxboost_chrono.path,
+			exclude: cxxboost_chrono.exclude,
+			sources: cxxboost_chrono.sources,
+			publicHeadersPath: cxxboost_chrono.publicHeadersPath,
+			packageAccess: cxxboost_chrono.packageAccess
+		),
+		.target(
+			name: cxxboost_hof.name,
+			dependencies: cxxboost_hof.dependencies,
+			path: cxxboost_hof.path,
+			exclude: cxxboost_hof.exclude,
+			sources: cxxboost_hof.sources,
+			publicHeadersPath: cxxboost_hof.publicHeadersPath,
+			packageAccess: cxxboost_hof.packageAccess
+		),
+		.target(
+			name: cxxboost_dll.name,
+			dependencies: cxxboost_dll.dependencies,
+			path: cxxboost_dll.path,
+			exclude: cxxboost_dll.exclude,
+			sources: cxxboost_dll.sources,
+			publicHeadersPath: cxxboost_dll.publicHeadersPath,
+			packageAccess: cxxboost_dll.packageAccess
+		),
+		.target(
+			name: cxxboost_format.name,
+			dependencies: cxxboost_format.dependencies,
+			path: cxxboost_format.path,
+			exclude: cxxboost_format.exclude,
+			sources: cxxboost_format.sources,
+			publicHeadersPath: cxxboost_format.publicHeadersPath,
+			packageAccess: cxxboost_format.packageAccess
+		),
+		.target(
+			name: cxxboost_smart_ptr.name,
+			dependencies: cxxboost_smart_ptr.dependencies,
+			path: cxxboost_smart_ptr.path,
+			exclude: cxxboost_smart_ptr.exclude,
+			sources: cxxboost_smart_ptr.sources,
+			publicHeadersPath: cxxboost_smart_ptr.publicHeadersPath,
+			packageAccess: cxxboost_smart_ptr.packageAccess
+		),
+		.target(
+			name: cxxboost_iterator.name,
+			dependencies: cxxboost_iterator.dependencies,
+			path: cxxboost_iterator.path,
+			exclude: cxxboost_iterator.exclude,
+			sources: cxxboost_iterator.sources,
+			publicHeadersPath: cxxboost_iterator.publicHeadersPath,
+			packageAccess: cxxboost_iterator.packageAccess
+		),
+		.target(
+			name: cxxboost_unordered.name,
+			dependencies: cxxboost_unordered.dependencies,
+			path: cxxboost_unordered.path,
+			exclude: cxxboost_unordered.exclude,
+			sources: cxxboost_unordered.sources,
+			publicHeadersPath: cxxboost_unordered.publicHeadersPath,
+			packageAccess: cxxboost_unordered.packageAccess
+		),
+		.target(
+			name: cxxboost_program_options.name,
+			dependencies: cxxboost_program_options.dependencies,
+			path: cxxboost_program_options.path,
+			exclude: cxxboost_program_options.exclude,
+			sources: cxxboost_program_options.sources,
+			publicHeadersPath: cxxboost_program_options.publicHeadersPath,
+			packageAccess: cxxboost_program_options.packageAccess
+		),
+		.target(
+			name: cxxboost_numeric__conversion.name,
+			dependencies: cxxboost_numeric__conversion.dependencies,
+			path: cxxboost_numeric__conversion.path,
+			exclude: cxxboost_numeric__conversion.exclude,
+			sources: cxxboost_numeric__conversion.sources,
+			publicHeadersPath: cxxboost_numeric__conversion.publicHeadersPath,
+			packageAccess: cxxboost_numeric__conversion.packageAccess
+		),
+		.target(
+			name: cxxboost_static_assert.name,
+			dependencies: cxxboost_static_assert.dependencies,
+			path: cxxboost_static_assert.path,
+			exclude: cxxboost_static_assert.exclude,
+			sources: cxxboost_static_assert.sources,
+			publicHeadersPath: cxxboost_static_assert.publicHeadersPath,
+			packageAccess: cxxboost_static_assert.packageAccess
+		),
+		.target(
+			name: cxxboost_circular_buffer.name,
+			dependencies: cxxboost_circular_buffer.dependencies,
+			path: cxxboost_circular_buffer.path,
+			exclude: cxxboost_circular_buffer.exclude,
+			sources: cxxboost_circular_buffer.sources,
+			publicHeadersPath: cxxboost_circular_buffer.publicHeadersPath,
+			packageAccess: cxxboost_circular_buffer.packageAccess
+		),
+		.target(
+			name: cxxboost_wave.name,
+			dependencies: cxxboost_wave.dependencies,
+			path: cxxboost_wave.path,
+			exclude: cxxboost_wave.exclude,
+			sources: cxxboost_wave.sources,
+			publicHeadersPath: cxxboost_wave.publicHeadersPath,
+			packageAccess: cxxboost_wave.packageAccess
+		),
+		.target(
+			name: cxxboost_range.name,
+			dependencies: cxxboost_range.dependencies,
+			path: cxxboost_range.path,
+			exclude: cxxboost_range.exclude,
+			sources: cxxboost_range.sources,
+			publicHeadersPath: cxxboost_range.publicHeadersPath,
+			packageAccess: cxxboost_range.packageAccess
+		),
+		.target(
+			name: cxxboost_vmd.name,
+			dependencies: cxxboost_vmd.dependencies,
+			path: cxxboost_vmd.path,
+			exclude: cxxboost_vmd.exclude,
+			sources: cxxboost_vmd.sources,
+			publicHeadersPath: cxxboost_vmd.publicHeadersPath,
+			packageAccess: cxxboost_vmd.packageAccess
+		),
+		.target(
+			name: cxxboost_numeric__ublas.name,
+			dependencies: cxxboost_numeric__ublas.dependencies,
+			path: cxxboost_numeric__ublas.path,
+			exclude: cxxboost_numeric__ublas.exclude,
+			sources: cxxboost_numeric__ublas.sources,
+			publicHeadersPath: cxxboost_numeric__ublas.publicHeadersPath,
+			packageAccess: cxxboost_numeric__ublas.packageAccess
+		),
+		.target(
+			name: cxxboost_process.name,
+			dependencies: cxxboost_process.dependencies,
+			path: cxxboost_process.path,
+			exclude: cxxboost_process.exclude,
+			sources: cxxboost_process.sources,
+			publicHeadersPath: cxxboost_process.publicHeadersPath,
+			packageAccess: cxxboost_process.packageAccess
+		),
+		.target(
+			name: cxxboost_polygon.name,
+			dependencies: cxxboost_polygon.dependencies,
+			path: cxxboost_polygon.path,
+			exclude: cxxboost_polygon.exclude,
+			sources: cxxboost_polygon.sources,
+			publicHeadersPath: cxxboost_polygon.publicHeadersPath,
+			packageAccess: cxxboost_polygon.packageAccess
+		),
+		.target(
+			name: cxxboost_intrusive.name,
+			dependencies: cxxboost_intrusive.dependencies,
+			path: cxxboost_intrusive.path,
+			exclude: cxxboost_intrusive.exclude,
+			sources: cxxboost_intrusive.sources,
+			publicHeadersPath: cxxboost_intrusive.publicHeadersPath,
+			packageAccess: cxxboost_intrusive.packageAccess
+		),
+		.target(
+			name: cxxboost_mp11.name,
+			dependencies: cxxboost_mp11.dependencies,
+			path: cxxboost_mp11.path,
+			exclude: cxxboost_mp11.exclude,
+			sources: cxxboost_mp11.sources,
+			publicHeadersPath: cxxboost_mp11.publicHeadersPath,
+			packageAccess: cxxboost_mp11.packageAccess
+		),
+		.target(
+			name: cxxboost_tti.name,
+			dependencies: cxxboost_tti.dependencies,
+			path: cxxboost_tti.path,
+			exclude: cxxboost_tti.exclude,
+			sources: cxxboost_tti.sources,
+			publicHeadersPath: cxxboost_tti.publicHeadersPath,
+			packageAccess: cxxboost_tti.packageAccess
+		),
+		.target(
+			name: cxxboost_fusion.name,
+			dependencies: cxxboost_fusion.dependencies,
+			path: cxxboost_fusion.path,
+			exclude: cxxboost_fusion.exclude,
+			sources: cxxboost_fusion.sources,
+			publicHeadersPath: cxxboost_fusion.publicHeadersPath,
+			packageAccess: cxxboost_fusion.packageAccess
+		),
+		.target(
+			name: cxxboost_lexical_cast.name,
+			dependencies: cxxboost_lexical_cast.dependencies,
+			path: cxxboost_lexical_cast.path,
+			exclude: cxxboost_lexical_cast.exclude,
+			sources: cxxboost_lexical_cast.sources,
+			publicHeadersPath: cxxboost_lexical_cast.publicHeadersPath,
+			packageAccess: cxxboost_lexical_cast.packageAccess
+		),
+		.target(
+			name: cxxboost_winapi.name,
+			dependencies: cxxboost_winapi.dependencies,
+			path: cxxboost_winapi.path,
+			exclude: cxxboost_winapi.exclude,
+			sources: cxxboost_winapi.sources,
+			publicHeadersPath: cxxboost_winapi.publicHeadersPath,
+			packageAccess: cxxboost_winapi.packageAccess
+		),
+		.target(
+			name: cxxboost_optional.name,
+			dependencies: cxxboost_optional.dependencies,
+			path: cxxboost_optional.path,
+			exclude: cxxboost_optional.exclude,
+			sources: cxxboost_optional.sources,
+			publicHeadersPath: cxxboost_optional.publicHeadersPath,
+			packageAccess: cxxboost_optional.packageAccess
+		),
+		.target(
+			name: cxxboost_accumulators.name,
+			dependencies: cxxboost_accumulators.dependencies,
+			path: cxxboost_accumulators.path,
+			exclude: cxxboost_accumulators.exclude,
+			sources: cxxboost_accumulators.sources,
+			publicHeadersPath: cxxboost_accumulators.publicHeadersPath,
+			packageAccess: cxxboost_accumulators.packageAccess
+		),
+		.target(
+			name: cxxboost_gil.name,
+			dependencies: cxxboost_gil.dependencies,
+			path: cxxboost_gil.path,
+			exclude: cxxboost_gil.exclude,
+			sources: cxxboost_gil.sources,
+			publicHeadersPath: cxxboost_gil.publicHeadersPath,
+			packageAccess: cxxboost_gil.packageAccess
+		),
+		.target(
+			name: cxxboost_yap.name,
+			dependencies: cxxboost_yap.dependencies,
+			path: cxxboost_yap.path,
+			exclude: cxxboost_yap.exclude,
+			sources: cxxboost_yap.sources,
+			publicHeadersPath: cxxboost_yap.publicHeadersPath,
+			packageAccess: cxxboost_yap.packageAccess
+		),
+		.target(
+			name: cxxboost_sort.name,
+			dependencies: cxxboost_sort.dependencies,
+			path: cxxboost_sort.path,
+			exclude: cxxboost_sort.exclude,
+			sources: cxxboost_sort.sources,
+			publicHeadersPath: cxxboost_sort.publicHeadersPath,
+			packageAccess: cxxboost_sort.packageAccess
+		),
+		.target(
+			name: cxxboost_uuid.name,
+			dependencies: cxxboost_uuid.dependencies,
+			path: cxxboost_uuid.path,
+			exclude: cxxboost_uuid.exclude,
+			sources: cxxboost_uuid.sources,
+			publicHeadersPath: cxxboost_uuid.publicHeadersPath,
+			packageAccess: cxxboost_uuid.packageAccess
+		),
+		.target(
+			name: cxxboost_local_function.name,
+			dependencies: cxxboost_local_function.dependencies,
+			path: cxxboost_local_function.path,
+			exclude: cxxboost_local_function.exclude,
+			sources: cxxboost_local_function.sources,
+			publicHeadersPath: cxxboost_local_function.publicHeadersPath,
+			packageAccess: cxxboost_local_function.packageAccess
+		),
+		.target(
+			name: cxxboost_any.name,
+			dependencies: cxxboost_any.dependencies,
+			path: cxxboost_any.path,
+			exclude: cxxboost_any.exclude,
+			sources: cxxboost_any.sources,
+			publicHeadersPath: cxxboost_any.publicHeadersPath,
+			packageAccess: cxxboost_any.packageAccess
+		),
+		.target(
+			name: cxxboost_signals2.name,
+			dependencies: cxxboost_signals2.dependencies,
+			path: cxxboost_signals2.path,
+			exclude: cxxboost_signals2.exclude,
+			sources: cxxboost_signals2.sources,
+			publicHeadersPath: cxxboost_signals2.publicHeadersPath,
+			packageAccess: cxxboost_signals2.packageAccess
+		),
+		.target(
+			name: cxxboost_timer.name,
+			dependencies: cxxboost_timer.dependencies,
+			path: cxxboost_timer.path,
+			exclude: cxxboost_timer.exclude,
+			sources: cxxboost_timer.sources,
+			publicHeadersPath: cxxboost_timer.publicHeadersPath,
+			packageAccess: cxxboost_timer.packageAccess
+		),
+		.target(
+			name: cxxboost_throw_exception.name,
+			dependencies: cxxboost_throw_exception.dependencies,
+			path: cxxboost_throw_exception.path,
+			exclude: cxxboost_throw_exception.exclude,
+			sources: cxxboost_throw_exception.sources,
+			publicHeadersPath: cxxboost_throw_exception.publicHeadersPath,
+			packageAccess: cxxboost_throw_exception.packageAccess
+		),
+		.target(
+			name: cxxboost_proto.name,
+			dependencies: cxxboost_proto.dependencies,
+			path: cxxboost_proto.path,
+			exclude: cxxboost_proto.exclude,
+			sources: cxxboost_proto.sources,
+			publicHeadersPath: cxxboost_proto.publicHeadersPath,
+			packageAccess: cxxboost_proto.packageAccess
+		),
+		.target(
+			name: cxxboost_lambda.name,
+			dependencies: cxxboost_lambda.dependencies,
+			path: cxxboost_lambda.path,
+			exclude: cxxboost_lambda.exclude,
+			sources: cxxboost_lambda.sources,
+			publicHeadersPath: cxxboost_lambda.publicHeadersPath,
+			packageAccess: cxxboost_lambda.packageAccess
+		),
+		.target(
+			name: cxxboost_numeric__interval.name,
+			dependencies: cxxboost_numeric__interval.dependencies,
+			path: cxxboost_numeric__interval.path,
+			exclude: cxxboost_numeric__interval.exclude,
+			sources: cxxboost_numeric__interval.sources,
+			publicHeadersPath: cxxboost_numeric__interval.publicHeadersPath,
+			packageAccess: cxxboost_numeric__interval.packageAccess
+		),
+		.target(
+			name: cxxboost_dynamic_bitset.name,
+			dependencies: cxxboost_dynamic_bitset.dependencies,
+			path: cxxboost_dynamic_bitset.path,
+			exclude: cxxboost_dynamic_bitset.exclude,
+			sources: cxxboost_dynamic_bitset.sources,
+			publicHeadersPath: cxxboost_dynamic_bitset.publicHeadersPath,
+			packageAccess: cxxboost_dynamic_bitset.packageAccess
+		),
+		.target(
+			name: cxxboost_flyweight.name,
+			dependencies: cxxboost_flyweight.dependencies,
+			path: cxxboost_flyweight.path,
+			exclude: cxxboost_flyweight.exclude,
+			sources: cxxboost_flyweight.sources,
+			publicHeadersPath: cxxboost_flyweight.publicHeadersPath,
+			packageAccess: cxxboost_flyweight.packageAccess
+		),
+		.target(
+			name: cxxboost_fiber.name,
+			dependencies: cxxboost_fiber.dependencies,
+			path: cxxboost_fiber.path,
+			exclude: cxxboost_fiber.exclude,
+			sources: cxxboost_fiber.sources,
+			publicHeadersPath: cxxboost_fiber.publicHeadersPath,
+			packageAccess: cxxboost_fiber.packageAccess
+		),
+		.target(
+			name: cxxboost_msm.name,
+			dependencies: cxxboost_msm.dependencies,
+			path: cxxboost_msm.path,
+			exclude: cxxboost_msm.exclude,
+			sources: cxxboost_msm.sources,
+			publicHeadersPath: cxxboost_msm.publicHeadersPath,
+			packageAccess: cxxboost_msm.packageAccess
 		),
 		.target(
 			name: cxxboost_crc.name,
@@ -3337,13 +3996,22 @@ let package = Package(
 			packageAccess: cxxboost_crc.packageAccess
 		),
 		.target(
-			name: cxxboost_filesystem.name,
-			dependencies: cxxboost_filesystem.dependencies,
-			path: cxxboost_filesystem.path,
-			exclude: cxxboost_filesystem.exclude,
-			sources: cxxboost_filesystem.sources,
-			publicHeadersPath: cxxboost_filesystem.publicHeadersPath,
-			packageAccess: cxxboost_filesystem.packageAccess
+			name: cxxboost_logic.name,
+			dependencies: cxxboost_logic.dependencies,
+			path: cxxboost_logic.path,
+			exclude: cxxboost_logic.exclude,
+			sources: cxxboost_logic.sources,
+			publicHeadersPath: cxxboost_logic.publicHeadersPath,
+			packageAccess: cxxboost_logic.packageAccess
+		),
+		.target(
+			name: cxxboost_system.name,
+			dependencies: cxxboost_system.dependencies,
+			path: cxxboost_system.path,
+			exclude: cxxboost_system.exclude,
+			sources: cxxboost_system.sources,
+			publicHeadersPath: cxxboost_system.publicHeadersPath,
+			packageAccess: cxxboost_system.packageAccess
 		),
 		.target(
 			name: cxxboost_ratio.name,
@@ -3364,166 +4032,13 @@ let package = Package(
 			packageAccess: cxxboost_context.packageAccess
 		),
 		.target(
-			name: cxxboost_functional.name,
-			dependencies: cxxboost_functional.dependencies,
-			path: cxxboost_functional.path,
-			exclude: cxxboost_functional.exclude,
-			sources: cxxboost_functional.sources,
-			publicHeadersPath: cxxboost_functional.publicHeadersPath,
-			packageAccess: cxxboost_functional.packageAccess
-		),
-		.target(
-			name: cxxboost_container_hash.name,
-			dependencies: cxxboost_container_hash.dependencies,
-			path: cxxboost_container_hash.path,
-			exclude: cxxboost_container_hash.exclude,
-			sources: cxxboost_container_hash.sources,
-			publicHeadersPath: cxxboost_container_hash.publicHeadersPath,
-			packageAccess: cxxboost_container_hash.packageAccess
-		),
-		.target(
-			name: cxxboost_rational.name,
-			dependencies: cxxboost_rational.dependencies,
-			path: cxxboost_rational.path,
-			exclude: cxxboost_rational.exclude,
-			sources: cxxboost_rational.sources,
-			publicHeadersPath: cxxboost_rational.publicHeadersPath,
-			packageAccess: cxxboost_rational.packageAccess
-		),
-		.target(
-			name: cxxboost_hana.name,
-			dependencies: cxxboost_hana.dependencies,
-			path: cxxboost_hana.path,
-			exclude: cxxboost_hana.exclude,
-			sources: cxxboost_hana.sources,
-			publicHeadersPath: cxxboost_hana.publicHeadersPath,
-			packageAccess: cxxboost_hana.packageAccess
-		),
-		.target(
-			name: cxxboost_dynamic_bitset.name,
-			dependencies: cxxboost_dynamic_bitset.dependencies,
-			path: cxxboost_dynamic_bitset.path,
-			exclude: cxxboost_dynamic_bitset.exclude,
-			sources: cxxboost_dynamic_bitset.sources,
-			publicHeadersPath: cxxboost_dynamic_bitset.publicHeadersPath,
-			packageAccess: cxxboost_dynamic_bitset.packageAccess
-		),
-		.target(
-			name: cxxboost_function.name,
-			dependencies: cxxboost_function.dependencies,
-			path: cxxboost_function.path,
-			exclude: cxxboost_function.exclude,
-			sources: cxxboost_function.sources,
-			publicHeadersPath: cxxboost_function.publicHeadersPath,
-			packageAccess: cxxboost_function.packageAccess
-		),
-		.target(
-			name: cxxboost_compute.name,
-			dependencies: cxxboost_compute.dependencies,
-			path: cxxboost_compute.path,
-			exclude: cxxboost_compute.exclude,
-			sources: cxxboost_compute.sources,
-			publicHeadersPath: cxxboost_compute.publicHeadersPath,
-			packageAccess: cxxboost_compute.packageAccess
-		),
-		.target(
-			name: cxxboost_static_string.name,
-			dependencies: cxxboost_static_string.dependencies,
-			path: cxxboost_static_string.path,
-			exclude: cxxboost_static_string.exclude,
-			sources: cxxboost_static_string.sources,
-			publicHeadersPath: cxxboost_static_string.publicHeadersPath,
-			packageAccess: cxxboost_static_string.packageAccess
-		),
-		.target(
-			name: cxxboost_stacktrace.name,
-			dependencies: cxxboost_stacktrace.dependencies,
-			path: cxxboost_stacktrace.path,
-			exclude: cxxboost_stacktrace.exclude,
-			sources: cxxboost_stacktrace.sources,
-			publicHeadersPath: cxxboost_stacktrace.publicHeadersPath,
-			packageAccess: cxxboost_stacktrace.packageAccess
-		),
-		.target(
-			name: cxxboost_hof.name,
-			dependencies: cxxboost_hof.dependencies,
-			path: cxxboost_hof.path,
-			exclude: cxxboost_hof.exclude,
-			sources: cxxboost_hof.sources,
-			publicHeadersPath: cxxboost_hof.publicHeadersPath,
-			packageAccess: cxxboost_hof.packageAccess
-		),
-		.target(
-			name: cxxboost_fusion.name,
-			dependencies: cxxboost_fusion.dependencies,
-			path: cxxboost_fusion.path,
-			exclude: cxxboost_fusion.exclude,
-			sources: cxxboost_fusion.sources,
-			publicHeadersPath: cxxboost_fusion.publicHeadersPath,
-			packageAccess: cxxboost_fusion.packageAccess
-		),
-		.target(
-			name: cxxboost_concept_check.name,
-			dependencies: cxxboost_concept_check.dependencies,
-			path: cxxboost_concept_check.path,
-			exclude: cxxboost_concept_check.exclude,
-			sources: cxxboost_concept_check.sources,
-			publicHeadersPath: cxxboost_concept_check.publicHeadersPath,
-			packageAccess: cxxboost_concept_check.packageAccess
-		),
-		.target(
-			name: cxxboost_tokenizer.name,
-			dependencies: cxxboost_tokenizer.dependencies,
-			path: cxxboost_tokenizer.path,
-			exclude: cxxboost_tokenizer.exclude,
-			sources: cxxboost_tokenizer.sources,
-			publicHeadersPath: cxxboost_tokenizer.publicHeadersPath,
-			packageAccess: cxxboost_tokenizer.packageAccess
-		),
-		.target(
-			name: cxxboost_describe.name,
-			dependencies: cxxboost_describe.dependencies,
-			path: cxxboost_describe.path,
-			exclude: cxxboost_describe.exclude,
-			sources: cxxboost_describe.sources,
-			publicHeadersPath: cxxboost_describe.publicHeadersPath,
-			packageAccess: cxxboost_describe.packageAccess
-		),
-		.target(
-			name: cxxboost_mp11.name,
-			dependencies: cxxboost_mp11.dependencies,
-			path: cxxboost_mp11.path,
-			exclude: cxxboost_mp11.exclude,
-			sources: cxxboost_mp11.sources,
-			publicHeadersPath: cxxboost_mp11.publicHeadersPath,
-			packageAccess: cxxboost_mp11.packageAccess
-		),
-		.target(
-			name: cxxboost_leaf.name,
-			dependencies: cxxboost_leaf.dependencies,
-			path: cxxboost_leaf.path,
-			exclude: cxxboost_leaf.exclude,
-			sources: cxxboost_leaf.sources,
-			publicHeadersPath: cxxboost_leaf.publicHeadersPath,
-			packageAccess: cxxboost_leaf.packageAccess
-		),
-		.target(
-			name: cxxboost_gil.name,
-			dependencies: cxxboost_gil.dependencies,
-			path: cxxboost_gil.path,
-			exclude: cxxboost_gil.exclude,
-			sources: cxxboost_gil.sources,
-			publicHeadersPath: cxxboost_gil.publicHeadersPath,
-			packageAccess: cxxboost_gil.packageAccess
-		),
-		.target(
-			name: cxxboost_detail.name,
-			dependencies: cxxboost_detail.dependencies,
-			path: cxxboost_detail.path,
-			exclude: cxxboost_detail.exclude,
-			sources: cxxboost_detail.sources,
-			publicHeadersPath: cxxboost_detail.publicHeadersPath,
-			packageAccess: cxxboost_detail.packageAccess
+			name: cxxboost_parameter_python.name,
+			dependencies: cxxboost_parameter_python.dependencies,
+			path: cxxboost_parameter_python.path,
+			exclude: cxxboost_parameter_python.exclude,
+			sources: cxxboost_parameter_python.sources,
+			publicHeadersPath: cxxboost_parameter_python.publicHeadersPath,
+			packageAccess: cxxboost_parameter_python.packageAccess
 		),
 		.target(
 			name: cxxboost_pool.name,
@@ -3535,589 +4050,13 @@ let package = Package(
 			packageAccess: cxxboost_pool.packageAccess
 		),
 		.target(
-			name: cxxboost_numeric__odeint.name,
-			dependencies: cxxboost_numeric__odeint.dependencies,
-			path: cxxboost_numeric__odeint.path,
-			exclude: cxxboost_numeric__odeint.exclude,
-			sources: cxxboost_numeric__odeint.sources,
-			publicHeadersPath: cxxboost_numeric__odeint.publicHeadersPath,
-			packageAccess: cxxboost_numeric__odeint.packageAccess
-		),
-		.target(
-			name: cxxboost_core.name,
-			dependencies: cxxboost_core.dependencies,
-			path: cxxboost_core.path,
-			exclude: cxxboost_core.exclude,
-			sources: cxxboost_core.sources,
-			publicHeadersPath: cxxboost_core.publicHeadersPath,
-			packageAccess: cxxboost_core.packageAccess
-		),
-		.target(
-			name: cxxboost_statechart.name,
-			dependencies: cxxboost_statechart.dependencies,
-			path: cxxboost_statechart.path,
-			exclude: cxxboost_statechart.exclude,
-			sources: cxxboost_statechart.sources,
-			publicHeadersPath: cxxboost_statechart.publicHeadersPath,
-			packageAccess: cxxboost_statechart.packageAccess
-		),
-		.target(
-			name: cxxboost_optional.name,
-			dependencies: cxxboost_optional.dependencies,
-			path: cxxboost_optional.path,
-			exclude: cxxboost_optional.exclude,
-			sources: cxxboost_optional.sources,
-			publicHeadersPath: cxxboost_optional.publicHeadersPath,
-			packageAccess: cxxboost_optional.packageAccess
-		),
-		.target(
-			name: cxxboost_interprocess.name,
-			dependencies: cxxboost_interprocess.dependencies,
-			path: cxxboost_interprocess.path,
-			exclude: cxxboost_interprocess.exclude,
-			sources: cxxboost_interprocess.sources,
-			publicHeadersPath: cxxboost_interprocess.publicHeadersPath,
-			packageAccess: cxxboost_interprocess.packageAccess
-		),
-		.target(
-			name: cxxboost_qvm.name,
-			dependencies: cxxboost_qvm.dependencies,
-			path: cxxboost_qvm.path,
-			exclude: cxxboost_qvm.exclude,
-			sources: cxxboost_qvm.sources,
-			publicHeadersPath: cxxboost_qvm.publicHeadersPath,
-			packageAccess: cxxboost_qvm.packageAccess
-		),
-		.target(
-			name: cxxboost_assign.name,
-			dependencies: cxxboost_assign.dependencies,
-			path: cxxboost_assign.path,
-			exclude: cxxboost_assign.exclude,
-			sources: cxxboost_assign.sources,
-			publicHeadersPath: cxxboost_assign.publicHeadersPath,
-			packageAccess: cxxboost_assign.packageAccess
-		),
-		.target(
-			name: cxxboost_graph.name,
-			dependencies: cxxboost_graph.dependencies,
-			path: cxxboost_graph.path,
-			exclude: cxxboost_graph.exclude,
-			sources: cxxboost_graph.sources,
-			publicHeadersPath: cxxboost_graph.publicHeadersPath,
-			packageAccess: cxxboost_graph.packageAccess
-		),
-		.target(
-			name: cxxboost_type_traits.name,
-			dependencies: cxxboost_type_traits.dependencies,
-			path: cxxboost_type_traits.path,
-			exclude: cxxboost_type_traits.exclude,
-			sources: cxxboost_type_traits.sources,
-			publicHeadersPath: cxxboost_type_traits.publicHeadersPath,
-			packageAccess: cxxboost_type_traits.packageAccess
-		),
-		.target(
-			name: cxxboost_predef.name,
-			dependencies: cxxboost_predef.dependencies,
-			path: cxxboost_predef.path,
-			exclude: cxxboost_predef.exclude,
-			sources: cxxboost_predef.sources,
-			publicHeadersPath: cxxboost_predef.publicHeadersPath,
-			packageAccess: cxxboost_predef.packageAccess
-		),
-		.target(
-			name: cxxboost_callable_traits.name,
-			dependencies: cxxboost_callable_traits.dependencies,
-			path: cxxboost_callable_traits.path,
-			exclude: cxxboost_callable_traits.exclude,
-			sources: cxxboost_callable_traits.sources,
-			publicHeadersPath: cxxboost_callable_traits.publicHeadersPath,
-			packageAccess: cxxboost_callable_traits.packageAccess
-		),
-		.target(
-			name: cxxboost_date_time.name,
-			dependencies: cxxboost_date_time.dependencies,
-			path: cxxboost_date_time.path,
-			exclude: cxxboost_date_time.exclude,
-			sources: cxxboost_date_time.sources,
-			publicHeadersPath: cxxboost_date_time.publicHeadersPath,
-			packageAccess: cxxboost_date_time.packageAccess
-		),
-		.target(
-			name: cxxboost_io.name,
-			dependencies: cxxboost_io.dependencies,
-			path: cxxboost_io.path,
-			exclude: cxxboost_io.exclude,
-			sources: cxxboost_io.sources,
-			publicHeadersPath: cxxboost_io.publicHeadersPath,
-			packageAccess: cxxboost_io.packageAccess
-		),
-		.target(
-			name: cxxboost_local_function.name,
-			dependencies: cxxboost_local_function.dependencies,
-			path: cxxboost_local_function.path,
-			exclude: cxxboost_local_function.exclude,
-			sources: cxxboost_local_function.sources,
-			publicHeadersPath: cxxboost_local_function.publicHeadersPath,
-			packageAccess: cxxboost_local_function.packageAccess
-		),
-		.target(
-			name: cxxboost_mysql.name,
-			dependencies: cxxboost_mysql.dependencies,
-			path: cxxboost_mysql.path,
-			exclude: cxxboost_mysql.exclude,
-			sources: cxxboost_mysql.sources,
-			publicHeadersPath: cxxboost_mysql.publicHeadersPath,
-			packageAccess: cxxboost_mysql.packageAccess
-		),
-		.target(
-			name: cxxboost_nowide.name,
-			dependencies: cxxboost_nowide.dependencies,
-			path: cxxboost_nowide.path,
-			exclude: cxxboost_nowide.exclude,
-			sources: cxxboost_nowide.sources,
-			publicHeadersPath: cxxboost_nowide.publicHeadersPath,
-			packageAccess: cxxboost_nowide.packageAccess
-		),
-		.target(
-			name: cxxboost_bimap.name,
-			dependencies: cxxboost_bimap.dependencies,
-			path: cxxboost_bimap.path,
-			exclude: cxxboost_bimap.exclude,
-			sources: cxxboost_bimap.sources,
-			publicHeadersPath: cxxboost_bimap.publicHeadersPath,
-			packageAccess: cxxboost_bimap.packageAccess
-		),
-		.target(
-			name: cxxboost_sort.name,
-			dependencies: cxxboost_sort.dependencies,
-			path: cxxboost_sort.path,
-			exclude: cxxboost_sort.exclude,
-			sources: cxxboost_sort.sources,
-			publicHeadersPath: cxxboost_sort.publicHeadersPath,
-			packageAccess: cxxboost_sort.packageAccess
-		),
-		.target(
-			name: cxxboost_numeric__ublas.name,
-			dependencies: cxxboost_numeric__ublas.dependencies,
-			path: cxxboost_numeric__ublas.path,
-			exclude: cxxboost_numeric__ublas.exclude,
-			sources: cxxboost_numeric__ublas.sources,
-			publicHeadersPath: cxxboost_numeric__ublas.publicHeadersPath,
-			packageAccess: cxxboost_numeric__ublas.packageAccess
-		),
-		.target(
-			name: cxxboost_random.name,
-			dependencies: cxxboost_random.dependencies,
-			path: cxxboost_random.path,
-			exclude: cxxboost_random.exclude,
-			sources: cxxboost_random.sources,
-			publicHeadersPath: cxxboost_random.publicHeadersPath,
-			packageAccess: cxxboost_random.packageAccess
-		),
-		.target(
-			name: cxxboost_tuple.name,
-			dependencies: cxxboost_tuple.dependencies,
-			path: cxxboost_tuple.path,
-			exclude: cxxboost_tuple.exclude,
-			sources: cxxboost_tuple.sources,
-			publicHeadersPath: cxxboost_tuple.publicHeadersPath,
-			packageAccess: cxxboost_tuple.packageAccess
-		),
-		.target(
-			name: cxxboost_stl_interfaces.name,
-			dependencies: cxxboost_stl_interfaces.dependencies,
-			path: cxxboost_stl_interfaces.path,
-			exclude: cxxboost_stl_interfaces.exclude,
-			sources: cxxboost_stl_interfaces.sources,
-			publicHeadersPath: cxxboost_stl_interfaces.publicHeadersPath,
-			packageAccess: cxxboost_stl_interfaces.packageAccess
-		),
-		.target(
-			name: cxxboost_beast.name,
-			dependencies: cxxboost_beast.dependencies,
-			path: cxxboost_beast.path,
-			exclude: cxxboost_beast.exclude,
-			sources: cxxboost_beast.sources,
-			publicHeadersPath: cxxboost_beast.publicHeadersPath,
-			packageAccess: cxxboost_beast.packageAccess
-		),
-		.target(
-			name: cxxboost_move.name,
-			dependencies: cxxboost_move.dependencies,
-			path: cxxboost_move.path,
-			exclude: cxxboost_move.exclude,
-			sources: cxxboost_move.sources,
-			publicHeadersPath: cxxboost_move.publicHeadersPath,
-			packageAccess: cxxboost_move.packageAccess
-		),
-		.target(
-			name: cxxboost_property_map.name,
-			dependencies: cxxboost_property_map.dependencies,
-			path: cxxboost_property_map.path,
-			exclude: cxxboost_property_map.exclude,
-			sources: cxxboost_property_map.sources,
-			publicHeadersPath: cxxboost_property_map.publicHeadersPath,
-			packageAccess: cxxboost_property_map.packageAccess
-		),
-		.target(
-			name: cxxboost_spirit.name,
-			dependencies: cxxboost_spirit.dependencies,
-			path: cxxboost_spirit.path,
-			exclude: cxxboost_spirit.exclude,
-			sources: cxxboost_spirit.sources,
-			publicHeadersPath: cxxboost_spirit.publicHeadersPath,
-			packageAccess: cxxboost_spirit.packageAccess
-		),
-		.target(
-			name: cxxboost_parameter.name,
-			dependencies: cxxboost_parameter.dependencies,
-			path: cxxboost_parameter.path,
-			exclude: cxxboost_parameter.exclude,
-			sources: cxxboost_parameter.sources,
-			publicHeadersPath: cxxboost_parameter.publicHeadersPath,
-			packageAccess: cxxboost_parameter.packageAccess
-		),
-		.target(
-			name: cxxboost_multi_index.name,
-			dependencies: cxxboost_multi_index.dependencies,
-			path: cxxboost_multi_index.path,
-			exclude: cxxboost_multi_index.exclude,
-			sources: cxxboost_multi_index.sources,
-			publicHeadersPath: cxxboost_multi_index.publicHeadersPath,
-			packageAccess: cxxboost_multi_index.packageAccess
-		),
-		.target(
-			name: cxxboost_circular_buffer.name,
-			dependencies: cxxboost_circular_buffer.dependencies,
-			path: cxxboost_circular_buffer.path,
-			exclude: cxxboost_circular_buffer.exclude,
-			sources: cxxboost_circular_buffer.sources,
-			publicHeadersPath: cxxboost_circular_buffer.publicHeadersPath,
-			packageAccess: cxxboost_circular_buffer.packageAccess
-		),
-		.target(
-			name: cxxboost_msm.name,
-			dependencies: cxxboost_msm.dependencies,
-			path: cxxboost_msm.path,
-			exclude: cxxboost_msm.exclude,
-			sources: cxxboost_msm.sources,
-			publicHeadersPath: cxxboost_msm.publicHeadersPath,
-			packageAccess: cxxboost_msm.packageAccess
-		),
-		.target(
-			name: cxxboost_iostreams.name,
-			dependencies: cxxboost_iostreams.dependencies,
-			path: cxxboost_iostreams.path,
-			exclude: cxxboost_iostreams.exclude,
-			sources: cxxboost_iostreams.sources,
-			publicHeadersPath: cxxboost_iostreams.publicHeadersPath,
-			packageAccess: cxxboost_iostreams.packageAccess
-		),
-		.target(
-			name: cxxboost_preprocessor.name,
-			dependencies: cxxboost_preprocessor.dependencies,
-			path: cxxboost_preprocessor.path,
-			exclude: cxxboost_preprocessor.exclude,
-			sources: cxxboost_preprocessor.sources,
-			publicHeadersPath: cxxboost_preprocessor.publicHeadersPath,
-			packageAccess: cxxboost_preprocessor.packageAccess
-		),
-		.target(
-			name: cxxboost_align.name,
-			dependencies: cxxboost_align.dependencies,
-			path: cxxboost_align.path,
-			exclude: cxxboost_align.exclude,
-			sources: cxxboost_align.sources,
-			publicHeadersPath: cxxboost_align.publicHeadersPath,
-			packageAccess: cxxboost_align.packageAccess
-		),
-		.target(
-			name: cxxboost_intrusive.name,
-			dependencies: cxxboost_intrusive.dependencies,
-			path: cxxboost_intrusive.path,
-			exclude: cxxboost_intrusive.exclude,
-			sources: cxxboost_intrusive.sources,
-			publicHeadersPath: cxxboost_intrusive.publicHeadersPath,
-			packageAccess: cxxboost_intrusive.packageAccess
-		),
-		.target(
-			name: cxxboost_outcome.name,
-			dependencies: cxxboost_outcome.dependencies,
-			path: cxxboost_outcome.path,
-			exclude: cxxboost_outcome.exclude,
-			sources: cxxboost_outcome.sources,
-			publicHeadersPath: cxxboost_outcome.publicHeadersPath,
-			packageAccess: cxxboost_outcome.packageAccess
-		),
-		.target(
-			name: cxxboost_assert.name,
-			dependencies: cxxboost_assert.dependencies,
-			path: cxxboost_assert.path,
-			exclude: cxxboost_assert.exclude,
-			sources: cxxboost_assert.sources,
-			publicHeadersPath: cxxboost_assert.publicHeadersPath,
-			packageAccess: cxxboost_assert.packageAccess
-		),
-		.target(
-			name: cxxboost_range.name,
-			dependencies: cxxboost_range.dependencies,
-			path: cxxboost_range.path,
-			exclude: cxxboost_range.exclude,
-			sources: cxxboost_range.sources,
-			publicHeadersPath: cxxboost_range.publicHeadersPath,
-			packageAccess: cxxboost_range.packageAccess
-		),
-		.target(
-			name: cxxboost_locale.name,
-			dependencies: cxxboost_locale.dependencies,
-			path: cxxboost_locale.path,
-			exclude: cxxboost_locale.exclude,
-			sources: cxxboost_locale.sources,
-			publicHeadersPath: cxxboost_locale.publicHeadersPath,
-			packageAccess: cxxboost_locale.packageAccess
-		),
-		.target(
-			name: cxxboost_regex.name,
-			dependencies: cxxboost_regex.dependencies,
-			path: cxxboost_regex.path,
-			exclude: cxxboost_regex.exclude,
-			sources: cxxboost_regex.sources,
-			publicHeadersPath: cxxboost_regex.publicHeadersPath,
-			packageAccess: cxxboost_regex.packageAccess
-		),
-		.target(
-			name: cxxboost_graph_parallel.name,
-			dependencies: cxxboost_graph_parallel.dependencies,
-			path: cxxboost_graph_parallel.path,
-			exclude: cxxboost_graph_parallel.exclude,
-			sources: cxxboost_graph_parallel.sources,
-			publicHeadersPath: cxxboost_graph_parallel.publicHeadersPath,
-			packageAccess: cxxboost_graph_parallel.packageAccess
-		),
-		.target(
-			name: cxxboost_geometry.name,
-			dependencies: cxxboost_geometry.dependencies,
-			path: cxxboost_geometry.path,
-			exclude: cxxboost_geometry.exclude,
-			sources: cxxboost_geometry.sources,
-			publicHeadersPath: cxxboost_geometry.publicHeadersPath,
-			packageAccess: cxxboost_geometry.packageAccess
-		),
-		.target(
-			name: cxxboost_process.name,
-			dependencies: cxxboost_process.dependencies,
-			path: cxxboost_process.path,
-			exclude: cxxboost_process.exclude,
-			sources: cxxboost_process.sources,
-			publicHeadersPath: cxxboost_process.publicHeadersPath,
-			packageAccess: cxxboost_process.packageAccess
-		),
-		.target(
-			name: cxxboost_log.name,
-			dependencies: cxxboost_log.dependencies,
-			path: cxxboost_log.path,
-			exclude: cxxboost_log.exclude,
-			sources: cxxboost_log.sources,
-			publicHeadersPath: cxxboost_log.publicHeadersPath,
-			packageAccess: cxxboost_log.packageAccess
-		),
-		.target(
-			name: cxxboost_fiber.name,
-			dependencies: cxxboost_fiber.dependencies,
-			path: cxxboost_fiber.path,
-			exclude: cxxboost_fiber.exclude,
-			sources: cxxboost_fiber.sources,
-			publicHeadersPath: cxxboost_fiber.publicHeadersPath,
-			packageAccess: cxxboost_fiber.packageAccess
-		),
-		.target(
-			name: cxxboost_lexical_cast.name,
-			dependencies: cxxboost_lexical_cast.dependencies,
-			path: cxxboost_lexical_cast.path,
-			exclude: cxxboost_lexical_cast.exclude,
-			sources: cxxboost_lexical_cast.sources,
-			publicHeadersPath: cxxboost_lexical_cast.publicHeadersPath,
-			packageAccess: cxxboost_lexical_cast.packageAccess
-		),
-		.target(
-			name: cxxboost_polygon.name,
-			dependencies: cxxboost_polygon.dependencies,
-			path: cxxboost_polygon.path,
-			exclude: cxxboost_polygon.exclude,
-			sources: cxxboost_polygon.sources,
-			publicHeadersPath: cxxboost_polygon.publicHeadersPath,
-			packageAccess: cxxboost_polygon.packageAccess
-		),
-		.target(
-			name: cxxboost_integer.name,
-			dependencies: cxxboost_integer.dependencies,
-			path: cxxboost_integer.path,
-			exclude: cxxboost_integer.exclude,
-			sources: cxxboost_integer.sources,
-			publicHeadersPath: cxxboost_integer.publicHeadersPath,
-			packageAccess: cxxboost_integer.packageAccess
-		),
-		.target(
-			name: cxxboost_variant.name,
-			dependencies: cxxboost_variant.dependencies,
-			path: cxxboost_variant.path,
-			exclude: cxxboost_variant.exclude,
-			sources: cxxboost_variant.sources,
-			publicHeadersPath: cxxboost_variant.publicHeadersPath,
-			packageAccess: cxxboost_variant.packageAccess
-		),
-		.target(
-			name: cxxboost_wave.name,
-			dependencies: cxxboost_wave.dependencies,
-			path: cxxboost_wave.path,
-			exclude: cxxboost_wave.exclude,
-			sources: cxxboost_wave.sources,
-			publicHeadersPath: cxxboost_wave.publicHeadersPath,
-			packageAccess: cxxboost_wave.packageAccess
-		),
-		.target(
-			name: cxxboost_iterator.name,
-			dependencies: cxxboost_iterator.dependencies,
-			path: cxxboost_iterator.path,
-			exclude: cxxboost_iterator.exclude,
-			sources: cxxboost_iterator.sources,
-			publicHeadersPath: cxxboost_iterator.publicHeadersPath,
-			packageAccess: cxxboost_iterator.packageAccess
-		),
-		.target(
-			name: cxxboost_lambda.name,
-			dependencies: cxxboost_lambda.dependencies,
-			path: cxxboost_lambda.path,
-			exclude: cxxboost_lambda.exclude,
-			sources: cxxboost_lambda.sources,
-			publicHeadersPath: cxxboost_lambda.publicHeadersPath,
-			packageAccess: cxxboost_lambda.packageAccess
-		),
-		.target(
-			name: cxxboost_unordered.name,
-			dependencies: cxxboost_unordered.dependencies,
-			path: cxxboost_unordered.path,
-			exclude: cxxboost_unordered.exclude,
-			sources: cxxboost_unordered.sources,
-			publicHeadersPath: cxxboost_unordered.publicHeadersPath,
-			packageAccess: cxxboost_unordered.packageAccess
-		),
-		.target(
-			name: cxxboost_thread.name,
-			dependencies: cxxboost_thread.dependencies,
-			path: cxxboost_thread.path,
-			exclude: cxxboost_thread.exclude,
-			sources: cxxboost_thread.sources,
-			publicHeadersPath: cxxboost_thread.publicHeadersPath,
-			packageAccess: cxxboost_thread.packageAccess
-		),
-		.target(
-			name: cxxboost_numeric__conversion.name,
-			dependencies: cxxboost_numeric__conversion.dependencies,
-			path: cxxboost_numeric__conversion.path,
-			exclude: cxxboost_numeric__conversion.exclude,
-			sources: cxxboost_numeric__conversion.sources,
-			publicHeadersPath: cxxboost_numeric__conversion.publicHeadersPath,
-			packageAccess: cxxboost_numeric__conversion.packageAccess
-		),
-		.target(
-			name: cxxboost_endian.name,
-			dependencies: cxxboost_endian.dependencies,
-			path: cxxboost_endian.path,
-			exclude: cxxboost_endian.exclude,
-			sources: cxxboost_endian.sources,
-			publicHeadersPath: cxxboost_endian.publicHeadersPath,
-			packageAccess: cxxboost_endian.packageAccess
-		),
-		.target(
-			name: cxxboost_utility.name,
-			dependencies: cxxboost_utility.dependencies,
-			path: cxxboost_utility.path,
-			exclude: cxxboost_utility.exclude,
-			sources: cxxboost_utility.sources,
-			publicHeadersPath: cxxboost_utility.publicHeadersPath,
-			packageAccess: cxxboost_utility.packageAccess
-		),
-		.target(
-			name: cxxboost_property_map_parallel.name,
-			dependencies: cxxboost_property_map_parallel.dependencies,
-			path: cxxboost_property_map_parallel.path,
-			exclude: cxxboost_property_map_parallel.exclude,
-			sources: cxxboost_property_map_parallel.sources,
-			publicHeadersPath: cxxboost_property_map_parallel.publicHeadersPath,
-			packageAccess: cxxboost_property_map_parallel.packageAccess
-		),
-		.target(
-			name: cxxboost_type_index.name,
-			dependencies: cxxboost_type_index.dependencies,
-			path: cxxboost_type_index.path,
-			exclude: cxxboost_type_index.exclude,
-			sources: cxxboost_type_index.sources,
-			publicHeadersPath: cxxboost_type_index.publicHeadersPath,
-			packageAccess: cxxboost_type_index.packageAccess
-		),
-		.target(
-			name: cxxboost_lockfree.name,
-			dependencies: cxxboost_lockfree.dependencies,
-			path: cxxboost_lockfree.path,
-			exclude: cxxboost_lockfree.exclude,
-			sources: cxxboost_lockfree.sources,
-			publicHeadersPath: cxxboost_lockfree.publicHeadersPath,
-			packageAccess: cxxboost_lockfree.packageAccess
-		),
-		.target(
-			name: cxxboost_winapi.name,
-			dependencies: cxxboost_winapi.dependencies,
-			path: cxxboost_winapi.path,
-			exclude: cxxboost_winapi.exclude,
-			sources: cxxboost_winapi.sources,
-			publicHeadersPath: cxxboost_winapi.publicHeadersPath,
-			packageAccess: cxxboost_winapi.packageAccess
-		),
-		.target(
-			name: cxxboost_asio.name,
-			dependencies: cxxboost_asio.dependencies,
-			path: cxxboost_asio.path,
-			exclude: cxxboost_asio.exclude,
-			sources: cxxboost_asio.sources,
-			publicHeadersPath: cxxboost_asio.publicHeadersPath,
-			packageAccess: cxxboost_asio.packageAccess
-		),
-		.target(
-			name: cxxboost_coroutine2.name,
-			dependencies: cxxboost_coroutine2.dependencies,
-			path: cxxboost_coroutine2.path,
-			exclude: cxxboost_coroutine2.exclude,
-			sources: cxxboost_coroutine2.sources,
-			publicHeadersPath: cxxboost_coroutine2.publicHeadersPath,
-			packageAccess: cxxboost_coroutine2.packageAccess
-		),
-		.target(
-			name: cxxboost_python.name,
-			dependencies: cxxboost_python.dependencies,
-			path: cxxboost_python.path,
-			exclude: cxxboost_python.exclude,
-			sources: cxxboost_python.sources,
-			publicHeadersPath: cxxboost_python.publicHeadersPath,
-			packageAccess: cxxboost_python.packageAccess
-		),
-		.target(
-			name: cxxboost_ptr_container.name,
-			dependencies: cxxboost_ptr_container.dependencies,
-			path: cxxboost_ptr_container.path,
-			exclude: cxxboost_ptr_container.exclude,
-			sources: cxxboost_ptr_container.sources,
-			publicHeadersPath: cxxboost_ptr_container.publicHeadersPath,
-			packageAccess: cxxboost_ptr_container.packageAccess
-		),
-		.target(
-			name: cxxboost_atomic.name,
-			dependencies: cxxboost_atomic.dependencies,
-			path: cxxboost_atomic.path,
-			exclude: cxxboost_atomic.exclude,
-			sources: cxxboost_atomic.sources,
-			publicHeadersPath: cxxboost_atomic.publicHeadersPath,
-			packageAccess: cxxboost_atomic.packageAccess
+			name: cxxboost_icl.name,
+			dependencies: cxxboost_icl.dependencies,
+			path: cxxboost_icl.path,
+			exclude: cxxboost_icl.exclude,
+			sources: cxxboost_icl.sources,
+			publicHeadersPath: cxxboost_icl.publicHeadersPath,
+			packageAccess: cxxboost_icl.packageAccess
 		),
 		.target(
 			name: cxxboost_test.name,
@@ -4129,67 +4068,40 @@ let package = Package(
 			packageAccess: cxxboost_test.packageAccess
 		),
 		.target(
-			name: cxxboost_coroutine.name,
-			dependencies: cxxboost_coroutine.dependencies,
-			path: cxxboost_coroutine.path,
-			exclude: cxxboost_coroutine.exclude,
-			sources: cxxboost_coroutine.sources,
-			publicHeadersPath: cxxboost_coroutine.publicHeadersPath,
-			packageAccess: cxxboost_coroutine.packageAccess
+			name: cxxboost_asio.name,
+			dependencies: cxxboost_asio.dependencies,
+			path: cxxboost_asio.path,
+			exclude: cxxboost_asio.exclude,
+			sources: cxxboost_asio.sources,
+			publicHeadersPath: cxxboost_asio.publicHeadersPath,
+			packageAccess: cxxboost_asio.packageAccess
 		),
 		.target(
-			name: cxxboost_config.name,
-			dependencies: cxxboost_config.dependencies,
-			path: cxxboost_config.path,
-			exclude: cxxboost_config.exclude,
-			sources: cxxboost_config.sources,
-			publicHeadersPath: cxxboost_config.publicHeadersPath,
-			packageAccess: cxxboost_config.packageAccess
+			name: cxxboost_variant.name,
+			dependencies: cxxboost_variant.dependencies,
+			path: cxxboost_variant.path,
+			exclude: cxxboost_variant.exclude,
+			sources: cxxboost_variant.sources,
+			publicHeadersPath: cxxboost_variant.publicHeadersPath,
+			packageAccess: cxxboost_variant.packageAccess
 		),
 		.target(
-			name: cxxboost_contract.name,
-			dependencies: cxxboost_contract.dependencies,
-			path: cxxboost_contract.path,
-			exclude: cxxboost_contract.exclude,
-			sources: cxxboost_contract.sources,
-			publicHeadersPath: cxxboost_contract.publicHeadersPath,
-			packageAccess: cxxboost_contract.packageAccess
+			name: cxxboost_leaf.name,
+			dependencies: cxxboost_leaf.dependencies,
+			path: cxxboost_leaf.path,
+			exclude: cxxboost_leaf.exclude,
+			sources: cxxboost_leaf.sources,
+			publicHeadersPath: cxxboost_leaf.publicHeadersPath,
+			packageAccess: cxxboost_leaf.packageAccess
 		),
 		.target(
-			name: cxxboost_type_erasure.name,
-			dependencies: cxxboost_type_erasure.dependencies,
-			path: cxxboost_type_erasure.path,
-			exclude: cxxboost_type_erasure.exclude,
-			sources: cxxboost_type_erasure.sources,
-			publicHeadersPath: cxxboost_type_erasure.publicHeadersPath,
-			packageAccess: cxxboost_type_erasure.packageAccess
-		),
-		.target(
-			name: cxxboost_lambda2.name,
-			dependencies: cxxboost_lambda2.dependencies,
-			path: cxxboost_lambda2.path,
-			exclude: cxxboost_lambda2.exclude,
-			sources: cxxboost_lambda2.sources,
-			publicHeadersPath: cxxboost_lambda2.publicHeadersPath,
-			packageAccess: cxxboost_lambda2.packageAccess
-		),
-		.target(
-			name: cxxboost_foreach.name,
-			dependencies: cxxboost_foreach.dependencies,
-			path: cxxboost_foreach.path,
-			exclude: cxxboost_foreach.exclude,
-			sources: cxxboost_foreach.sources,
-			publicHeadersPath: cxxboost_foreach.publicHeadersPath,
-			packageAccess: cxxboost_foreach.packageAccess
-		),
-		.target(
-			name: cxxboost_scope_exit.name,
-			dependencies: cxxboost_scope_exit.dependencies,
-			path: cxxboost_scope_exit.path,
-			exclude: cxxboost_scope_exit.exclude,
-			sources: cxxboost_scope_exit.sources,
-			publicHeadersPath: cxxboost_scope_exit.publicHeadersPath,
-			packageAccess: cxxboost_scope_exit.packageAccess
+			name: cxxboost_algorithm.name,
+			dependencies: cxxboost_algorithm.dependencies,
+			path: cxxboost_algorithm.path,
+			exclude: cxxboost_algorithm.exclude,
+			sources: cxxboost_algorithm.sources,
+			publicHeadersPath: cxxboost_algorithm.publicHeadersPath,
+			packageAccess: cxxboost_algorithm.packageAccess
 		),
 		.target(
 			name: cxxboost_array.name,
@@ -4201,22 +4113,76 @@ let package = Package(
 			packageAccess: cxxboost_array.packageAccess
 		),
 		.target(
-			name: cxxboost_logic.name,
-			dependencies: cxxboost_logic.dependencies,
-			path: cxxboost_logic.path,
-			exclude: cxxboost_logic.exclude,
-			sources: cxxboost_logic.sources,
-			publicHeadersPath: cxxboost_logic.publicHeadersPath,
-			packageAccess: cxxboost_logic.packageAccess
+			name: cxxboost_lambda2.name,
+			dependencies: cxxboost_lambda2.dependencies,
+			path: cxxboost_lambda2.path,
+			exclude: cxxboost_lambda2.exclude,
+			sources: cxxboost_lambda2.sources,
+			publicHeadersPath: cxxboost_lambda2.publicHeadersPath,
+			packageAccess: cxxboost_lambda2.packageAccess
 		),
 		.target(
-			name: cxxboost_variant2.name,
-			dependencies: cxxboost_variant2.dependencies,
-			path: cxxboost_variant2.path,
-			exclude: cxxboost_variant2.exclude,
-			sources: cxxboost_variant2.sources,
-			publicHeadersPath: cxxboost_variant2.publicHeadersPath,
-			packageAccess: cxxboost_variant2.packageAccess
+			name: cxxboost_assign.name,
+			dependencies: cxxboost_assign.dependencies,
+			path: cxxboost_assign.path,
+			exclude: cxxboost_assign.exclude,
+			sources: cxxboost_assign.sources,
+			publicHeadersPath: cxxboost_assign.publicHeadersPath,
+			packageAccess: cxxboost_assign.packageAccess
+		),
+		.target(
+			name: cxxboost_compute.name,
+			dependencies: cxxboost_compute.dependencies,
+			path: cxxboost_compute.path,
+			exclude: cxxboost_compute.exclude,
+			sources: cxxboost_compute.sources,
+			publicHeadersPath: cxxboost_compute.publicHeadersPath,
+			packageAccess: cxxboost_compute.packageAccess
+		),
+		.target(
+			name: cxxboost_random.name,
+			dependencies: cxxboost_random.dependencies,
+			path: cxxboost_random.path,
+			exclude: cxxboost_random.exclude,
+			sources: cxxboost_random.sources,
+			publicHeadersPath: cxxboost_random.publicHeadersPath,
+			packageAccess: cxxboost_random.packageAccess
+		),
+		.target(
+			name: cxxboost_type_index.name,
+			dependencies: cxxboost_type_index.dependencies,
+			path: cxxboost_type_index.path,
+			exclude: cxxboost_type_index.exclude,
+			sources: cxxboost_type_index.sources,
+			publicHeadersPath: cxxboost_type_index.publicHeadersPath,
+			packageAccess: cxxboost_type_index.packageAccess
+		),
+		.target(
+			name: cxxboost_mpl.name,
+			dependencies: cxxboost_mpl.dependencies,
+			path: cxxboost_mpl.path,
+			exclude: cxxboost_mpl.exclude,
+			sources: cxxboost_mpl.sources,
+			publicHeadersPath: cxxboost_mpl.publicHeadersPath,
+			packageAccess: cxxboost_mpl.packageAccess
+		),
+		.target(
+			name: cxxboost_pfr.name,
+			dependencies: cxxboost_pfr.dependencies,
+			path: cxxboost_pfr.path,
+			exclude: cxxboost_pfr.exclude,
+			sources: cxxboost_pfr.sources,
+			publicHeadersPath: cxxboost_pfr.publicHeadersPath,
+			packageAccess: cxxboost_pfr.packageAccess
+		),
+		.target(
+			name: cxxboost_tokenizer.name,
+			dependencies: cxxboost_tokenizer.dependencies,
+			path: cxxboost_tokenizer.path,
+			exclude: cxxboost_tokenizer.exclude,
+			sources: cxxboost_tokenizer.sources,
+			publicHeadersPath: cxxboost_tokenizer.publicHeadersPath,
+			packageAccess: cxxboost_tokenizer.packageAccess
 		),
 		.target(
 			name: cxxboost_units.name,
@@ -4228,103 +4194,13 @@ let package = Package(
 			packageAccess: cxxboost_units.packageAccess
 		),
 		.target(
-			name: cxxboost_tti.name,
-			dependencies: cxxboost_tti.dependencies,
-			path: cxxboost_tti.path,
-			exclude: cxxboost_tti.exclude,
-			sources: cxxboost_tti.sources,
-			publicHeadersPath: cxxboost_tti.publicHeadersPath,
-			packageAccess: cxxboost_tti.packageAccess
-		),
-		.target(
-			name: cxxboost_container.name,
-			dependencies: cxxboost_container.dependencies,
-			path: cxxboost_container.path,
-			exclude: cxxboost_container.exclude,
-			sources: cxxboost_container.sources,
-			publicHeadersPath: cxxboost_container.publicHeadersPath,
-			packageAccess: cxxboost_container.packageAccess
-		),
-		.target(
-			name: cxxboost_format.name,
-			dependencies: cxxboost_format.dependencies,
-			path: cxxboost_format.path,
-			exclude: cxxboost_format.exclude,
-			sources: cxxboost_format.sources,
-			publicHeadersPath: cxxboost_format.publicHeadersPath,
-			packageAccess: cxxboost_format.packageAccess
-		),
-		.target(
-			name: cxxboost_dll.name,
-			dependencies: cxxboost_dll.dependencies,
-			path: cxxboost_dll.path,
-			exclude: cxxboost_dll.exclude,
-			sources: cxxboost_dll.sources,
-			publicHeadersPath: cxxboost_dll.publicHeadersPath,
-			packageAccess: cxxboost_dll.packageAccess
-		),
-		.target(
-			name: cxxboost_proto.name,
-			dependencies: cxxboost_proto.dependencies,
-			path: cxxboost_proto.path,
-			exclude: cxxboost_proto.exclude,
-			sources: cxxboost_proto.sources,
-			publicHeadersPath: cxxboost_proto.publicHeadersPath,
-			packageAccess: cxxboost_proto.packageAccess
-		),
-		.target(
-			name: cxxboost_any.name,
-			dependencies: cxxboost_any.dependencies,
-			path: cxxboost_any.path,
-			exclude: cxxboost_any.exclude,
-			sources: cxxboost_any.sources,
-			publicHeadersPath: cxxboost_any.publicHeadersPath,
-			packageAccess: cxxboost_any.packageAccess
-		),
-		.target(
-			name: cxxboost_multi_array.name,
-			dependencies: cxxboost_multi_array.dependencies,
-			path: cxxboost_multi_array.path,
-			exclude: cxxboost_multi_array.exclude,
-			sources: cxxboost_multi_array.sources,
-			publicHeadersPath: cxxboost_multi_array.publicHeadersPath,
-			packageAccess: cxxboost_multi_array.packageAccess
-		),
-		.target(
-			name: cxxboost_numeric__interval.name,
-			dependencies: cxxboost_numeric__interval.dependencies,
-			path: cxxboost_numeric__interval.path,
-			exclude: cxxboost_numeric__interval.exclude,
-			sources: cxxboost_numeric__interval.sources,
-			publicHeadersPath: cxxboost_numeric__interval.publicHeadersPath,
-			packageAccess: cxxboost_numeric__interval.packageAccess
-		),
-		.target(
-			name: cxxboost_accumulators.name,
-			dependencies: cxxboost_accumulators.dependencies,
-			path: cxxboost_accumulators.path,
-			exclude: cxxboost_accumulators.exclude,
-			sources: cxxboost_accumulators.sources,
-			publicHeadersPath: cxxboost_accumulators.publicHeadersPath,
-			packageAccess: cxxboost_accumulators.packageAccess
-		),
-		.target(
-			name: cxxboost_uuid.name,
-			dependencies: cxxboost_uuid.dependencies,
-			path: cxxboost_uuid.path,
-			exclude: cxxboost_uuid.exclude,
-			sources: cxxboost_uuid.sources,
-			publicHeadersPath: cxxboost_uuid.publicHeadersPath,
-			packageAccess: cxxboost_uuid.packageAccess
-		),
-		.target(
-			name: cxxboost_xpressive.name,
-			dependencies: cxxboost_xpressive.dependencies,
-			path: cxxboost_xpressive.path,
-			exclude: cxxboost_xpressive.exclude,
-			sources: cxxboost_xpressive.sources,
-			publicHeadersPath: cxxboost_xpressive.publicHeadersPath,
-			packageAccess: cxxboost_xpressive.packageAccess
+			name: cxxboost_preprocessor.name,
+			dependencies: cxxboost_preprocessor.dependencies,
+			path: cxxboost_preprocessor.path,
+			exclude: cxxboost_preprocessor.exclude,
+			sources: cxxboost_preprocessor.sources,
+			publicHeadersPath: cxxboost_preprocessor.publicHeadersPath,
+			packageAccess: cxxboost_preprocessor.packageAccess
 		),
 		.target(
 			name: cxxboost_property_tree.name,
@@ -4336,22 +4212,148 @@ let package = Package(
 			packageAccess: cxxboost_property_tree.packageAccess
 		),
 		.target(
-			name: cxxboost_safe_numerics.name,
-			dependencies: cxxboost_safe_numerics.dependencies,
-			path: cxxboost_safe_numerics.path,
-			exclude: cxxboost_safe_numerics.exclude,
-			sources: cxxboost_safe_numerics.sources,
-			publicHeadersPath: cxxboost_safe_numerics.publicHeadersPath,
-			packageAccess: cxxboost_safe_numerics.packageAccess
+			name: cxxboost_url.name,
+			dependencies: cxxboost_url.dependencies,
+			path: cxxboost_url.path,
+			exclude: cxxboost_url.exclude,
+			sources: cxxboost_url.sources,
+			publicHeadersPath: cxxboost_url.publicHeadersPath,
+			packageAccess: cxxboost_url.packageAccess
 		),
 		.target(
-			name: cxxboost_mpl.name,
-			dependencies: cxxboost_mpl.dependencies,
-			path: cxxboost_mpl.path,
-			exclude: cxxboost_mpl.exclude,
-			sources: cxxboost_mpl.sources,
-			publicHeadersPath: cxxboost_mpl.publicHeadersPath,
-			packageAccess: cxxboost_mpl.packageAccess
+			name: cxxboost_heap.name,
+			dependencies: cxxboost_heap.dependencies,
+			path: cxxboost_heap.path,
+			exclude: cxxboost_heap.exclude,
+			sources: cxxboost_heap.sources,
+			publicHeadersPath: cxxboost_heap.publicHeadersPath,
+			packageAccess: cxxboost_heap.packageAccess
+		),
+		.target(
+			name: cxxboost_convert.name,
+			dependencies: cxxboost_convert.dependencies,
+			path: cxxboost_convert.path,
+			exclude: cxxboost_convert.exclude,
+			sources: cxxboost_convert.sources,
+			publicHeadersPath: cxxboost_convert.publicHeadersPath,
+			packageAccess: cxxboost_convert.packageAccess
+		),
+		.target(
+			name: cxxboost_contract.name,
+			dependencies: cxxboost_contract.dependencies,
+			path: cxxboost_contract.path,
+			exclude: cxxboost_contract.exclude,
+			sources: cxxboost_contract.sources,
+			publicHeadersPath: cxxboost_contract.publicHeadersPath,
+			packageAccess: cxxboost_contract.packageAccess
+		),
+		.target(
+			name: cxxboost_callable_traits.name,
+			dependencies: cxxboost_callable_traits.dependencies,
+			path: cxxboost_callable_traits.path,
+			exclude: cxxboost_callable_traits.exclude,
+			sources: cxxboost_callable_traits.sources,
+			publicHeadersPath: cxxboost_callable_traits.publicHeadersPath,
+			packageAccess: cxxboost_callable_traits.packageAccess
+		),
+		.target(
+			name: cxxboost_bimap.name,
+			dependencies: cxxboost_bimap.dependencies,
+			path: cxxboost_bimap.path,
+			exclude: cxxboost_bimap.exclude,
+			sources: cxxboost_bimap.sources,
+			publicHeadersPath: cxxboost_bimap.publicHeadersPath,
+			packageAccess: cxxboost_bimap.packageAccess
+		),
+		.target(
+			name: cxxboost_hana.name,
+			dependencies: cxxboost_hana.dependencies,
+			path: cxxboost_hana.path,
+			exclude: cxxboost_hana.exclude,
+			sources: cxxboost_hana.sources,
+			publicHeadersPath: cxxboost_hana.publicHeadersPath,
+			packageAccess: cxxboost_hana.packageAccess
+		),
+		.target(
+			name: cxxboost_geometry.name,
+			dependencies: cxxboost_geometry.dependencies,
+			path: cxxboost_geometry.path,
+			exclude: cxxboost_geometry.exclude,
+			sources: cxxboost_geometry.sources,
+			publicHeadersPath: cxxboost_geometry.publicHeadersPath,
+			packageAccess: cxxboost_geometry.packageAccess
+		),
+		.target(
+			name: cxxboost_numeric__odeint.name,
+			dependencies: cxxboost_numeric__odeint.dependencies,
+			path: cxxboost_numeric__odeint.path,
+			exclude: cxxboost_numeric__odeint.exclude,
+			sources: cxxboost_numeric__odeint.sources,
+			publicHeadersPath: cxxboost_numeric__odeint.publicHeadersPath,
+			packageAccess: cxxboost_numeric__odeint.packageAccess
+		),
+		.target(
+			name: cxxboost_multiprecision.name,
+			dependencies: cxxboost_multiprecision.dependencies,
+			path: cxxboost_multiprecision.path,
+			exclude: cxxboost_multiprecision.exclude,
+			sources: cxxboost_multiprecision.sources,
+			publicHeadersPath: cxxboost_multiprecision.publicHeadersPath,
+			packageAccess: cxxboost_multiprecision.packageAccess
+		),
+		.target(
+			name: cxxboost_functional.name,
+			dependencies: cxxboost_functional.dependencies,
+			path: cxxboost_functional.path,
+			exclude: cxxboost_functional.exclude,
+			sources: cxxboost_functional.sources,
+			publicHeadersPath: cxxboost_functional.publicHeadersPath,
+			packageAccess: cxxboost_functional.packageAccess
+		),
+		.target(
+			name: cxxboost_histogram.name,
+			dependencies: cxxboost_histogram.dependencies,
+			path: cxxboost_histogram.path,
+			exclude: cxxboost_histogram.exclude,
+			sources: cxxboost_histogram.sources,
+			publicHeadersPath: cxxboost_histogram.publicHeadersPath,
+			packageAccess: cxxboost_histogram.packageAccess
+		),
+		.target(
+			name: cxxboost_typeof.name,
+			dependencies: cxxboost_typeof.dependencies,
+			path: cxxboost_typeof.path,
+			exclude: cxxboost_typeof.exclude,
+			sources: cxxboost_typeof.sources,
+			publicHeadersPath: cxxboost_typeof.publicHeadersPath,
+			packageAccess: cxxboost_typeof.packageAccess
+		),
+		.target(
+			name: cxxboost_function_types.name,
+			dependencies: cxxboost_function_types.dependencies,
+			path: cxxboost_function_types.path,
+			exclude: cxxboost_function_types.exclude,
+			sources: cxxboost_function_types.sources,
+			publicHeadersPath: cxxboost_function_types.publicHeadersPath,
+			packageAccess: cxxboost_function_types.packageAccess
+		),
+		.target(
+			name: cxxboost_exception.name,
+			dependencies: cxxboost_exception.dependencies,
+			path: cxxboost_exception.path,
+			exclude: cxxboost_exception.exclude,
+			sources: cxxboost_exception.sources,
+			publicHeadersPath: cxxboost_exception.publicHeadersPath,
+			packageAccess: cxxboost_exception.packageAccess
+		),
+		.target(
+			name: cxxboost_describe.name,
+			dependencies: cxxboost_describe.dependencies,
+			path: cxxboost_describe.path,
+			exclude: cxxboost_describe.exclude,
+			sources: cxxboost_describe.sources,
+			publicHeadersPath: cxxboost_describe.publicHeadersPath,
+			packageAccess: cxxboost_describe.packageAccess
 		)
 	],
 	cxxLanguageStandard: .cxx14

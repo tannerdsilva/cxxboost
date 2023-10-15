@@ -1,0 +1,14 @@
+module cxxboost_property_map_parallel [system] {
+	header "boost/property_map/parallel/basic_reduce.hpp"
+	header "boost/property_map/parallel/distributed_property_map.hpp"
+	header "boost/property_map/parallel/local_property_map.hpp"
+	header "boost/property_map/parallel/process_group.hpp"
+	header "boost/property_map/parallel/global_index_map.hpp"
+	header "boost/property_map/parallel/caching_property_map.hpp"
+	header "boost/property_map/parallel/simple_trigger.hpp"
+	header "boost/property_map/parallel/unsafe_serialize.hpp"
+	header "boost/property_map/parallel/detail/untracked_pair.hpp"
+	header "boost/property_map/parallel/parallel_property_maps.hpp"
+	header "boost/property_map/parallel/vector_property_map.hpp"
+	export *
+}

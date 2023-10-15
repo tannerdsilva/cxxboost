@@ -1,0 +1,22 @@
+module cxxboost_format [system] {
+	header "boost/format/alt_sstream.hpp"
+	header "boost/format/format_implementation.hpp"
+	header "boost/format/group.hpp"
+	header "boost/format/format_fwd.hpp"
+	header "boost/format/alt_sstream_impl.hpp"
+	header "boost/format/parsing.hpp"
+	header "boost/format/detail/workarounds_stlport.hpp"
+	header "boost/format/detail/msvc_disambiguater.hpp"
+	header "boost/format/detail/workarounds_gcc-2_95.hpp"
+	header "boost/format/detail/config_macros.hpp"
+	header "boost/format/detail/compat_workarounds.hpp"
+	header "boost/format/detail/unset_macros.hpp"
+	header "boost/format/free_funcs.hpp"
+	header "boost/format/feed_args.hpp"
+	header "boost/format/exceptions.hpp"
+	header "boost/format/internals.hpp"
+	header "boost/format/format_class.hpp"
+	header "boost/format/internals_fwd.hpp"
+	header "boost/format.hpp"
+	export *
+}

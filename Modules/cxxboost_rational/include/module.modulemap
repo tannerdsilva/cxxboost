@@ -1,0 +1,4 @@
+module cxxboost_rational [system] {
+	header "boost/rational.hpp"
+	export *
+}

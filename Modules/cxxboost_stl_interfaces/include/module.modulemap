@@ -1,0 +1,12 @@
+module cxxboost_stl_interfaces [system] {
+	header "boost/stl_interfaces/view_interface.hpp"
+	header "boost/stl_interfaces/fwd.hpp"
+	header "boost/stl_interfaces/sequence_container_interface.hpp"
+	header "boost/stl_interfaces/config.hpp"
+	header "boost/stl_interfaces/detail/pipeable_view.hpp"
+	header "boost/stl_interfaces/detail/view_closure.hpp"
+	header "boost/stl_interfaces/view_adaptor.hpp"
+	header "boost/stl_interfaces/reverse_iterator.hpp"
+	header "boost/stl_interfaces/iterator_interface.hpp"
+	export *
+}

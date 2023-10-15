@@ -1,0 +1,6 @@
+module cxxboost_conversion [system] {
+	header "boost/polymorphic_cast.hpp"
+	header "boost/implicit_cast.hpp"
+	header "boost/polymorphic_pointer_cast.hpp"
+	export *
+}

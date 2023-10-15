@@ -1,0 +1,13 @@
+module cxxboost_functional [system] {
+	header "boost/functional.hpp"
+	header "boost/functional/factory.hpp"
+	header "boost/functional/overloaded_function/config.hpp"
+	header "boost/functional/overloaded_function/detail/function_type.hpp"
+	header "boost/functional/overloaded_function/detail/base.hpp"
+	header "boost/functional/identity.hpp"
+	header "boost/functional/value_factory.hpp"
+	header "boost/functional/overloaded_function.hpp"
+	header "boost/functional/forward_adapter.hpp"
+	header "boost/functional/lightweight_forward_adapter.hpp"
+	export *
+}

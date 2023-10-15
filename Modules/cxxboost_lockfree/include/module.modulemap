@@ -1,0 +1,16 @@
+module cxxboost_lockfree [system] {
+	header "boost/lockfree/spsc_queue.hpp"
+	header "boost/lockfree/policies.hpp"
+	header "boost/lockfree/queue.hpp"
+	header "boost/lockfree/lockfree_forward.hpp"
+	header "boost/lockfree/detail/prefix.hpp"
+	header "boost/lockfree/detail/copy_payload.hpp"
+	header "boost/lockfree/detail/tagged_ptr_dcas.hpp"
+	header "boost/lockfree/detail/tagged_ptr.hpp"
+	header "boost/lockfree/detail/tagged_ptr_ptrcompression.hpp"
+	header "boost/lockfree/detail/atomic.hpp"
+	header "boost/lockfree/detail/freelist.hpp"
+	header "boost/lockfree/detail/parameter.hpp"
+	header "boost/lockfree/stack.hpp"
+	export *
+}

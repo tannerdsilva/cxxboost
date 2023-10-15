@@ -1,0 +1,11 @@
+module cxxboost_io [system] {
+	header "boost/io/nullstream.hpp"
+	header "boost/io/ios_state.hpp"
+	header "boost/io/ostream_joiner.hpp"
+	header "boost/io/ostream_put.hpp"
+	header "boost/io/detail/buffer_fill.hpp"
+	header "boost/io/detail/ostream_guard.hpp"
+	header "boost/io/quoted.hpp"
+	header "boost/io_fwd.hpp"
+	export *
+}

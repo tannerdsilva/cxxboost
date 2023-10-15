@@ -1,0 +1,5 @@
+module cxxboost_lambda2 [system] {
+	header "boost/lambda2/lambda2.hpp"
+	header "boost/lambda2.hpp"
+	export *
+}

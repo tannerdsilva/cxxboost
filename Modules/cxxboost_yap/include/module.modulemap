@@ -1,0 +1,12 @@
+module cxxboost_yap [system] {
+	header "boost/yap/expression.hpp"
+	header "boost/yap/config.hpp"
+	header "boost/yap/algorithm.hpp"
+	header "boost/yap/detail/transform.hpp"
+	header "boost/yap/detail/algorithm.hpp"
+	header "boost/yap/print.hpp"
+	header "boost/yap/algorithm_fwd.hpp"
+	header "boost/yap/yap.hpp"
+	header "boost/yap/user_macros.hpp"
+	export *
+}

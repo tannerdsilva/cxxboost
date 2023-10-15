@@ -1,0 +1,11 @@
+module cxxboost_pool [system] {
+	header "boost/pool/poolfwd.hpp"
+	header "boost/pool/pool_alloc.hpp"
+	header "boost/pool/singleton_pool.hpp"
+	header "boost/pool/pool.hpp"
+	header "boost/pool/object_pool.hpp"
+	header "boost/pool/detail/guard.hpp"
+	header "boost/pool/detail/mutex.hpp"
+	header "boost/pool/simple_segregated_storage.hpp"
+	export *
+}

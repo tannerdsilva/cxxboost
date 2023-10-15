@@ -1,0 +1,4 @@
+module cxxboost_array [system] {
+	header "boost/array.hpp"
+	export *
+}

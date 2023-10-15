@@ -1,0 +1,6 @@
+module cxxboost_static_string [system] {
+	header "boost/static_string/static_string.hpp"
+	header "boost/static_string/config.hpp"
+	header "boost/static_string.hpp"
+	export *
+}

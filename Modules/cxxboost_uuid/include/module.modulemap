@@ -1,0 +1,22 @@
+module cxxboost_uuid [system] {
+	header "boost/uuid/entropy_error.hpp"
+	header "boost/uuid/uuid.hpp"
+	header "boost/uuid/uuid_io.hpp"
+	header "boost/uuid/string_generator.hpp"
+	header "boost/uuid/random_generator.hpp"
+	header "boost/uuid/name_generator.hpp"
+	header "boost/uuid/uuid_serialize.hpp"
+	header "boost/uuid/detail/random_provider_detect_platform.hpp"
+	header "boost/uuid/detail/config.hpp"
+	header "boost/uuid/detail/sha1.hpp"
+	header "boost/uuid/detail/random_provider.hpp"
+	header "boost/uuid/detail/md5.hpp"
+	header "boost/uuid/detail/random_provider_include_platform.hpp"
+	header "boost/uuid/basic_name_generator.hpp"
+	header "boost/uuid/name_generator_sha1.hpp"
+	header "boost/uuid/uuid_hash.hpp"
+	header "boost/uuid/name_generator_md5.hpp"
+	header "boost/uuid/uuid_generators.hpp"
+	header "boost/uuid/nil_generator.hpp"
+	export *
+}

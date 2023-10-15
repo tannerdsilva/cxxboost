@@ -1,0 +1,9 @@
+module cxxboost_circular_buffer [system] {
+	header "boost/circular_buffer.hpp"
+	header "boost/circular_buffer/space_optimized.hpp"
+	header "boost/circular_buffer/details.hpp"
+	header "boost/circular_buffer/debug.hpp"
+	header "boost/circular_buffer/base.hpp"
+	header "boost/circular_buffer_fwd.hpp"
+	export *
+}

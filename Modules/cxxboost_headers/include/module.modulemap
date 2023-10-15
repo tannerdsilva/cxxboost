@@ -1,0 +1,3 @@
+module cxxboost_headers [system] {
+	export *
+}

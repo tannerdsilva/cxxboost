@@ -1,0 +1,19 @@
+module cxxboost_concept_check [system] {
+	header "boost/concept_check.hpp"
+	header "boost/concept_check/msvc.hpp"
+	header "boost/concept_check/borland.hpp"
+	header "boost/concept_check/has_constraints.hpp"
+	header "boost/concept_check/general.hpp"
+	header "boost/concept/detail/msvc.hpp"
+	header "boost/concept/detail/borland.hpp"
+	header "boost/concept/detail/concept_undef.hpp"
+	header "boost/concept/detail/has_constraints.hpp"
+	header "boost/concept/detail/backward_compatibility.hpp"
+	header "boost/concept/detail/concept_def.hpp"
+	header "boost/concept/detail/general.hpp"
+	header "boost/concept/assert.hpp"
+	header "boost/concept/usage.hpp"
+	header "boost/concept/requires.hpp"
+	header "boost/concept_archetype.hpp"
+	export *
+}

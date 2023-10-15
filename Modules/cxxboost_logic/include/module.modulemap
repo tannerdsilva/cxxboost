@@ -1,0 +1,6 @@
+module cxxboost_logic [system] {
+	header "boost/logic/tribool_fwd.hpp"
+	header "boost/logic/tribool_io.hpp"
+	header "boost/logic/tribool.hpp"
+	export *
+}

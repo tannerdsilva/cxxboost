@@ -1,0 +1,18 @@
+module cxxboost_filesystem [system] {
+	header "boost/filesystem.hpp"
+	header "boost/filesystem/path_traits.hpp"
+	header "boost/filesystem/string_file.hpp"
+	header "boost/filesystem/config.hpp"
+	header "boost/filesystem/path.hpp"
+	header "boost/filesystem/file_status.hpp"
+	header "boost/filesystem/detail/path_traits.hpp"
+	header "boost/filesystem/detail/utf8_codecvt_facet.hpp"
+	header "boost/filesystem/detail/header.hpp"
+	header "boost/filesystem/detail/footer.hpp"
+	header "boost/filesystem/convenience.hpp"
+	header "boost/filesystem/operations.hpp"
+	header "boost/filesystem/directory.hpp"
+	header "boost/filesystem/fstream.hpp"
+	header "boost/filesystem/exception.hpp"
+	export *
+}

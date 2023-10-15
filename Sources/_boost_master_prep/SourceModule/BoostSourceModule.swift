@@ -11,10 +11,9 @@ struct BoostSourceModule:Codable, Hashable {
 	/// the prefix for the package target name
 	static let packageTargetNamePrefix = "cxxboost_"
 
-	/// represents a header file or directory in the module map.
+	/// this used to represent multiple things but now it is only one thing, so it is essentially a string
 	enum ModuleMapHeader:Codable, Hashable, Equatable {
 		case headerFile(String)
-		case headerDirectory(String)
 	}
 
 	enum Name:Codable, Hashable, Equatable {
@@ -63,14 +62,14 @@ struct BoostSourceModule:Codable, Hashable {
 		
 		let sourceIncludeDir = path.appendingPathComponent("include", isDirectory:true)
 		let sourceIncludeBoostDir = sourceIncludeDir.appendingPathComponent("boost", isDirectory:true)
-		let includeContents = try FileManager.default.contentsOfDirectory(atPath:sourceIncludeBoostDir.path)
+		let includeEnumerator = FileManager.default.enumerator(atPath:sourceIncludeBoostDir.path)
 		var includeHeaders = [ModuleMapHeader]()
-		
-		for curContent in includeContents {
-			if curContent.hasSuffix(".hpp") {
-				includeHeaders.append(.headerFile(curContent))
-			} else if curContent.contains(".") == false {
-				includeHeaders.append(.headerDirectory(curContent))
+		while let someUnknownObject = includeEnumerator?.nextObject() {
+			let hasNextItem = "\(someUnknownObject)"
+			if hasNextItem.hasSuffix(".hpp") {
+				includeHeaders.append(.headerFile(hasNextItem))
+			} else if hasNextItem.hasSuffix(".h") {
+				includeHeaders.append(.headerFile(hasNextItem))
 			}
 		}
 		self.includeHeaders = includeHeaders
@@ -110,9 +109,7 @@ struct BoostSourceModule:Codable, Hashable {
 		for curEntry in self.includeHeaders {
 			switch curEntry {
 				case .headerFile(let headerName):
-					moduleMapContent += "\theader \"./boost/\(headerName)\"\n"
-				case .headerDirectory(let headerName):
-					moduleMapContent += "\theader \"./boost/\(headerName)/*\"\n"
+					moduleMapContent += "\theader \"boost/\(headerName)\"\n"
 			}
 		}
 		moduleMapContent += "\texport *\n"
@@ -219,18 +216,12 @@ extension BoostSourceModule.ModuleMapHeader {
 	init(from decoder:Decoder) throws {
 		let container = try decoder.singleValueContainer()
 		let stringValue = try container.decode(String.self)
-		if stringValue.hasSuffix(".hpp") {
-			self = .headerFile(stringValue)
-		} else {
-			self = .headerDirectory(stringValue)
-		}
+		self = .headerFile(stringValue)
 	}
 	func encode(to encoder:Encoder) throws {
 		var container = encoder.singleValueContainer()
 		switch self {
 			case .headerFile(let headerName):
-				try container.encode(headerName)
-			case .headerDirectory(let headerName):
 				try container.encode(headerName)
 		}
 	}

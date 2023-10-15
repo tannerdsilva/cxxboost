@@ -1,0 +1,17 @@
+module cxxboost_type_index [system] {
+	header "boost/type_index.hpp"
+	header "boost/type_index/runtime_cast.hpp"
+	header "boost/type_index/stl_type_index.hpp"
+	header "boost/type_index/detail/compile_time_type_info.hpp"
+	header "boost/type_index/detail/stl_register_class.hpp"
+	header "boost/type_index/detail/ctti_register_class.hpp"
+	header "boost/type_index/ctti_type_index.hpp"
+	header "boost/type_index/runtime_cast/std_shared_ptr_cast.hpp"
+	header "boost/type_index/runtime_cast/detail/runtime_cast_impl.hpp"
+	header "boost/type_index/runtime_cast/register_runtime_class.hpp"
+	header "boost/type_index/runtime_cast/pointer_cast.hpp"
+	header "boost/type_index/runtime_cast/reference_cast.hpp"
+	header "boost/type_index/runtime_cast/boost_shared_ptr_cast.hpp"
+	header "boost/type_index/type_index_facade.hpp"
+	export *
+}

@@ -1,0 +1,19 @@
+module cxxboost_assign [system] {
+	header "boost/assign.hpp"
+	header "boost/assign/std.hpp"
+	header "boost/assign/list_inserter.hpp"
+	header "boost/assign/ptr_list_of.hpp"
+	header "boost/assign/ptr_list_inserter.hpp"
+	header "boost/assign/std/slist.hpp"
+	header "boost/assign/std/vector.hpp"
+	header "boost/assign/std/map.hpp"
+	header "boost/assign/std/queue.hpp"
+	header "boost/assign/std/list.hpp"
+	header "boost/assign/std/set.hpp"
+	header "boost/assign/std/deque.hpp"
+	header "boost/assign/std/stack.hpp"
+	header "boost/assign/ptr_map_inserter.hpp"
+	header "boost/assign/list_of.hpp"
+	header "boost/assign/assignment_exception.hpp"
+	export *
+}

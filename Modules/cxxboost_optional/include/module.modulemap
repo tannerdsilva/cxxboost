@@ -1,0 +1,20 @@
+module cxxboost_optional [system] {
+	header "boost/none_t.hpp"
+	header "boost/optional/optional_io.hpp"
+	header "boost/optional/bad_optional_access.hpp"
+	header "boost/optional/detail/optional_reference_spec.hpp"
+	header "boost/optional/detail/old_optional_implementation.hpp"
+	header "boost/optional/detail/optional_hash.hpp"
+	header "boost/optional/detail/optional_aligned_storage.hpp"
+	header "boost/optional/detail/optional_factory_support.hpp"
+	header "boost/optional/detail/optional_trivially_copyable_base.hpp"
+	header "boost/optional/detail/optional_config.hpp"
+	header "boost/optional/detail/optional_relops.hpp"
+	header "boost/optional/detail/experimental_traits.hpp"
+	header "boost/optional/detail/optional_swap.hpp"
+	header "boost/optional/optional.hpp"
+	header "boost/optional/optional_fwd.hpp"
+	header "boost/optional.hpp"
+	header "boost/none.hpp"
+	export *
+}

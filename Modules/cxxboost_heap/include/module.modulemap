@@ -1,0 +1,19 @@
+module cxxboost_heap [system] {
+	header "boost/heap/heap_concepts.hpp"
+	header "boost/heap/policies.hpp"
+	header "boost/heap/skew_heap.hpp"
+	header "boost/heap/priority_queue.hpp"
+	header "boost/heap/detail/heap_comparison.hpp"
+	header "boost/heap/detail/ordered_adaptor_iterator.hpp"
+	header "boost/heap/detail/stable_heap.hpp"
+	header "boost/heap/detail/tree_iterator.hpp"
+	header "boost/heap/detail/mutable_heap.hpp"
+	header "boost/heap/detail/ilog2.hpp"
+	header "boost/heap/detail/heap_node.hpp"
+	header "boost/heap/pairing_heap.hpp"
+	header "boost/heap/binomial_heap.hpp"
+	header "boost/heap/fibonacci_heap.hpp"
+	header "boost/heap/heap_merge.hpp"
+	header "boost/heap/d_ary_heap.hpp"
+	export *
+}

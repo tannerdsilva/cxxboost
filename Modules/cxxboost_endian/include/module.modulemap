@@ -1,0 +1,19 @@
+module cxxboost_endian [system] {
+	header "boost/endian/conversion.hpp"
+	header "boost/endian/buffers.hpp"
+	header "boost/endian/arithmetic.hpp"
+	header "boost/endian/detail/requires_cxx11.hpp"
+	header "boost/endian/detail/is_scoped_enum.hpp"
+	header "boost/endian/detail/endian_reverse.hpp"
+	header "boost/endian/detail/order.hpp"
+	header "boost/endian/detail/is_trivially_copyable.hpp"
+	header "boost/endian/detail/integral_by_size.hpp"
+	header "boost/endian/detail/disable_warnings_pop.hpp"
+	header "boost/endian/detail/disable_warnings.hpp"
+	header "boost/endian/detail/intrinsic.hpp"
+	header "boost/endian/detail/endian_load.hpp"
+	header "boost/endian/detail/endian_store.hpp"
+	header "boost/endian/endian.hpp"
+	header "boost/endian.hpp"
+	export *
+}

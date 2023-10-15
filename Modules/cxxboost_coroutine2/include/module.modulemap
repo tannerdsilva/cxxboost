@@ -1,0 +1,19 @@
+module cxxboost_coroutine2 [system] {
+	header "boost/coroutine2/protected_fixedsize_stack.hpp"
+	header "boost/coroutine2/all.hpp"
+	header "boost/coroutine2/segmented_stack.hpp"
+	header "boost/coroutine2/detail/decay_copy.hpp"
+	header "boost/coroutine2/detail/config.hpp"
+	header "boost/coroutine2/detail/pull_coroutine.hpp"
+	header "boost/coroutine2/detail/push_control_block_cc.hpp"
+	header "boost/coroutine2/detail/disable_overload.hpp"
+	header "boost/coroutine2/detail/wrap.hpp"
+	header "boost/coroutine2/detail/state.hpp"
+	header "boost/coroutine2/detail/coroutine.hpp"
+	header "boost/coroutine2/detail/pull_control_block_cc.hpp"
+	header "boost/coroutine2/detail/push_coroutine.hpp"
+	header "boost/coroutine2/coroutine.hpp"
+	header "boost/coroutine2/pooled_fixedsize_stack.hpp"
+	header "boost/coroutine2/fixedsize_stack.hpp"
+	export *
+}

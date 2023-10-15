@@ -1,0 +1,22 @@
+module cxxboost_container_hash [system] {
+	header "boost/container_hash/is_tuple_like.hpp"
+	header "boost/container_hash/is_contiguous_range.hpp"
+	header "boost/container_hash/hash.hpp"
+	header "boost/container_hash/is_unordered_range.hpp"
+	header "boost/container_hash/is_described_class.hpp"
+	header "boost/container_hash/detail/requires_cxx11.hpp"
+	header "boost/container_hash/detail/mulx.hpp"
+	header "boost/container_hash/detail/hash_tuple_like.hpp"
+	header "boost/container_hash/detail/limits.hpp"
+	header "boost/container_hash/detail/hash_range.hpp"
+	header "boost/container_hash/detail/hash_mix.hpp"
+	header "boost/container_hash/extensions.hpp"
+	header "boost/container_hash/hash_fwd.hpp"
+	header "boost/container_hash/is_range.hpp"
+	header "boost/functional/hash.hpp"
+	header "boost/functional/hash/hash.hpp"
+	header "boost/functional/hash/extensions.hpp"
+	header "boost/functional/hash/hash_fwd.hpp"
+	header "boost/functional/hash_fwd.hpp"
+	export *
+}

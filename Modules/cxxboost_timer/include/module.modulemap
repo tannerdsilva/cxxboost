@@ -1,0 +1,8 @@
+module cxxboost_timer [system] {
+	header "boost/progress.hpp"
+	header "boost/timer/config.hpp"
+	header "boost/timer/progress_display.hpp"
+	header "boost/timer/timer.hpp"
+	header "boost/timer.hpp"
+	export *
+}

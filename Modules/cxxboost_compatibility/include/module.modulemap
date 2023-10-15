@@ -1,0 +1,3 @@
+module cxxboost_compatibility [system] {
+	export *
+}

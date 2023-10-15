@@ -1,0 +1,20 @@
+module cxxboost_multi_array [system] {
+	header "boost/multi_array/subarray.hpp"
+	header "boost/multi_array/concept_checks.hpp"
+	header "boost/multi_array/multi_array_ref.hpp"
+	header "boost/multi_array/storage_order.hpp"
+	header "boost/multi_array/range_list.hpp"
+	header "boost/multi_array/extent_gen.hpp"
+	header "boost/multi_array/extent_range.hpp"
+	header "boost/multi_array/algorithm.hpp"
+	header "boost/multi_array/index_gen.hpp"
+	header "boost/multi_array/index_range.hpp"
+	header "boost/multi_array/base.hpp"
+	header "boost/multi_array/view.hpp"
+	header "boost/multi_array/collection_concept.hpp"
+	header "boost/multi_array/copy_array.hpp"
+	header "boost/multi_array/types.hpp"
+	header "boost/multi_array/iterator.hpp"
+	header "boost/multi_array.hpp"
+	export *
+}
